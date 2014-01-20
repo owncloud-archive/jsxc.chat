@@ -90,7 +90,7 @@ You can configure oJSXC in the admin panel of owncloud.
 
 ## Developer notes
 
-Please execude the following commands to get a copy of the code:
+Please execute the following commands to get a copy of the code:
 
 ```
 git clone https://github.com/sualko/ojsxc/
