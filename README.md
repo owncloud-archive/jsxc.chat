@@ -19,6 +19,7 @@ Real-time chat app for OwnCloud. This app requires external XMPP server (openfir
 - roster management 
 - multi-language support (de, en)
 - multi tab support
+- vCard avatar
 
 ### Supported protocols
 - XMPP Core (RFC6120)
@@ -29,6 +30,8 @@ Real-time chat app for OwnCloud. This app requires external XMPP server (openfir
 - CAP (XEP-0127)
 - Jingle (XEP-0166)
 - Jingle RTP Sessions (XEP-0167)
+- vcard-temp (XEP-0054)
+- vCard-Based Avatars (XEP-0153)
 
 ### Supported browsers
 - Full support for __Chrome__ and __Firefox__.
@@ -91,7 +94,7 @@ Please execude the following commands to get a copy of the code:
 
 ```
 git clone https://github.com/sualko/ojsxc/
-git submodule update --init
+git submodule update --init --recursive
 ```
 
 ### Libaries
