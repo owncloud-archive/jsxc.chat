@@ -1,13 +1,4 @@
-/**
- * Copyright (c) 2013 Klaus Herberth <klaus@jsxc.org> <br>
- * Released under the MIT license
- * 
- * @author Klaus Herberth
- * @version 0.5.0
- */
-
 /* global jsxc, oc_appswebroots, OC, $ */
-
 
 /**
  * Make room for the roster inside the owncloud template.

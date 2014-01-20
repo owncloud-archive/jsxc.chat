@@ -8,7 +8,6 @@
     module.exports = DSA
     CryptoJS = require('../vendor/crypto.js')
     BigInt = require('../vendor/bigint.js')
-    Worker = require('webworker-threads').Worker
     WWPath = require('path').join(__dirname, '/dsa-webworker.js')
     HLP = require('./helpers.js')
   } else {
@@ -366,8 +365,21 @@
     return BigInt.equals(v, r)
   }
 
-  DSA.createInWebWorker = function (path, cb) {
-    var worker = new Worker(path ? path : WWPath)
+  DSA.createInWebWorker = function (options, cb) {
+    var opts = {
+        path: WWPath
+      , seed: BigInt.getSeed
+    }
+    if (options && typeof options === 'object')
+      Object.keys(options).forEach(function (k) {
+        opts[k] = options[k]
+      })
+
+    // load optional dep. in node
+    if (typeof module !== 'undefined' && module.exports)
+      Worker = require('webworker-threads').Worker
+
+    var worker = new Worker(opts.path)
     worker.onmessage = function (e) {
       var data = e.data
       switch (data.type) {
@@ -383,7 +395,11 @@
           throw new Error("Unrecognized type.")
       }
     }
-    worker.postMessage({ seed: BigInt.getSeed(), debug: DEBUG })
+    worker.postMessage({
+        seed: opts.seed()
+      , imports: opts.imports
+      , debug: DEBUG
+    })
   }
 
 }).call(this)

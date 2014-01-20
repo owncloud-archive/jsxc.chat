@@ -1,6 +1,3 @@
-[submodule "js/strophe.jingle"]
-	path = js/strophe.jingle
-	url = https://github.com/ESTOS/strophe.jingle.git
-[submodule "js/otr"]
-	path = js/otr
-	url = https://github.com/arlolra/otr.git
+[submodule "js/jsxc"]
+	path = js/jsxc
+	url = https://github.com/sualko/jsxc.git

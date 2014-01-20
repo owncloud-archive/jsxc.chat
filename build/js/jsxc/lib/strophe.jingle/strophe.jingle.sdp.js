@@ -40,16 +40,47 @@ SDP.prototype.mangle = function () {
     this.raw = this.session + this.media.join('');
 };
 
+// remove lines matching prefix from session section
+SDP.prototype.removeSessionLines = function(prefix) {
+    var self = this;
+    var lines = SDPUtil.find_lines(this.session, prefix);
+    lines.forEach(function(line) {
+        self.session = self.session.replace(line + '\r\n', '');
+    });
+    this.raw = this.session + this.media.join('');
+    return lines;
+}
+// remove lines matching prefix from a media section specified by mediaindex
+// TODO: non-numeric mediaindex could match mid
+SDP.prototype.removeMediaLines = function(mediaindex, prefix) {
+    var self = this;
+    var lines = SDPUtil.find_lines(this.media[mediaindex], prefix);
+    lines.forEach(function(line) {
+        self.media[mediaindex] = self.media[mediaindex].replace(line + '\r\n', '');
+    });
+    this.raw = this.session + this.media.join('');
+    return lines;
+}
+
 // add content's to a jingle element
 SDP.prototype.toJingle = function (elem, thecreator) {
     var i, j, k, mline, ssrc, rtpmap, tmp, line, lines;
-    var ob = this;
+    var self = this;
     // new bundle plan
     if (SDPUtil.find_line(this.session, 'a=group:')) {
         lines = SDPUtil.find_lines(this.session, 'a=group:');
         for (i = 0; i < lines.length; i++) {
             tmp = lines[i].split(' ');
-            elem.c('group', {xmlns: 'urn:ietf:rfc:5888', type: tmp.shift().substr(8)});
+            var semantics = tmp.shift().substr(8);
+            // new plan
+            elem.c('group', {xmlns: 'urn:xmpp:jingle:apps:grouping:0', type: semantics, semantics:semantics});
+            for (j = 0; j < tmp.length; j++) {
+                elem.c('content', {name: tmp[j]}).up();
+            }
+            elem.up();
+
+            // temporary plan, to be removed
+            elem.c('group', {xmlns: 'urn:ietf:rfc:5888', type: semantics});
             for (j = 0; j < tmp.length; j++) {
                 elem.c('content', {name: tmp[j]}).up();
             }
@@ -102,13 +133,14 @@ SDP.prototype.toJingle = function (elem, thecreator) {
                         elem.c('parameter', tmp[k]).up();
                     }
                 }
-                this.RtcpFbToJingle(this.media[i], elem, mline.fmt[j]); // XEP-0293 -- map a=rtcp-fb
+                this.RtcpFbToJingle(i, elem, mline.fmt[j]); // XEP-0293 -- map a=rtcp-fb
 
                 elem.up();
             }
             if (SDPUtil.find_line(this.media[i], 'a=crypto:', this.session)) {
                 elem.c('encryption', {required: 1});
-                $.each(SDPUtil.find_lines(this.media[i], 'a=crypto:', this.session), function (idx, line) {
+                var crypto = SDPUtil.find_lines(this.media[i], 'a=crypto:', this.session);
+                crypto.forEach(function(line) {
                     elem.c('crypto', SDPUtil.parse_crypto(line)).up();
                 });
                 elem.up(); // end of encryption
@@ -118,8 +150,15 @@ SDP.prototype.toJingle = function (elem, thecreator) {
                 // new style mapping
                 elem.c('source', { ssrc: ssrc, xmlns: 'urn:xmpp:jingle:apps:rtp:ssma:0' });
                 // FIXME: group by ssrc and support multiple different ssrcs
-                $.each(SDPUtil.find_lines(this.media[i], 'a=ssrc:'), function (idx, line) {
+                var ssrclines = SDPUtil.find_lines(this.media[i], 'a=ssrc:');
+                ssrclines.forEach(function(line) {
                     idx = line.indexOf(' ');
+                    var linessrc = line.substr(0, idx).substr(7);
+                    if (linessrc != ssrc) {
+                        elem.up();
+                        ssrc = linessrc;
+                        elem.c('source', { ssrc: ssrc, xmlns: 'urn:xmpp:jingle:apps:rtp:ssma:0' });
+                    }
                     var kv = line.substr(idx + 1);
                     elem.c('parameter');
                     if (kv.indexOf(':') == -1) {
@@ -144,7 +183,7 @@ SDP.prototype.toJingle = function (elem, thecreator) {
             }
 
             // XEP-0293 -- map a=rtcp-fb:*
-            this.RtcpFbToJingle(this.media[i], elem, '*');
+            this.RtcpFbToJingle(i, elem, '*');
 
             // XEP-0294
             if (SDPUtil.find_line(this.media[i], 'a=extmap:')) {
@@ -177,34 +216,8 @@ SDP.prototype.toJingle = function (elem, thecreator) {
             elem.up(); // end of description
         }
 
-        elem.c('transport', {xmlns: 'urn:xmpp:jingle:transports:ice-udp:1'});
-        // XEP-0320
-        $.each(SDPUtil.find_lines(this.media[i], 'a=fingerprint:', this.session), function (idx, line) {
-            tmp = SDPUtil.parse_fingerprint(line);
-            tmp.xmlns = 'urn:xmpp:tmp:jingle:apps:dtls:0';
-            // tmp.xmlns = 'urn:xmpp:jingle:apps:dtls:0'; -- FIXME: update receivers first
-            elem.c('fingerprint').t(tmp.fingerprint);
-            delete tmp.fingerprint;
-            line = SDPUtil.find_line(ob.media[i], 'a=setup:', ob.session);
-            if (line) {
-                tmp.setup = line.substr(8);
-            }
-            elem.attrs(tmp);
-            elem.up();
-        });
-        tmp = SDPUtil.iceparams(this.media[i], this.session);
-        if (tmp) {
-            elem.attrs(tmp);
-            // XEP-0176
-            if (SDPUtil.find_line(this.media[i], 'a=candidate:', this.session)) { // add any a=candidate lines
-                lines = SDPUtil.find_lines(this.media[i], 'a=candidate:', this.session);
-                for (j = 0; j < lines.length; j++) {
-                    tmp = SDPUtil.candidateToJingle(lines[j]);
-                    elem.c('candidate', tmp).up();
-                }
-            }
-            elem.up(); // end of transport
-        }
+        // map ice-ufrag/pwd, dtls fingerprint, candidates
+        this.TransportToJingle(i, elem);
 
         if (SDPUtil.find_line(this.media[i], 'a=sendrecv', this.session)) {
             elem.attrs({senders: 'both'});
@@ -225,10 +238,46 @@ SDP.prototype.toJingle = function (elem, thecreator) {
     return elem;
 };
 
-SDP.prototype.RtcpFbToJingle = function (sdp, elem, payloadtype) { // XEP-0293
-    var lines = SDPUtil.find_lines(sdp, 'a=rtcp-fb:' + payloadtype);
-    for (var i = 0; i < lines.length; i++) {
-        var tmp = SDPUtil.parse_rtcpfb(lines[i]);
+SDP.prototype.TransportToJingle = function (mediaindex, elem) {
+    var i = mediaindex;
+    var tmp;
+    var self = this;
+    elem.c('transport');
+
+    // XEP-0320
+    var fingerprints = SDPUtil.find_lines(this.media[mediaindex], 'a=fingerprint:', this.session);
+    fingerprints.forEach(function(line) {
+        tmp = SDPUtil.parse_fingerprint(line);
+        tmp.xmlns = 'urn:xmpp:tmp:jingle:apps:dtls:0';
+        // tmp.xmlns = 'urn:xmpp:jingle:apps:dtls:0'; -- FIXME: update receivers first
+        elem.c('fingerprint').t(tmp.fingerprint);
+        delete tmp.fingerprint;
+        line = SDPUtil.find_line(self.media[mediaindex], 'a=setup:', self.session);
+        if (line) {
+            tmp.setup = line.substr(8);
+        }
+        elem.attrs(tmp);
+        elem.up(); // end of fingerprint
+    });
+    tmp = SDPUtil.iceparams(this.media[mediaindex], this.session);
+    if (tmp) {
+        tmp.xmlns = 'urn:xmpp:jingle:transports:ice-udp:1';
+        elem.attrs(tmp);
+        // XEP-0176
+        if (SDPUtil.find_line(this.media[mediaindex], 'a=candidate:', this.session)) { // add any a=candidate lines
+            var lines = SDPUtil.find_lines(this.media[mediaindex], 'a=candidate:', this.session);
+            lines.forEach(function (line) {
+                elem.c('candidate', SDPUtil.candidateToJingle(line)).up();
+            });
+        }
+    }
+    elem.up(); // end of transport
+}
+
+SDP.prototype.RtcpFbToJingle = function (mediaindex, elem, payloadtype) { // XEP-0293
+    var lines = SDPUtil.find_lines(this.media[mediaindex], 'a=rtcp-fb:' + payloadtype);
+    lines.forEach(function (line) {
+        var tmp = SDPUtil.parse_rtcpfb(line);
         if (tmp.type == 'trr-int') {
             elem.c('rtcp-fb-trr-int', {xmlns: 'urn:xmpp:jingle:apps:rtp:rtcp-fb:0', value: tmp.params[0]});
             elem.up();
@@ -239,7 +288,7 @@ SDP.prototype.RtcpFbToJingle = function (sdp, elem, payloadtype) { // XEP-0293
             }
             elem.up();
         }
-    }
+    });
 };
 
 SDP.prototype.RtcpFbFromJingle = function (elem, payloadtype) { // XEP-0293
@@ -267,19 +316,29 @@ SDP.prototype.RtcpFbFromJingle = function (elem, payloadtype) { // XEP-0293
 
 // construct an SDP from a jingle stanza
 SDP.prototype.fromJingle = function (jingle) {
-    var obj = this;
+    var self = this;
     this.raw = 'v=0\r\n' +
         'o=- ' + '1923518516' + ' 2 IN IP4 0.0.0.0\r\n' +// FIXME
         's=-\r\n' +
         't=0 0\r\n';
     // http://tools.ietf.org/html/draft-ietf-mmusic-sdp-bundle-negotiation-04#section-8
-    if ($(jingle).find('>group[xmlns="urn:ietf:rfc:5888"]').length) {
+    if ($(jingle).find('>group[xmlns="urn:xmpp:jingle:apps:grouping:0"]').length) {
+        $(jingle).find('>group[xmlns="urn:xmpp:jingle:apps:grouping:0"]').each(function (idx, group) {
+            var contents = $(group).find('>content').map(function (idx, content) {
+                return content.getAttribute('name');
+            }).get();
+            if (contents.length > 0) {
+                self.raw += 'a=group:' + (group.getAttribute('semantics') || group.getAttribute('type')) + ' ' + contents.join(' ') + '\r\n';
+            }
+        });
+    } else if ($(jingle).find('>group[xmlns="urn:ietf:rfc:5888"]').length) {
+        // temporary namespace, not to be used. to be removed soon.
         $(jingle).find('>group[xmlns="urn:ietf:rfc:5888"]').each(function (idx, group) {
             var contents = $(group).find('>content').map(function (idx, content) {
-                return $(content).attr('name');
+                return content.getAttribute('name');
             }).get();
-            if ($(group).attr('type') !== null && contents.length > 0) {
-                obj.raw += 'a=group:' + $(group).attr('type') + ' ' + contents.join(' ') + '\r\n';
+            if (group.getAttribute('type') !== null && contents.length > 0) {
+                self.raw += 'a=group:' + group.getAttribute('type') + ' ' + contents.join(' ') + '\r\n';
             }
         });
     } else {
@@ -289,7 +348,7 @@ SDP.prototype.fromJingle = function (jingle) {
             //elem.c('bundle', {xmlns:'http://estos.de/ns/bundle'});
             return $(content).find('>bundle').length > 0;
         }).map(function (idx, content) {
-            return $(content).attr('name');
+            return content.getAttribute('name');
         }).get();
         if (bundle.length) {
             this.raw += 'a=group:BUNDLE ' + bundle.join(' ') + '\r\n';
@@ -298,8 +357,8 @@ SDP.prototype.fromJingle = function (jingle) {
 
     this.session = this.raw;
     jingle.find('>content').each(function () {
-        var m = obj.jingle2media($(this));
-        obj.media.push(m);
+        var m = self.jingle2media($(this));
+        self.media.push(m);
     });
 
     // reconstruct msid-semantic -- apparently not necessary
@@ -332,7 +391,7 @@ SDP.prototype.jingle2media = function (content) {
     } else {
         tmp.proto = 'RTP/AVPF';
     }
-    tmp.fmt = desc.find('payload-type').map(function () { return $(this).attr('id'); }).get();
+    tmp.fmt = desc.find('payload-type').map(function () { return this.getAttribute('id'); }).get();
     media += SDPUtil.build_mline(tmp) + '\r\n';
     media += 'c=IN IP4 0.0.0.0\r\n';
     media += 'a=rtcp:1 IN IP4 0.0.0.0\r\n';
@@ -346,11 +405,11 @@ SDP.prototype.jingle2media = function (content) {
         }
         tmp.find('>fingerprint').each(function () {
             // FIXME: check namespace at some point
-            media += 'a=fingerprint:' + $(this).attr('hash');
+            media += 'a=fingerprint:' + this.getAttribute('hash');
             media += ' ' + $(this).text();
             media += '\r\n';
-            if ($(this).attr('setup')) {
-                media += 'a=setup:' + $(this).attr('setup') + '\r\n';
+            if (this.getAttribute('setup')) {
+                media += 'a=setup:' + this.getAttribute('setup') + '\r\n';
             }
         });
     }
@@ -379,11 +438,11 @@ SDP.prototype.jingle2media = function (content) {
 
     if (desc.find('encryption').length) {
         desc.find('encryption>crypto').each(function () {
-            media += 'a=crypto:' + $(this).attr('tag');
-            media += ' ' + $(this).attr('crypto-suite');
-            media += ' ' + $(this).attr('key-params');
-            if ($(this).attr('session-params')) {
-                media += ' ' + $(this).attr('session-params');
+            media += 'a=crypto:' + this.getAttribute('tag');
+            media += ' ' + this.getAttribute('crypto-suite');
+            media += ' ' + this.getAttribute('key-params');
+            if (this.getAttribute('session-params')) {
+                media += ' ' + this.getAttribute('session-params');
             }
             media += '\r\n';
         });
@@ -391,12 +450,12 @@ SDP.prototype.jingle2media = function (content) {
     desc.find('payload-type').each(function () {
         media += SDPUtil.build_rtpmap(this) + '\r\n';
         if ($(this).find('>parameter').length) {
-            media += 'a=fmtp:' + $(this).attr('id') + ' ';
-            media += $(this).find('parameter').map(function () { return ($(this).attr('name') ? ($(this).attr('name') + '=') : '') + $(this).attr('value'); }).get().join(';');
+            media += 'a=fmtp:' + this.getAttribute('id') + ' ';
+            media += $(this).find('parameter').map(function () { return (this.getAttribute('name') ? (this.getAttribute('name') + '=') : '') + this.getAttribute('value'); }).get().join(';');
             media += '\r\n';
         }
         // xep-0293
-        media += self.RtcpFbFromJingle($(this), $(this).attr('id'));
+        media += self.RtcpFbFromJingle($(this), this.getAttribute('id'));
     });
 
     // xep-0293
@@ -405,7 +464,7 @@ SDP.prototype.jingle2media = function (content) {
     // xep-0294
     tmp = desc.find('>rtp-hdrext[xmlns="urn:xmpp:jingle:apps:rtp:rtp-hdrext:0"]');
     tmp.each(function () {
-        media += 'a=extmap:' + $(this).attr('id') + ' ' + $(this).attr('uri') + '\r\n';
+        media += 'a=extmap:' + this.getAttribute('id') + ' ' + this.getAttribute('uri') + '\r\n';
     });
 
     content.find('>transport[xmlns="urn:xmpp:jingle:transports:ice-udp:1"]>candidate').each(function () {
@@ -414,11 +473,11 @@ SDP.prototype.jingle2media = function (content) {
 
     tmp = content.find('description>source[xmlns="urn:xmpp:jingle:apps:rtp:ssma:0"]');
     tmp.each(function () {
-        var ssrc = $(this).attr('ssrc');
+        var ssrc = this.getAttribute('ssrc');
         $(this).find('>parameter').each(function () {
-            media += 'a=ssrc:' + ssrc + ' ' + $(this).attr('name');
-            if ($(this).attr('value') && $(this).attr('value').length)
-                media += ':' + $(this).attr('value');
+            media += 'a=ssrc:' + ssrc + ' ' + this.getAttribute('name');
+            if (this.getAttribute('value') && this.getAttribute('value').length)
+                media += ':' + this.getAttribute('value');
             media += '\r\n';
         });
     });
@@ -489,9 +548,9 @@ SDPUtil = {
         return data;
     },
     build_rtpmap: function (el) {
-        var line = 'a=rtpmap:' + $(el).attr('id') + ' ' + $(el).attr('name') + '/' + $(el).attr('clockrate');
-        if ($(el).attr('channels') && $(el).attr('channels') != '1') {
-            line += '/' + $(el).attr('channels');
+        var line = 'a=rtpmap:' + el.getAttribute('id') + ' ' + el.getAttribute('name') + '/' + el.getAttribute('clockrate');
+        if (el.getAttribute('channels') && el.getAttribute('channels') != '1') {
+            line += '/' + el.getAttribute('channels');
         }
         return line;
     },
@@ -546,6 +605,7 @@ SDPUtil = {
         candidate.port = elems[5];
         // elems[6] => "typ"
         candidate.type = elems[7];
+        candidate.generation = 0; // default value, may be overwritten below
         for (var i = 8; i < elems.length; i += 2) {
             switch (elems[i]) {
             case 'raddr':

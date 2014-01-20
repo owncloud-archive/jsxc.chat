@@ -1,14 +1,13 @@
 /**
- * Copyright (c) 2013 Klaus Herberth <klaus@jsxc.org> <br>
+ * jsxc v0.5.0 - 2014-01-20
+ * 
+ * Copyright (c) 2014 Klaus Herberth <klaus@jsxc.org> <br>
  * Released under the MIT license
  * 
- * Please see: https://github.com/sualko/ojsxc/
+ * Please see http://jsxc.org/
  * 
- * @file Mainscript of the javascript xmpp client
  * @author Klaus Herberth <klaus@jsxc.org>
  * @version 0.5.0
- * @requires [1] {@link https://github.com/sualko/strophejs/|Strophe.js}
- * @requires [2] {@link https://github.com/arlolra/otr/|OTR}
  */
 
 var jsxc;
@@ -3354,36 +3353,47 @@ var jsxc;
          }
 
          if (jsxc.storage.getUserItem('key') === null) {
-
-            var msg = jsxc.l.now_we_will_create_your_private_key_;
-            jsxc.gui.dialog.open(jsxc.gui.template.get('waitAlert', null, msg), {
-               noClose: true
-            });
-
+            var msg = jsxc.l.now_we_will_create_your_private_key_; 
+            
             if (Worker) {
                // create DSA key in background
+           
+               var waitDiv = $('<div>').addClass('jsxc_wait').html(jsxc.gui.template.get('waitAlert', null, msg));
+               $('#jsxc_roster').append(waitDiv);
+               
+               var worker = new Worker(jsxc.options.root + '/js/jsxc/lib/otr/build/dsa-webworker.js');
 
-               var worker = new Worker(jsxc.options.root + '/js/lib/dsa-ww.js');
-
-               worker.onmessage = function(e) {
+               worker.onmessage = function(e) { console.log(e);
                   var type = e.data.type;
-                  var data = e.data.data;
+                  var val = e.data.val;
 
-                  if (type === 'debug') {
-                     jsxc.debug(data);
+                  if (type === 'val') {
+                     jsxc.debug(val);
                   } else if (type === 'data') {
-                     jsxc.otr.DSAready(DSA.parsePrivate(data.key));
+                     jsxc.otr.DSAready(DSA.parsePrivate(val));
                   }
                };
 
                // start worker
                worker.postMessage({
-                  imports: [ jsxc.options.root + '/js/otr/vendor/salsa20.js', jsxc.options.root + '/js/otr/vendor/bigint.js', jsxc.options.root + '/js/otr/vendor/crypto.js', jsxc.options.root + '/js/otr/vendor/eventemitter.js', jsxc.options.root + '/js/otr/lib/const.js', jsxc.options.root + '/js/otr/lib/helpers.js', jsxc.options.root + '/js/otr/lib/dsa.js' ],
-                  seed: BigInt.getSeed()
+                  imports: [ jsxc.options.root + '/js/jsxc/lib/otr/vendor/salsa20.js', 
+                             jsxc.options.root + '/js/jsxc/lib/otr/vendor/bigint.js', 
+                             jsxc.options.root + '/js/jsxc/lib/otr/vendor/crypto.js', 
+                             jsxc.options.root + '/js/jsxc/lib/otr/vendor/eventemitter.js', 
+                             jsxc.options.root + '/js/jsxc/lib/otr/lib/const.js', 
+                             jsxc.options.root + '/js/jsxc/lib/otr/lib/helpers.js', 
+                             jsxc.options.root + '/js/jsxc/lib/otr/lib/dsa.js' ],
+                  seed: BigInt.getSeed(),
+                  debug: true
                });
 
             } else {
                // fallback
+
+               jsxc.gui.dialog.open(jsxc.gui.template.get('waitAlert', null, msg), {
+                  noClose: true
+               });
+               
                jsxc.debug('DSA key creation started.');
 
                // wait until the wait alert is opened
@@ -3415,10 +3425,11 @@ var jsxc;
        * 
        * @param {DSA} dsa DSA object
        */
-      DSAready: function(dsa) {
+      DSAready: function(dsa) { 
          // close wait alert
          jsxc.gui.dialog.close();
-
+         $('#jsxc_roster .jsxc_wait').remove();
+         
          jsxc.storage.setUserItem('key', dsa.packPrivate());
          jsxc.options.otr.priv = dsa;
 

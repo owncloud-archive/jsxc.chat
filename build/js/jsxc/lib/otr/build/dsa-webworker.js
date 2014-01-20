@@ -1,10 +1,13 @@
-/*global DSA */
 ;(function (root) {
   "use strict";
 
   root.OTR = {}
-  root.crypto = {}
-  root.DSA = {};
+  root.DSA = {}
+  root.crypto = {
+    randomBytes: function () {
+      throw new Error("Haven't seeded yet.")
+    }
+  }
 
   // default imports
   var imports = [
@@ -24,16 +27,25 @@
   onmessage = function (e) {
     var data = e.data;
 
-    root.crypto.randomBytes = function () {
-      return data.seed
-    }
-
     if (data.imports) imports = data.imports
     importScripts.apply(root, imports);
 
+    // use salsa20 since there's no prng in webworkers
+    var state = new root.Salsa20(data.seed.slice(0, 32), data.seed.slice(32))
+    root.crypto.randomBytes = function (n) {
+      return state.getBytes(n)
+    }
+
     if (data.debug) sendMsg('debug', 'DSA key creation started')
-    var dsa = new DSA()
+    var dsa
+    try {
+      dsa = new root.DSA()
+    } catch (e) {
+      if (data.debug) sendMsg('debug', e.toString())
+      return
+    }
     if (data.debug) sendMsg('debug', 'DSA key creation finished')
+
     sendMsg('data', dsa.packPrivate())
   }
 

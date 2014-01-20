@@ -3,33 +3,54 @@ module.exports = function(grunt) {
 
    // Project configuration.
    grunt.initConfig({
+      app: grunt.file.readJSON('app.json'),
+      meta: {
+         banner: grunt.file.read('js/jsxc/banner.js')
+      },
       jshint: {
-         options: { 
+         options: {
             jshintrc: '.jshintrc'
          },
          gruntfile: {
             src: 'Gruntfile.js'
          },
-         files: [ 'js/lib/jsxc.lib.webrtc.js', 'js/lib/jsxc.lib.js', 'js/ojsxc.js' ]
+         files: [ 'js/ojsxc.js' ]
       },
       copy: {
          main: {
             files: [ {
                expand: true,
-               src: [ 'js/plugin/*.js', 'js/strophe.jingle/*.js', 'js/otr/build/**', 'js/otr/lib/dsa-webworker.js', 'js/otr/lib/sm-webworker.js', 'js/otr/lib/const.js', 'js/otr/lib/helpers.js', 'js/otr/lib/dsa.js', 'js/otr/vendor/*.js', 'js/*.js', 'js/lib/*', 'css/*', 'appinfo/*', 'ajax/*', 'img/*', 'templates/*', 'settings.php', 'LICENSE' ],
+               src: [ 'js/*.js', 'css/*', 'appinfo/*', 'ajax/*', 'img/*', 'templates/*', 'settings.php', 'LICENSE' ],
                dest: 'build/'
+            }, {
+               expand: true,
+               cwd: 'js/jsxc/build/',
+               src: [ '**' ],
+               dest: 'build/js/jsxc/'
             } ]
          }
       },
-      clean: [ 'build/' ]
+      clean: [ 'build/' ],
+      usebanner: {
+         dist: {
+            options: {
+               position: 'top',
+               banner: '<%= meta.banner %>'
+            },
+            files: {
+               src: [ 'build/js/*.js' ]
+            }
+         }
+      }
    });
 
    // These plugins provide necessary tasks.
    grunt.loadNpmTasks('grunt-contrib-jshint');
    grunt.loadNpmTasks('grunt-contrib-copy');
    grunt.loadNpmTasks('grunt-contrib-clean');
+   grunt.loadNpmTasks('grunt-banner');
 
    // Default task.
-   grunt.registerTask('default', [ 'jshint', 'clean', 'copy' ]);
+   grunt.registerTask('default', [ 'jshint', 'clean', 'copy', 'usebanner' ]);
 
 };
