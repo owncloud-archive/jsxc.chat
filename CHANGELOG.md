@@ -1,3 +1,8 @@
+v0.5.1 / 2014-01-27
+===
+- downgrade required oc version
+- upgrade jsxc to v0.5.1
+
 v0.5.0 / 2014-01-13
 ===
 - add hide offline buddy function

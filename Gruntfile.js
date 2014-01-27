@@ -38,7 +38,7 @@ module.exports = function(grunt) {
                banner: '<%= meta.banner %>'
             },
             files: {
-               src: [ 'build/js/*.js' ]
+               src: [ 'build/js/*.js', 'build/css/jsxc.oc.css' ]
             }
          }
       }

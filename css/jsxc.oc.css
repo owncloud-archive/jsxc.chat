@@ -1,8 +1,3 @@
-body {
-	font-family: Arial;
-	font-size: 0.8em;
-}
-
 .jsxc_online {
 	border-left: 4px solid #00BFFF;
 }
@@ -17,14 +12,6 @@ body {
 
 .jsxc_hidden {
 	display: none;
-}
-
-.chief {
-	background-color: blue;
-}
-
-.sidekick {
-	background-color: orange;
 }
 
 .jsxc_invalid {
@@ -67,50 +54,7 @@ p.jsxc_center {
 	padding-top: 10px;
 }
 
-#status {
-	position: fixed;
-	bottom: 10px;
-	left: 10px;
-	z-index: 1000;
-	width: 20px;
-	height: 20px;
-	border-radius: 10px;
-}
-
-#jsxc_waitAlert {
-	position: fixed;
-	width: 300px;
-	left: 50%;
-	top: 20%;
-	margin-left: -150px;
-	background-color: #fff;
-	z-index: 1200;
-}
-
-#jsxc_overlay {
-	position: fixed;
-	height: 100%;
-	width: 100%;
-	left: 0px;
-	top: 0px;
-	opacity: 0.7;
-	background-color: #777;
-	z-index: 1100;
-}
-
 div#jsxc_roster {
-	/*position:fixed;
-    top:0px;
-    right:0px;
-    width:200px;
-    overflow:visible;
-    height:100%;
-    border-left:4px solid #A4A4A4;
-    z-index:80;
-    padding-top: 40px;
-    padding-bottom: 30px;
-    background: url("http://localhost/owncloud/core/img/noise.png") #383C43;
-    box-shadow: 0px 0px 7px #000000;*/
 	position: fixed;
 	top: 0px;
 	right: 0px;
@@ -134,10 +78,9 @@ div#jsxc_roster .jsxc_wait{
 	position:absolute;
 	top:45px;
 	left:0px;
-	width:170px;
+	width:160px;
 	height: 100%;
-	padding: 10px;
-	padding-right: 20px;
+	padding: 20px;
 	background-color:#fff;
 }
 
@@ -149,6 +92,22 @@ div#jsxc_roster .jsxc_wait h3 {
    margin-bottom:5px;
    font-size:1.13em;
    font-weight:bold;
+}
+
+#jsxc_roster input{
+   position:absolute;
+   left: 31px;
+   top: 2px;
+   width: 157px;
+   height: 22px;
+   padding: 2px;
+   border:0px;
+   background-image:none;
+   background-color:#fff;
+   border-radius:3px;
+   -moz-box-shadow: inset 0 0 5px #888;
+    -webkit-box-shadow: inset 0 0 5px#888;
+    box-shadow: inner 0 0 5px #888;
 }
 
 ul#jsxc_buddylist {
@@ -181,17 +140,12 @@ ul#jsxc_buddylist li.jsxc_oneway {
 	opacity: 0.7;
 }
 
-ul#jsxc_buddylist li .jsxc_name {
-	width: 160px;
+li .jsxc_name {
 	overflow: hidden;
 	height: 30px;
 	cursor: pointer;
 	text-overflow: ellipsis;
 	white-space: nowrap;
-}
-
-ul#jsxc_buddylist li:hover .jsxc_name {
-	width: 130px;
 }
 
 ul#jsxc_buddylist.jsxc_hideOffline .jsxc_offline {
@@ -203,7 +157,7 @@ ul#jsxc_buddylist.jsxc_hideOffline .jsxc_offline {
 	height: 25px;
 	line-height: 25px;
 	margin-top: 2px;
-	margin-right: 2px;
+	margin-right: 4px;
 	background-color: #a3a3a3;
 	border-radius: 2px;
 	float: left;
@@ -277,10 +231,13 @@ div#jsxc_menu ul li:last-child {
 }
 
 ul#jsxc_buddylist .jsxc_options {
-	position: absolute;
-	right: 0px;
-	top: 0px;
 	height: 30px;
+	float:right;
+	overflow:hidden;
+	transition: width 2s;
+	width:0px;
+   -webkit-transition: width .5s; /* Safari */
+   white-space: nowrap;
 }
 
 ul#jsxc_buddylist .jsxc_options div {
@@ -289,12 +246,15 @@ ul#jsxc_buddylist .jsxc_options div {
 	width: 20px;
 	cursor: pointer;
 	opacity: 0.7;
-	float: left;
-	display: none
+	display:inline-block;
+	font-weight:bold;
+   text-align:center;
+   font-size: 17px;
+   overflow:hidden;
 }
 
-ul#jsxc_buddylist li[data-type="chat"]:hover .jsxc_options div {
-	display: block;
+ul#jsxc_buddylist li[data-type="chat"]:hover .jsxc_options {
+	width:50px;
 }
 
 ul#jsxc_buddylist .jsxc_options div:hover {
@@ -302,17 +262,18 @@ ul#jsxc_buddylist .jsxc_options div:hover {
 }
 
 ul#jsxc_buddylist .jsxc_rename {
-	background-image: url('%appswebroot%/ojsxc/img/edit.png');
-	background-repeat: no-repeat;
-	background-position: center center;
-	background-size: 15px 15px;
+/* 	background-image: url('../img/edit.png'); */
+/* 	background-repeat: no-repeat; */
+/* 	background-position: center center; */
+/* 	background-size: 15px 15px; */
+   transform: scaleX(-1);
 }
 
 ul#jsxc_buddylist .jsxc_delete {
-	text-transform: lowercase;
-	font-weight: bold;
-	vertical-align: middle;
-	font-size: 17px;
+/* 	text-transform: lowercase; */
+/* 	font-weight: bold; */
+/* 	vertical-align: middle; */
+/* 	font-size: 17px; */
 }
 
 div#jsxc_toggleRoster {
@@ -362,14 +323,6 @@ div#jsxc_windowList>ul>li {
 	cursor: pointer;
 }
 
-div#jsxc_windowList>ul>li .jsxc_name {
-	cursor: pointer;
-	overflow:hidden;
-	text-overflow: ellipsis;
-   white-space: nowrap;
-   width: 150px;
-}
-
 div#jsxc_windowList>ul>li.jsxc_unreadMsg .jsxc_name {
 	font-style: italic;
 }
@@ -398,12 +351,7 @@ div.jsxc_bar {
 div.jsxc_bar:hover {
 	color: #FAFAFA;
 }
-/*.jsxc_online .jsxc_window{
-    border-left:4px solid #00BFFF;
-}
-.jsxc_offline .jsxc_window{
-    border-left:4px solid #A4A4A4;
-}*/
+
 div.jsxc_window {
 	display: none;
 	width: 200px;
@@ -430,7 +378,6 @@ div.jsxc_window .jsxc_tools {
 div.jsxc_window .jsxc_textarea {
 	width: 200px;
 	height: 200px;
-	background-color: #A4A4A4;
 	overflow: hidden;
 }
 
@@ -547,7 +494,7 @@ div.jsxc_settings li:first-child {
 	border-top: 1px solid #ccc;
 }
 
-div.jsxc_settings li:hover:not (.jsxc_disabled ){
+div.jsxc_settings li:hover:not(.jsxc_disabled){
 	color: #fff;
 	background-color: #3F8FBA;
 }
