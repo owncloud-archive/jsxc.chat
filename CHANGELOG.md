@@ -1,3 +1,7 @@
+v0.5.2 / 2014-01-28
+===
+- upgrade jsxc to v0.5.2
+
 v0.5.1 / 2014-01-27
 ===
 - downgrade required oc version

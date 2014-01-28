@@ -77,15 +77,6 @@ $(function() {
       },
       logoutElement: $('#logout'),
       checkFlash: false,
-      debug: function(msg, data) {
-         if (data) {
-            console.log(msg, data); 
-            jsxc.log = jsxc.log + msg + ' >> ' + $("<span>").prepend(data).html() + '\n';
-         } else {
-            console.log(msg);
-            jsxc.log = jsxc.log + msg + '\n';
-         }
-      },
       rosterAppend: 'body',
       root: oc_appswebroots.ojsxc,
       // @TODO: don't include get turn credentials routine into jsxc
