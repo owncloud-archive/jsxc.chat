@@ -1,9 +1,13 @@
-.jsxc_online {
+.jsxc_online, .jsxc_chat {
 	border-left: 4px solid #00BFFF;
 }
 
-.jsxc_away {
+.jsxc_away, .jsxc_xa {
 	border-left: 4px solid orange;
+}
+
+.jsxc_dnd {
+	border-left: 4px solid red;
 }
 
 .jsxc_offline {
@@ -167,6 +171,7 @@ ul#jsxc_buddylist.jsxc_hideOffline .jsxc_offline {
 	color: #b1b1b1;
 	overflow: hidden;
 	position: relative;
+	font-family: Arial;
 }
 
 .jsxc_avatar img {
@@ -182,25 +187,29 @@ div#jsxc_roster p {
 	color: #939393;
 }
 
-div#jsxc_menu {
+div#jsxc_roster > .jsxc_bottom {
 	position: absolute;
 	left: 0px;
 	bottom: 75px;
 	height: 30px;
-	width: 190px;
+	width: 200px;
 	border-top: 1px solid #939393;
-	padding-left: 10px;
+	padding-left: 0px;
 	background-color: #282323;
 	color: #939393;
 	cursor: pointer;
 	line-height: 30px;
 }
 
-div#jsxc_menu:hover {
+div#jsxc_roster > .jsxc_bottom > div:hover {
 	color: #FAFAFA;
 }
 
-div#jsxc_menu ul {
+div#jsxc_roster > .jsxc_bottom > div > span {
+   cursor:pointer;
+}
+   
+div#jsxc_roster > .jsxc_bottom ul {
 	width: 190px;
 	position: absolute;
 	bottom: 30px;
@@ -211,7 +220,7 @@ div#jsxc_menu ul {
 	background-color: #282323;
 }
 
-div#jsxc_menu li {
+div#jsxc_roster > .jsxc_bottom li {
 	height: 30px;
 	background-color: #282323;
 	color: #939393;
@@ -219,15 +228,61 @@ div#jsxc_menu li {
 	width: 180px;
 	padding-left: 10px;
 	line-height: 30px;
+	text-align:left;
+	overflow:hidden;
+	text-overflow: ellipsis;
+   white-space: nowrap;
 }
 
-div#jsxc_menu li:hover {
+div#jsxc_roster > .jsxc_bottom li:hover {
 	color: #fff;
 	background-color: #3F8FBA;
 }
 
-div#jsxc_menu ul li:last-child {
+div#jsxc_roster > .jsxc_bottom ul li:last-child {
 	border-bottom: 1px solid #939393;
+}
+
+#jsxc_menu, #jsxc_avatar, #jsxc_notice{
+	height: 30px;
+	width: 30px;
+}
+#jsxc_avatar{
+	float:left;
+	margin-left: 2px;
+	width: 25px;
+}
+#jsxc_menu {
+	cursor:pointer;
+	float:right;
+	text-align:center;
+	width: 25px;
+}
+#jsxc_menu > span{
+	font-size: 25px;
+   line-height: 30px;
+   font-family: "Open Sans", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
+}
+#jsxc_notice {
+	float:right;
+	text-align:center;
+	line-height:30px;
+}
+#jsxc_notice > span:empty{
+	display:none;
+}
+#jsxc_notice span{
+	background-color: #fbc14c;
+	border-radius:11px;
+	color: black;
+	font-size:80%;
+	padding:2px;
+}
+
+#jsxc_presence{
+	cursor:pointer;
+	padding-left:2px;
+	overflow: hidden;
 }
 
 ul#jsxc_buddylist .jsxc_options {
