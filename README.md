@@ -1,3 +1,5 @@
+__Bugtracker and issues:__ https://github.com/sualko/jsxc/issues
+
 # Owncloud JavaScript Xmpp Client
 
 __Beware! This is beta software.__
