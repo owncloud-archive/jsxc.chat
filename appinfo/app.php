@@ -8,7 +8,6 @@
  * 
  * @author Klaus Herberth
 */
-
 OCP\App::registerAdmin ( 'ojsxc', 'settings' );
 
 // ############# Javascript #############

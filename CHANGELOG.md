@@ -1,3 +1,8 @@
+v0.6.0 / 2014-02-28
+===
+- upgrade jsxc to v0.6.0
+- add external auth script for ejabberd (on github)
+
 v0.5.2 / 2014-01-28
 ===
 - upgrade jsxc to v0.5.2
