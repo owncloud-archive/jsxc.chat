@@ -559,7 +559,42 @@ var jsxc;
 
             return jsxc.l[k] || key.replace(/_/gi, ' ');
          });
-      }
+      },
+	  
+	  /**
+       * Get browser cookies.
+       * 
+       * @memberOf jsxc
+       * @param cname cookie name.
+       * @param def falback if cookie not set.
+       */
+      getCookie: function(cname, def) {
+         
+		var name = cname + '=';
+		var ca = document.cookie.split(';');
+		for(var i=0; i<ca.length; i++){
+			var c = ca[i].trim();
+			if (c.indexOf(name)==0) return c.substring(name.length,c.length);
+		}
+		
+		return def || '';
+      },
+	  
+	  /**
+       * Set browser cookies.
+       * 
+       * @memberOf jsxc
+       * @param cname cookie name.
+       * @param cvalue cookie value.
+	   * @param exdays duration.
+       */
+      setCookie: function(cname, cvalue, exdays) {
+         
+		var d = new Date();
+		d.setTime(d.getTime()+(exdays*24*60*60*1000));
+		var expires = 'expires='+d.toGMTString();
+		document.cookie = cname + '=' + cvalue + '; ' + expires;
+      },
    };
 
    /**
@@ -650,7 +685,10 @@ var jsxc;
       },
 
       /** Set to true if you want to hide offline buddies. */
-      hideOffline: false
+      hideOffline: false,
+	  
+	  /** Set notification Sounds true/false. **/
+	  sounds: jsxc.getCookie('chatsounds', 'ON')
    };
 
    /**
@@ -1219,7 +1257,36 @@ var jsxc;
       updatePresence: function(cid, pres) {
          
          $('.jsxc_presence_' + cid).removeClass('jsxc_' + jsxc.CONST.STATUS.join(' jsxc_')).addClass('jsxc_' + pres);
+      },
+	  
+	  /**
+       * Play chat sounds.
+       * 
+       * @memberOf jsxc.gui
+       * @param id sound audio element id.
+	   * @param id loop play audio as loop.
+       */
+      playNotification: function(id, loop) {
+		  
+		var sounds = jsxc.options.sounds,
+		audio = '';
+		
+        if(sounds == 'ON'){
+			audio = document.getElementById(id);
+			audio.play();
+		}
+			
+		if(typeof loop != 'undefined' && loop == true){
+			audio.loop = true;
+			audio.addEventListener('ended', function() {
+				this.currentTime = 0;
+				this.play();
+			 }, false);
+		}
+		
+		return audio;
       }
+	  
    };
 
    /**
@@ -1236,12 +1303,19 @@ var jsxc;
        * @returns {undefined}
        */
       init: function() {
-         $(jsxc.options.rosterAppend + ':first').append($(jsxc.gui.template.get('roster')));
+         $(jsxc.options.rosterAppend + ':first').append($(jsxc.gui.template.get('roster'))).append($(jsxc.gui.template.get('soundFiles')));
 
          if (jsxc.options.get('hideOffline')) {
             $('#jsxc_menu .jsxc_hideOffline').text(jsxc.translate('%%Show offline%%'));
             $('#jsxc_buddylist').addClass('jsxc_hideOffline');
          }
+		 
+		 if (jsxc.options.sounds == 'ON') {
+            $('#jsxc_menu .jsxc_setSounds').text(jsxc.translate('%%Mute%%'));
+         }
+		 else {
+			 $('#jsxc_menu .jsxc_setSounds').text(jsxc.translate('%%Unmute%%'));
+		 }
 
          $('#jsxc_menu .jsxc_hideOffline').click(function() {
             var hideOffline = !jsxc.options.get('hideOffline');
@@ -1273,6 +1347,21 @@ var jsxc;
             var self = $(this);
             
             jsxc.gui.changePresence(self.data('pres'));
+         });
+		 
+		 $('#jsxc_menu .jsxc_setSounds').click(function(e) {
+			e.preventDefault();
+            if (jsxc.options.sounds == 'ON') {
+				jsxc.options.sounds = 'OFF';
+				jsxc.setCookie('chatsounds', 'OFF', 365);
+				$('#jsxc_menu .jsxc_setSounds').text(jsxc.translate('%%Unmute%%'));
+			}
+			else {
+				jsxc.options.sounds = 'ON';
+				jsxc.setCookie('chatsounds', 'ON', 365);
+				$('#jsxc_menu .jsxc_setSounds').text(jsxc.translate('%%Mute%%'));
+			}
+			return false;
          });
 
          $('#jsxc_buddylist').slimScroll({
@@ -2109,6 +2198,7 @@ var jsxc;
                  <ul>\
                      <li class="jsxc_addBuddy">%%Add_buddy%%</li>\
                      <li class="jsxc_hideOffline">%%Hide offline%%</li>\
+					 <li class="jsxc_setSounds"/>\
                      <li class="jsxc_about">%%About%%</li>\
                  </ul>\
               </div>\
@@ -2192,7 +2282,11 @@ var jsxc;
          Real-time chat app for OwnCloud. This app requires external<br /> XMPP server (openfire, ejabberd etc.).<br />\
          <br />\
          <i>Released under the MIT license</i></p>\
-         <p class="jsxc_right"><a class="button jsxc_debuglog" href="#">Show debug log</a></p>'
+         <p class="jsxc_right"><a class="button jsxc_debuglog" href="#">Show debug log</a></p>',
+	  soundFiles: '<audio id="chatNotification" src="'+ OC.filePath('ojsxc', 'sounds', 'incomingMessage.wav') +'"></audio>\
+	  	 <audio id="callNotification" src="'+ OC.filePath('ojsxc', 'sounds', 'incomingCall.wav') +'" preload="auto"></audio>\
+	  	 <audio id="userJoined" src="'+ OC.filePath('ojsxc', 'sounds', 'joined.wav') +'" preload="auto"></audio>\
+         <audio id="userLeft" src="'+ OC.filePath('ojsxc', 'sounds', 'left.wav') +'" preload="auto"></audio>',
    };
 
    /**
@@ -3289,6 +3383,8 @@ var jsxc;
          }
 
          jsxc.gui.window.postMessage(cid, 'in', msg);
+		 
+		 jsxc.gui.playNotification('chatNotification');
       },
 
       /**
@@ -3879,6 +3975,8 @@ var jsxc;
          list.append(notice);
 
          $('#jsxc_notice > span').text(++jsxc.notice._num);
+		 
+		 jsxc.gui.playNotification('userJoined');
 
          if (!id) {
             var saved = jsxc.storage.getUserItem('notices') || {};
@@ -3975,7 +4073,9 @@ var jsxc;
          New_message_from: 'New message from',
          Should_we_notify_you_: 'Should we notify you about new messages in the future?',
          Please_accept_: 'Please click the "Allow" button at the top.',
-         dnd: 'Do Not Disturb'
+         dnd: 'Do Not Disturb',
+		 Mute: 'Mute',
+		 Unmute: 'Unmute'
       },
       de: {
          please_wait_until_we_logged_you_in: 'Bitte warte bis wir dich eingeloggt haben.',
@@ -4054,7 +4154,9 @@ var jsxc;
          Hide_offline: 'Offline ausblenden',
          Show_offline: 'Offline einblenden',
          About: 'Über',
-         dd: 'Beschäftigt'
+         dd: 'Beschäftigt',
+		 Mute: 'Dämpfen',
+		 Unmute: 'Ton ein'
       }
    };
 }(jQuery));

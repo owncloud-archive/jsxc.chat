@@ -397,9 +397,15 @@ jsxc.gui.template.videoWindow = '<div class="jsxc_webrtc">\
          }
 
          var dialog = jsxc.gui.dialog.open(jsxc.gui.template.get('incomingCall', jsxc.jidToCid(jid)));
+		 
+		 var audio = jsxc.gui.playNotification('callNotification', true);
 
          dialog.find('.jsxc_accept').click(function() {
             self.reqUserMedia();
+			
+			audio.pause();
+			audio.currentTime = 0;
+			jsxc.gui.playNotification('userJoined');
          });
 
          dialog.find('.jsxc_reject').click(function() {
@@ -407,6 +413,10 @@ jsxc.gui.template.videoWindow = '<div class="jsxc_webrtc">\
 
             sess.sendTerminate('decline');
             sess.terminate();
+			
+			audio.pause();
+			audio.currentTime = 0;
+			jsxc.gui.playNotification('userLeft');
          });
       },
 
