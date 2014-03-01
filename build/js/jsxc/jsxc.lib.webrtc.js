@@ -405,6 +405,7 @@ jsxc.gui.template.videoWindow = '<div class="jsxc_webrtc">\
 			
 			audio.pause();
 			audio.currentTime = 0;
+			jsxc.gui.playNotification('userJoined');
          });
 
          dialog.find('.jsxc_reject').click(function() {
@@ -415,6 +416,7 @@ jsxc.gui.template.videoWindow = '<div class="jsxc_webrtc">\
 			
 			audio.pause();
 			audio.currentTime = 0;
+			jsxc.gui.playNotification('userLeft');
          });
       },
 
