@@ -235,9 +235,14 @@ div#jsxc_roster>.jsxc_bottom li {
 	white-space: nowrap;
 }
 
-div#jsxc_roster>.jsxc_bottom li:hover {
+div#jsxc_roster>.jsxc_bottom li:hover:not(.jsxc_disabled) {
 	color: #fff;
 	background-color: #3F8FBA;
+}
+
+div#jsxc_roster>.jsxc_bottom li.jsxc_disabled {
+   color: #595959;
+   cursor: default;
 }
 
 div#jsxc_roster>.jsxc_bottom ul li:last-child {

@@ -20,7 +20,7 @@ module.exports = function(grunt) {
          main: {
             files: [ {
                expand: true,
-               src: [ 'js/*.js', 'css/*', 'appinfo/*', 'ajax/*', 'img/*', 'templates/*', 'settings.php', 'LICENSE' ],
+               src: [ 'js/*.js', 'css/*', 'appinfo/*', 'ajax/*', 'img/*', 'templates/*', 'sound/*', 'settings.php', 'LICENSE' ],
                dest: 'build/'
             }, {
                expand: true,
