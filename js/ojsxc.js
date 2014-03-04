@@ -45,6 +45,11 @@ $(function() {
 
    $(document).on('ready.roster.jsxc', onRosterReady);
    $(document).on('toggle.roster.jsxc', onRosterToggle);
+   
+   $(document).on('connected.jsxc', function(){
+      //reset default avatar cache
+      jsxc.storage.removeUserItem('defaultAvatars');
+   });
 
    jsxc.log = "";
    jsxc.tmp = null;
