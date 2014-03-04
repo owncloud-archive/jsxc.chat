@@ -1,5 +1,5 @@
 /**
- * ojsxc v0.6.1-alpha - 2014-03-03
+ * ojsxc v0.6.1-alpha2 - 2014-03-04
  * 
  * Copyright (c) 2014 Klaus Herberth <klaus@jsxc.org> <br>
  * Released under the MIT license
@@ -7,10 +7,10 @@
  * Please see http://jsxc.org/
  * 
  * @author Klaus Herberth <klaus@jsxc.org>
- * @version 0.6.1-alpha
+ * @version 0.6.1-alpha2
  */
 
-/* global jsxc, oc_appswebroots, OC, $ */
+/* global jsxc, oc_appswebroots, OC, $, oc_requesttoken */
 
 /**
  * Make room for the roster inside the owncloud template.
@@ -99,6 +99,52 @@ $(function() {
       otr: {
          SEND_WHITESPACE_TAG: true,
          WHITESPACE_START_AKE: true
+      },
+      defaultAvatar: function(jid) {
+         var cache = jsxc.storage.getUserItem('defaultAvatars') || {};
+         
+         $(this).each(function() {
+            var user = jid.replace(/@.+/, '');
+            var ie8fix = true;
+            var $div = $(this).find('.jsxc_avatar');
+            var size = $div.width();
+            var key = user + '@' + size;
+
+            var handleResponse = function(result) {
+               if (typeof (result) === 'object') {
+                  if (result.data && result.data.displayname) {
+                     $div.imageplaceholder(user, result.data.displayname);
+                  } else {
+                     $div.imageplaceholder(user);
+                  }
+               } else {
+                  $div.show();
+                  if (ie8fix === true) {
+                     $div.html('<img src="' + result + '#' + Math.floor(Math.random() * 1000) + '">');
+                  } else {
+                     $div.html('<img src="' + result + '">');
+                  }
+               }
+            };
+            
+            if (typeof cache[key] === 'undefined' || cache[key] === null) {
+               OC.Router.registerLoadedCallback(function() {
+                  var url = OC.Router.generate('core_avatar_get', {
+                     user: user,
+                     size: size
+                  }) + '?requesttoken=' + oc_requesttoken;
+                  
+                  $.get(url, function(result){
+                     handleResponse(result);
+                     var val = (typeof (result) === 'object')? result: url;
+                     
+                     jsxc.storage.updateUserItem('defaultAvatars', key, val);
+                  });
+               });
+            } else {
+               handleResponse(cache[key]);
+            }
+         });
       }
    });
 
