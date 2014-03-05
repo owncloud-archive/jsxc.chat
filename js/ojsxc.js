@@ -90,6 +90,7 @@ $(function() {
          return OC.currentUser != null;
       },
       otr: {
+         debug: true,
          SEND_WHITESPACE_TAG: true,
          WHITESPACE_START_AKE: true
       },
