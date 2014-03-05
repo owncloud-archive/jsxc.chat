@@ -45,9 +45,9 @@ $(function() {
 
    $(document).on('ready.roster.jsxc', onRosterReady);
    $(document).on('toggle.roster.jsxc', onRosterToggle);
-   
-   $(document).on('connected.jsxc', function(){
-      //reset default avatar cache
+
+   $(document).on('connected.jsxc', function() {
+      // reset default avatar cache
       jsxc.storage.removeUserItem('defaultAvatars');
    });
 
@@ -95,7 +95,7 @@ $(function() {
       },
       defaultAvatar: function(jid) {
          var cache = jsxc.storage.getUserItem('defaultAvatars') || {};
-         
+
          $(this).each(function() {
             var user = jid.replace(/@.+/, '');
             var ie8fix = true;
@@ -119,18 +119,19 @@ $(function() {
                   }
                }
             };
-            
+
             if (typeof cache[key] === 'undefined' || cache[key] === null) {
                OC.Router.registerLoadedCallback(function() {
                   var url = OC.Router.generate('core_avatar_get', {
                      user: user,
                      size: size
                   }) + '?requesttoken=' + oc_requesttoken;
-                  
-                  $.get(url, function(result){
-                     handleResponse(result);
-                     var val = (typeof (result) === 'object')? result: url;
-                     
+
+                  $.get(url, function(result) {
+
+                     var val = (typeof result === 'object') ? result : url;
+                     handleResponse(val);
+
                      jsxc.storage.updateUserItem('defaultAvatars', key, val);
                   });
                });
