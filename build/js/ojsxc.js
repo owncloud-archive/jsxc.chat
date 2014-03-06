@@ -1,5 +1,5 @@
 /**
- * ojsxc v0.6.1-alpha2 - 2014-03-04
+ * ojsxc v0.6.1-alpha3 - 2014-03-06
  * 
  * Copyright (c) 2014 Klaus Herberth <klaus@jsxc.org> <br>
  * Released under the MIT license
@@ -7,7 +7,7 @@
  * Please see http://jsxc.org/
  * 
  * @author Klaus Herberth <klaus@jsxc.org>
- * @version 0.6.1-alpha2
+ * @version 0.6.1-alpha3
  */
 
 /* global jsxc, oc_appswebroots, OC, $, oc_requesttoken */
@@ -57,9 +57,9 @@ $(function() {
 
    $(document).on('ready.roster.jsxc', onRosterReady);
    $(document).on('toggle.roster.jsxc', onRosterToggle);
-   
-   $(document).on('connected.jsxc', function(){
-      //reset default avatar cache
+
+   $(document).on('connected.jsxc', function() {
+      // reset default avatar cache
       jsxc.storage.removeUserItem('defaultAvatars');
    });
 
@@ -102,12 +102,13 @@ $(function() {
          return OC.currentUser != null;
       },
       otr: {
+         debug: true,
          SEND_WHITESPACE_TAG: true,
          WHITESPACE_START_AKE: true
       },
       defaultAvatar: function(jid) {
          var cache = jsxc.storage.getUserItem('defaultAvatars') || {};
-         
+
          $(this).each(function() {
             var user = jid.replace(/@.+/, '');
             var ie8fix = true;
@@ -131,18 +132,19 @@ $(function() {
                   }
                }
             };
-            
+
             if (typeof cache[key] === 'undefined' || cache[key] === null) {
                OC.Router.registerLoadedCallback(function() {
                   var url = OC.Router.generate('core_avatar_get', {
                      user: user,
                      size: size
                   }) + '?requesttoken=' + oc_requesttoken;
-                  
-                  $.get(url, function(result){
-                     handleResponse(result);
-                     var val = (typeof (result) === 'object')? result: url;
-                     
+
+                  $.get(url, function(result) {
+
+                     var val = (typeof result === 'object') ? result : url;
+                     handleResponse(val);
+
                      jsxc.storage.updateUserItem('defaultAvatars', key, val);
                   });
                });

@@ -463,6 +463,19 @@ div.jsxc_chatmessage,input.jsxc_chatmessage {
 	width: 157px;
 	word-wrap: break-word;
 	background-color: #fff;
+	position:relative;
+}
+div.jsxc_chatmessage.jsxc_received{
+	
+}
+div.jsxc_chatmessage.jsxc_received:before{
+	content: '✓';
+	position: absolute;
+	bottom: 2px;
+	left: 4px;
+	font-size: 10px;
+	line-height: 10px;
+	color: green;
 }
 
 div.jsxc_chatmessage a {
