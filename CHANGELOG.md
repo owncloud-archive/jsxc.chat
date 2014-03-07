@@ -1,3 +1,9 @@
+v0.7.0 / 2014-03-07
+===
+- upgrade jsxc to v0.7.0
+- enable otr debugging
+- add oc avatars
+
 v0.6.0 / 2014-02-28
 ===
 - upgrade jsxc to v0.6.0
