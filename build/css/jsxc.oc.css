@@ -1,5 +1,5 @@
 /**
- * ojsxc v0.7.0 - 2014-03-07
+ * ojsxc v0.7.1 - 2014-03-18
  * 
  * Copyright (c) 2014 Klaus Herberth <klaus@jsxc.org> <br>
  * Released under the MIT license
@@ -7,7 +7,7 @@
  * Please see http://jsxc.org/
  * 
  * @author Klaus Herberth <klaus@jsxc.org>
- * @version 0.7.0
+ * @version 0.7.1
  */
 
 .jsxc_online,.jsxc_chat {
@@ -280,10 +280,17 @@ div#jsxc_roster>.jsxc_bottom ul li:last-child {
 }
 
 #jsxc_menu>span {
-	font-size: 25px;
-	line-height: 30px;
-	font-family: "Open Sans", "Helvetica Neue", "Helvetica", "Arial",
-		sans-serif;
+	opacity: 0.5;
+	display:block;
+	width:25px;
+	height: 30px;
+	background-image: url('%appswebroot%/ojsxc/img/gear.svg');
+   background-size: 18px 18px;
+   background-repeat: no-repeat;
+   background-position: center center;
+}
+#jsxc_menu:hover>span{
+	opacity: 1;
 }
 
 #jsxc_notice {

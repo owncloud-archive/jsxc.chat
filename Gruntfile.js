@@ -20,7 +20,7 @@ module.exports = function(grunt) {
          main: {
             files: [ {
                expand: true,
-               src: [ 'js/*.js', 'css/*', 'appinfo/*', 'ajax/*', 'img/*', 'templates/*', 'sound/*', 'settings.php', 'LICENSE' ],
+               src: [ 'js/*.js', 'css/*', 'appinfo/*', 'ajax/*', 'img/**', 'templates/*', 'sound/*', 'settings.php', 'LICENSE' ],
                dest: 'build/'
             }, {
                expand: true,
@@ -41,6 +41,24 @@ module.exports = function(grunt) {
                src: [ 'build/js/*.js', 'build/css/jsxc.oc.css' ]
             }
          }
+      },
+      replace: {
+         info: {
+            src: [ 'build/appinfo/info.xml' ],
+            overwrite: true,
+            replacements: [ {
+               from: /<version>[\d.]+<\/version>/,
+               to: "<version><%= app.version %></version>"
+            } ]
+         },
+         version: {
+            src: [ 'build/appinfo/version' ],
+            overwrite: true,
+            replacements: [ {
+               from: /[\d.]+/,
+               to: "<%= app.version %>"
+            } ]
+         }
       }
    });
 
@@ -49,8 +67,9 @@ module.exports = function(grunt) {
    grunt.loadNpmTasks('grunt-contrib-copy');
    grunt.loadNpmTasks('grunt-contrib-clean');
    grunt.loadNpmTasks('grunt-banner');
+   grunt.loadNpmTasks('grunt-text-replace');
 
    // Default task.
-   grunt.registerTask('default', [ 'jshint', 'clean', 'copy', 'usebanner' ]);
+   grunt.registerTask('default', [ 'jshint', 'clean', 'copy', 'usebanner', 'replace' ]);
 
 };

@@ -1,3 +1,9 @@
+v0.7.1 / 2014-03-18
+===
+- upgrade jsxc to v0.7.1
+- replace utf8 gear with svg gear
+- add missing emoticons
+
 v0.7.0 / 2014-03-07
 ===
 - upgrade jsxc to v0.7.0
