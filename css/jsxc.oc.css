@@ -268,10 +268,17 @@ div#jsxc_roster>.jsxc_bottom ul li:last-child {
 }
 
 #jsxc_menu>span {
-	font-size: 25px;
-	line-height: 30px;
-	font-family: "Open Sans", "Helvetica Neue", "Helvetica", "Arial",
-		sans-serif;
+	opacity: 0.5;
+	display:block;
+	width:25px;
+	height: 30px;
+	background-image: url('%appswebroot%/ojsxc/img/gear.svg');
+   background-size: 18px 18px;
+   background-repeat: no-repeat;
+   background-position: center center;
+}
+#jsxc_menu:hover>span{
+	opacity: 1;
 }
 
 #jsxc_notice {
