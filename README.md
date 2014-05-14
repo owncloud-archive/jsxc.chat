@@ -1,4 +1,5 @@
 __Bugtracker and issues:__ https://github.com/sualko/jsxc/issues
+__Wiki__ https://github.com/sualko/jsxc/wiki
 
 # Owncloud JavaScript Xmpp Client
 
@@ -6,44 +7,8 @@ __Beware! This is beta software.__
 
 Real-time chat app for OwnCloud. This app requires external XMPP server (openfire, ejabberd etc.).
 
-### Features
-- integration into existing ui
-- one-to-one conversation (XMPP)
-- encrypted one-to-one conversation (OTR)
-  - use of whitespace tags to start a OTR session
-- user verification (SMP)
-- encrypted one-to-one video call (WebRTC)
-  - [TURN REST API](http://tools.ietf.org/html/draft-uberti-behave-turn-rest-00)
-  - fullscreen mode
-  - snapshots
-- auto link-detection
-- emotions
-- roster management 
-- multi-language support (de, en)
-- multi tab support
-- vCard avatar
+More information about features, supported protocols/browsers and planned features at [www.jsxc.org](http://www.jsxc.org/).
 
-### Supported protocols
-- XMPP Core (RFC6120)
-- XMPP IM (RFC6121)
-- Bidirectional-streams Over Synchronous HTTP (XEP-0124)
-- XMPP Over BOSH (XEP-0206)
-- Service Discovery (XEP-0030)
-- CAP (XEP-0127)
-- Jingle (XEP-0166)
-- Jingle RTP Sessions (XEP-0167)
-- vcard-temp (XEP-0054)
-- vCard-Based Avatars (XEP-0153)
-
-### Supported browsers
-- Full support for __Chrome__ and __Firefox__.
-- __IE__ doesn't support multi tabs, WebRTC and Notifications.
-- __Safari__ doesn't support WebRTC and Notifications.
-
-### Planned features
-- multi user chat
-- video conference
-- encrypted file transfer 
 
 ## User notes
 
