@@ -40,8 +40,9 @@ OCP\Util::addScript ( 'ojsxc', 'ojsxc' );
 // ############# CSS #############
 OCP\Util::addStyle ( 'ojsxc', 'jquery.mCustomScrollbar' );
 OCP\Util::addStyle ( 'ojsxc', 'jquery.colorbox' );
+OCP\Util::addStyle ( 'ojsxc', '../js/jsxc/jsxc' );
+OCP\Util::addStyle ( 'ojsxc', '../js/jsxc/jsxc.webrtc' );
 OCP\Util::addStyle ( 'ojsxc', 'jsxc.oc' );
-OCP\Util::addStyle ( 'ojsxc', 'webrtc' );
 OCP\Util::addStyle ( 'ojsxc', 'muc' );
 // OCP\Util::addStyle ( 'ojsxc', 'log' );
 

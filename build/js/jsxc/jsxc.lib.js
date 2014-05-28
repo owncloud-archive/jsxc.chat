@@ -1,13 +1,13 @@
 /**
- * jsxc v0.7.1 - 2014-03-18
+ * jsxc v0.7.2 - 2014-05-28
  * 
  * Copyright (c) 2014 Klaus Herberth <klaus@jsxc.org> <br>
  * Released under the MIT license
  * 
- * Please see http://jsxc.org/
+ * Please see http://www.jsxc.org/
  * 
  * @author Klaus Herberth <klaus@jsxc.org>
- * @version 0.7.1
+ * @version 0.7.2
  */
 
 var jsxc;
@@ -22,7 +22,7 @@ var jsxc;
     */
    jsxc = {
       /** Version of jsxc */
-      version: '0.7.1',
+      version: '0.7.2',
 
       /** True if i'm the master */
       master: false,
@@ -197,9 +197,9 @@ var jsxc;
 
          // detect language
          var lang;
-         if (jsxc.storage.getItem('lang') !== null){
+         if (jsxc.storage.getItem('lang') !== null) {
             lang = jsxc.storage.getItem('lang');
-         } else if(jsxc.options.autoLang && navigator.language) {
+         } else if (jsxc.options.autoLang && navigator.language) {
             lang = navigator.language.substr(0, 2);
          } else {
             lang = jsxc.options.defaultLang;
@@ -483,7 +483,7 @@ var jsxc;
             jsxc.gui.roster.add(value);
          });
 
-         $(document).trigger('loaded.roster.jsxc');
+         $(document).trigger('cloaded.roster.jsxc');
       },
 
       /**
@@ -851,7 +851,10 @@ var jsxc;
                jsxc.storage.setUserItem('avatar_' + aid, src);
                setAvatar(src);
             }, Strophe.getBareJidFromJid(jid), function(msg) {
-               jsxc.error('Could not load vcard.', msg);
+               jsxc.warn('Could not load vcard.', msg);
+
+               jsxc.storage.setUserItem('avatar_' + aid, 0);
+               setAvatar(0);
             });
          }
       },
@@ -970,10 +973,10 @@ var jsxc;
 
          // Add handler
 
-         $('#jsxc_facebox > div:gt(0)').hide();
-         $('#jsxc_facebox select').change(function() {
-            $('#jsxc_facebox > div:gt(0)').hide();
-            $('#jsxc_facebox > div:eq(' + $(this).prop('selectedIndex') + ')').slideDown({
+         $('#jsxc_dialog > div:gt(0)').hide();
+         $('#jsxc_dialog select').change(function() {
+            $('#jsxc_dialog > div:gt(0)').hide();
+            $('#jsxc_dialog > div:eq(' + $(this).prop('selectedIndex') + ')').slideDown({
                complete: function() {
                   jsxc.gui.dialog.resize();
                }
@@ -981,7 +984,7 @@ var jsxc;
          });
 
          // Manual
-         $('#jsxc_facebox > div:eq(1) a.creation').click(function() {
+         $('#jsxc_dialog > div:eq(1) a.creation').click(function() {
             if (jsxc.master) {
                jsxc.buddyList[cid].trust = true;
             }
@@ -996,8 +999,8 @@ var jsxc;
          });
 
          // Question
-         $('#jsxc_facebox > div:eq(2) a.creation').click(function() {
-            var div = $('#jsxc_facebox > div:eq(2)');
+         $('#jsxc_dialog > div:eq(2) a.creation').click(function() {
+            var div = $('#jsxc_dialog > div:eq(2)');
             var sec = div.find('#jsxc_secret2').val();
             var quest = div.find('#jsxc_quest').val();
 
@@ -1026,8 +1029,8 @@ var jsxc;
          });
 
          // Secret
-         $('#jsxc_facebox > div:eq(3) .creation').click(function() {
-            var div = $('#jsxc_facebox > div:eq(3)');
+         $('#jsxc_dialog > div:eq(3) .creation').click(function() {
+            var div = $('#jsxc_dialog > div:eq(3)');
             var sec = div.find('#jsxc_secret').val();
 
             if (sec === '') {
@@ -1372,6 +1375,10 @@ var jsxc;
             jsxc.gui.showContactDialog();
          });
 
+         $('#jsxc_roster .jsxc_onlineHelp').click(function() {
+            window.open("http://www.jsxc.org/manual.html", "onlineHelp");
+         });
+
          $('#jsxc_roster .jsxc_about').click(function() {
             jsxc.gui.showAboutDialog();
          });
@@ -1388,7 +1395,7 @@ var jsxc;
 
          $('#jsxc_buddylist').slimScroll({
             distance: '3px',
-            height: ($('#jsxc_roster').height() - 107) + 'px',
+            height: ($('#jsxc_roster').height() - 31) + 'px',
             width: $('#jsxc_buddylist').width() + 'px',
             color: '#fff',
             opacity: '0.5'
@@ -1407,13 +1414,13 @@ var jsxc;
          $('#jsxc_presence > span').text($('#jsxc_presence > ul .jsxc_' + pres).text());
          jsxc.gui.updatePresence('own', pres);
 
-         $(document).on('loaded.roster.jsxc', function() {
+         $(document).on('cloaded.roster.jsxc', function() {
             jsxc.gui.updateAvatar($('#jsxc_avatar'), jsxc.storage.getItem('jid'), 'own');
          });
 
          $('#jsxc_roster').tooltip({
             show: {
-               delay: 1000
+               delay: 600
             },
             content: function() {
                return $(this).attr('title').replace(/\n/g, '<br />');
@@ -2015,6 +2022,7 @@ var jsxc;
             uid: uid.replace(/:/, '-'),
             received: false
          };
+
          chat.unshift(post);
          jsxc.storage.setUserItem('chat_' + cid, chat);
 
@@ -2234,7 +2242,7 @@ var jsxc;
                         </ul>\
                     </div>\
                     <div class="jsxc_transfer"/>\
-                    <span class="jsxc_close">X</span>\
+                    <div class="jsxc_close">X</div>\
                 </div>\
                 <div class="jsxc_textarea"/>\
                 <input type="text" class="jsxc_textinput jsxc_chatmessage jsxc_out" placeholder="...%%Message%%"/>\
@@ -2252,6 +2260,7 @@ var jsxc;
                      <li class="jsxc_muteNotification">%%Mute%%</li>\
                      <li class="jsxc_addBuddy">%%Add_buddy%%</li>\
                      <li class="jsxc_hideOffline">%%Hide offline%%</li>\
+                     <li class="jsxc_onlineHelp">%%Online help%%</li>\
                      <li class="jsxc_about">%%About%%</li>\
                  </ul>\
               </div>\
@@ -2307,9 +2316,9 @@ var jsxc;
       approveDialog: '<h3>%%Subscription_request%%</h3>\
         <p>%%You_have_a_request_from%% <b class="jsxc_their_jid"></b>.</p>\
         <p class="jsxc_right"><a href="#" class="button jsxc_deny">%%Deny%%</a> <a href="#" class="button creation jsxc_approve">%%Approve%%</a></p>',
-      removeDialog: '<h3>Remove Buddy</h3>\
-        <p>%%You_are_about_to_remove_%%</p>\
-        <p class="jsxc_right"><a href="#" class="button jsxc_cancel jsxc_close">%%Cancel%%</a> <a href="#" class="button creation">%%Continue%%</a></p>',
+      removeDialog: '<h3>%%Remove buddy%%</h3>\
+        <p class="jsxc_maxWidth">%%You_are_about_to_remove_%%</p>\
+        <p class="jsxc_right"><a href="#" class="button jsxc_cancel jsxc_close">%%Cancel%%</a> <a href="#" class="button creation">%%Remove%%</a></p>',
       waitAlert: '<h3>%%Please_wait%%</h3>\
         <p>{{msg}}</p>\
         <p class="jsxc_center"><img src="{{root}}/img/loading.gif" alt="wait" width="32px" height="32px" /></p>',
@@ -2381,12 +2390,14 @@ var jsxc;
             return uid;
          };
 
-         // jsxc.xmpp.conn.xmlInput = function(data) {
-         // console.log('<', data);
-         // };
-         // jsxc.xmpp.conn.xmlOutput = function(data) {
-         // console.log('>', data);
-         // };
+         if (jsxc.storage.getItem('debug') === true) {
+            jsxc.xmpp.conn.xmlInput = function(data) {
+               console.log('<', data);
+            };
+            jsxc.xmpp.conn.xmlOutput = function(data) {
+               console.log('>', data);
+            };
+         }
 
          // Strophe.log = function(level, msg) {
          // console.log(level + " " + msg);
@@ -2517,7 +2528,7 @@ var jsxc;
          if (!jsxc.restore || !jsxc.storage.getUserItem('buddylist')) {
             // in order to not overide existing presence information, we send
             // pres first after roster is ready
-            $(document).one('loaded.roster.jsxc', jsxc.xmpp.sendPres);
+            $(document).one('cloaded.roster.jsxc', jsxc.xmpp.sendPres);
 
             var iq = $iq({
                type: 'get'
@@ -2675,7 +2686,7 @@ var jsxc;
          jsxc.storage.setUserItem('buddylist', buddies);
 
          jsxc.debug('Roster loaded');
-         $(document).trigger('loaded.roster.jsxc');
+         $(document).trigger('cloaded.roster.jsxc');
       },
 
       /**
@@ -2727,6 +2738,22 @@ var jsxc;
                   type: 'chat'
                });
                jsxc.gui.roster.add(cid);
+            }
+
+            // Remove pending friendship request from notice list
+            if (sub === 'from' || sub === 'both') {
+               var notices = jsxc.storage.getUserItem('notices');
+               var noticeKey = null, notice;
+
+               for (noticeKey in notices) {
+                  notice = notices[noticeKey];
+
+                  if (notice.fnName === 'gui.showApproveDialog' && notice.fnParams[0] === jid) {
+                     jsxc.debug('Remove notice with key ' + noticeKey);
+
+                     jsxc.notice.remove(noticeKey);
+                  }
+               }
             }
          });
 
@@ -2784,7 +2811,7 @@ var jsxc;
                jid: jid,
                approve: -1
             });
-            jsxc.notice.add('Friendship request', 'from ' + jid, 'gui.showApproveDialog', [ jid ]);
+            jsxc.notice.add('%%Friendship request%%', '%%from%% ' + jid, 'gui.showApproveDialog', [ jid ]);
 
             return true;
          } else if (ptype === 'unavailable' || ptype === 'unsubscribed') {
@@ -3665,18 +3692,18 @@ var jsxc;
       onSmpQuestion: function(cid, data) {
          jsxc.gui.showVerification(cid);
 
-         $('#jsxc_facebox select').prop('selectedIndex', (data ? 2 : 3)).change();
-         $('#jsxc_facebox > div:eq(0)').hide();
+         $('#jsxc_dialog select').prop('selectedIndex', (data ? 2 : 3)).change();
+         $('#jsxc_dialog > div:eq(0)').hide();
 
          if (data) {
-            $('#jsxc_facebox > div:eq(2)').find('#jsxc_quest').val(data).prop('disabled', true);
-            $('#jsxc_facebox > div:eq(2)').find('.creation').text('Answer');
-            $('#jsxc_facebox > div:eq(2)').find('.jsxc_explanation').text(jsxc.l.your_buddy_is_attempting_to_determine_ + ' ' + jsxc.l.to_authenticate_to_your_buddy + jsxc.l.enter_the_answer_and_click_answer);
+            $('#jsxc_dialog > div:eq(2)').find('#jsxc_quest').val(data).prop('disabled', true);
+            $('#jsxc_dialog > div:eq(2)').find('.creation').text('Answer');
+            $('#jsxc_dialog > div:eq(2)').find('.jsxc_explanation').text(jsxc.l.your_buddy_is_attempting_to_determine_ + ' ' + jsxc.l.to_authenticate_to_your_buddy + jsxc.l.enter_the_answer_and_click_answer);
          } else {
-            $('#jsxc_facebox > div:eq(3)').find('.jsxc_explanation').text(jsxc.l.your_buddy_is_attempting_to_determine_ + ' ' + jsxc.l.to_authenticate_to_your_buddy + jsxc.l.enter_the_secret);
+            $('#jsxc_dialog > div:eq(3)').find('.jsxc_explanation').text(jsxc.l.your_buddy_is_attempting_to_determine_ + ' ' + jsxc.l.to_authenticate_to_your_buddy + jsxc.l.enter_the_secret);
          }
 
-         $('#jsxc_facebox a[rel=close]').click(function() {
+         $('#jsxc_dialog a[rel=close]').click(function() {
             jsxc.storage.removeUserItem('smp_' + cid);
 
             if (jsxc.master) {
@@ -3823,20 +3850,30 @@ var jsxc;
 
          if (jsxc.storage.getUserItem('key') === null) {
             var msg = jsxc.l.now_we_will_create_your_private_key_;
+            var worker = null;
 
             if (Worker) {
+               // try to create web-worker
+
+               try {
+                  worker = new Worker(jsxc.options.root + '/js/jsxc/lib/otr/build/dsa-webworker.js');
+               } catch (err) {
+                  jsxc.warn('Couldn\'t create web-worker.', err);
+               }
+            }
+
+            if (worker !== null) {
                // create DSA key in background
 
+               // add wait overlay on roster
                var waitDiv = $('<div>').addClass('jsxc_wait').html(jsxc.gui.template.get('waitAlert', null, msg));
                $('#jsxc_roster').append(waitDiv);
-
-               var worker = new Worker(jsxc.options.root + '/js/jsxc/lib/otr/build/dsa-webworker.js');
 
                worker.onmessage = function(e) {
                   var type = e.data.type;
                   var val = e.data.val;
 
-                  if (type === 'val') {
+                  if (type === 'debug') {
                      jsxc.debug(val);
                   } else if (type === 'data') {
                      jsxc.otr.DSAready(DSA.parsePrivate(val));
@@ -3951,8 +3988,8 @@ var jsxc;
 
          jsxc.toNotification = setTimeout(function() {
 
-            var popup = window.Notification(title, {
-               body: msg
+            var popup = new Notification(jsxc.translate(title), {
+               body: jsxc.translate(msg)
             });
 
             var duration = d || jsxc.options.popupDuration;
@@ -4004,7 +4041,7 @@ var jsxc;
             };
 
             return true;
-         } else if (Notification) {
+         } else if (window.Notification) {
             return true;
          } else {
             return false;
@@ -4195,12 +4232,7 @@ var jsxc;
          var notice = $('<li/>');
 
          notice.click(function() {
-            $(this).remove();
-            $('#jsxc_notice > span').text(--jsxc.notice._num || '');
-
-            var s = jsxc.storage.getUserItem('notices');
-            delete s[nid];
-            jsxc.storage.setUserItem('notices', s);
+            jsxc.notice.remove(nid);
 
             var fnList = fnName.split('.');
             var fn = jsxc[fnList[0]];
@@ -4216,8 +4248,9 @@ var jsxc;
             return false;
          });
 
-         notice.text(msg);
-         notice.attr('title', description || '');
+         notice.text(jsxc.translate(msg));
+         notice.attr('title', jsxc.translate(description) || '');
+         notice.attr('data-nid', nid);
          list.append(notice);
 
          $('#jsxc_notice > span').text(++jsxc.notice._num);
@@ -4235,6 +4268,23 @@ var jsxc;
             jsxc.notification.notify(msg, description || '', null, true);
             jsxc.notification.playSound(jsxc.CONST.SOUNDS.NOTICE, false, true);
          }
+      },
+
+      /**
+       * Removes notice from stack
+       * 
+       * @memberOf jsxc.notice
+       * @param nid The notice id
+       */
+      remove: function(nid) {
+         var el = $('#jsxc_notice li[data-nid=' + nid + ']');
+
+         el.remove();
+         $('#jsxc_notice > span').text(--jsxc.notice._num || '');
+
+         var s = jsxc.storage.getUserItem('notices');
+         delete s[nid];
+         jsxc.storage.setUserItem('notices', s);
       }
    };
 
@@ -4308,7 +4358,7 @@ var jsxc;
          Deny: 'Deny',
          Approve: 'Approve',
          Remove_buddy: 'Remove buddy',
-         You_are_about_to_remove_: 'You are about to remove {{cid_jid}} from your buddy list. All related chats will be closed.  Do you want to continue?',
+         You_are_about_to_remove_: 'You are about to remove {{cid_name}} (<b>{{cid_jid}}</b>) from your buddy list. All related chats will be closed.',
          Continue: 'Continue',
          Please_wait: 'Please wait',
          Login_failed: 'Login failed',
@@ -4337,7 +4387,12 @@ var jsxc;
          Chatty: 'Chatty',
          Away: 'Away',
          Extended_away: 'Extended away',
-         Offline: 'Offline'
+         Offline: 'Offline',
+         Friendship_request: 'Friendship request',
+         Confirm: 'Confirm',
+         Dismiss: 'Dismiss',
+         Remove: 'Remove',
+         Online_help: 'Online help'
       },
       de: {
          please_wait_until_we_logged_you_in: 'Bitte warte bis wir dich eingeloggt haben.',
@@ -4402,7 +4457,7 @@ var jsxc;
          Deny: 'Ablehnen',
          Approve: 'Bestätigen',
          Remove_buddy: 'Freund entfernen',
-         You_are_about_to_remove_: 'Du bist gerade dabei {{cid_jid}} von deiner Kontaktliste zu entfernen. Alle Chats werden geschlossen. Willst du fortfahren?',
+         You_are_about_to_remove_: 'Du bist gerade dabei {{cid_name}} (<b>{{cid_jid}}</b>) von deiner Kontaktliste zu entfernen. Alle Chats werden geschlossen.',
          Continue: 'Weiter',
          Please_wait: 'Bitte warten',
          Login_failed: 'Anmeldung fehlgeschlagen',
@@ -4435,7 +4490,12 @@ var jsxc;
          Chatty: 'Gesprächig',
          Away: 'Abwesend',
          Extended_away: 'Länger abwesend',
-         Offline: 'Offline'
+         Offline: 'Offline',
+         Friendship_request: 'Freundschaftsanfrage',
+         Confirm: 'Bestätigen',
+         Dismiss: 'Ablehnen',
+         Remove: 'Löschen',
+         Online_help: 'Online Hilfe'
       }
    };
 }(jQuery));

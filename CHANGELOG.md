@@ -1,3 +1,8 @@
+v0.7.2 / 2014-05-28
+===
+- ugrade jsxc to v0.7.2
+- clean up oc specific stylesheet
+
 v0.7.1 / 2014-03-18
 ===
 - upgrade jsxc to v0.7.1

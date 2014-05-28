@@ -1,13 +1,13 @@
 /**
- * jsxc v0.7.1 - 2014-03-18
+ * jsxc v0.7.2 - 2014-05-28
  * 
  * Copyright (c) 2014 Klaus Herberth <klaus@jsxc.org> <br>
  * Released under the MIT license
  * 
- * Please see http://jsxc.org/
+ * Please see http://www.jsxc.org/
  * 
  * @author Klaus Herberth <klaus@jsxc.org>
- * @version 0.7.1
+ * @version 0.7.2
  */
 
 /* jsxc, Strophe, SDPUtil, getUserMediaWithConstraints, setupRTC, jQuery */
@@ -167,7 +167,8 @@ jsxc.gui.template.videoWindow = '<div class="jsxc_webrtc">\
                jsxc.webrtc.conn.jingle.ice_config = iceConfig;
                jsxc.storage.setUserItem('iceConfig', iceConfig);
                jsxc.storage.setUserItem('iceValidity', (new Date()).getTime() + 1000 * data.ttl);
-            }
+            },
+            dataType: 'json'
          });
       },
 
@@ -189,8 +190,8 @@ jsxc.gui.template.videoWindow = '<div class="jsxc_webrtc">\
             return;
          }
 
-         var li = $('<li>Video</li>').addClass('jsxc_video');
-         win.find('.jsxc_settings ul').append(li);
+         var div = $('<div>').addClass('jsxc_video');
+         win.find('.jsxc_transfer:eq(1)').after(div);
 
          self.updateWindow(win);
       },
@@ -227,8 +228,12 @@ jsxc.gui.template.videoWindow = '<div class="jsxc_webrtc">\
                self.startCall(jid);
             });
             li.removeClass('jsxc_disabled');
+
+            li.attr('title', jsxc.translate('%%Start video call%%'));
          } else {
             li.addClass('jsxc_disabled');
+
+            li.attr('title', jsxc.translate('%%Video call not possible.%%'));
          }
       },
 
@@ -798,7 +803,7 @@ jsxc.gui.template.videoWindow = '<div class="jsxc_webrtc">\
          $(document).on('attached.jsxc', jsxc.webrtc.init);
       }
    });
-   
+
    $.extend(jsxc.l10n.en, {
       Please_allow_access_to_microphone_and_camera: 'Please allow access to microphone and camera.',
       Incoming_call: 'Incoming call',
@@ -816,6 +821,8 @@ jsxc.gui.template.videoWindow = '<div class="jsxc_webrtc">\
       Remote_IP: 'Remote IP',
       Local_Fingerprint: 'Local fingerprint',
       Remote_Fingerprint: 'Remote fingerprint',
+      Video_call_not_possible: 'Video call not possible',
+      Start_video_call: 'Start video call'
    });
 
    $.extend(jsxc.l10n.de, {
@@ -835,5 +842,7 @@ jsxc.gui.template.videoWindow = '<div class="jsxc_webrtc">\
       Remote_IP: 'Remote IP',
       Local_Fingerprint: 'Lokaler Fingerprint',
       Remote_Fingerprint: 'Remote Fingerprint',
+      Video_call_not_possible: 'Videoanruf nicht verfügbar',
+      Start_video_call: 'Starte Videoanruf'
    });
 }(jQuery));

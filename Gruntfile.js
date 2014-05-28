@@ -3,7 +3,7 @@ module.exports = function(grunt) {
 
    // Project configuration.
    grunt.initConfig({
-      app: grunt.file.readJSON('app.json'),
+      app: grunt.file.readJSON('package.json'),
       meta: {
          banner: grunt.file.read('js/jsxc/banner.js')
       },
