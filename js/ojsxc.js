@@ -43,6 +43,10 @@ function onRosterReady() {
 $(function() {
    "use strict";
 
+   if (location.pathname.substring(location.pathname.lastIndexOf("/") + 1) === 'public.php') {
+      return;
+   }
+   
    $(document).on('ready.roster.jsxc', onRosterReady);
    $(document).on('toggle.roster.jsxc', onRosterToggle);
 
@@ -144,7 +148,7 @@ $(function() {
    });
 
    // Add submit link without chat functionality
-   if (jsxc.el_exists($('#body-login form'))) {
+   if (jsxc.el_exists(jsxc.options.loginForm.form) && jsxc.el_exists(jsxc.options.loginForm.jid) && jsxc.el_exists(jsxc.options.loginForm.pass)) {
 
       var link = $('<a/>').text('Log in without chat').attr('href', '#').click(function() {
          jsxc.submitLoginForm();
