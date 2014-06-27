@@ -14,7 +14,7 @@ $(document).ready(function() {
       var rid = jsxc.storage.getItem('rid') || '123456';
       var xmppDomain = $('#xmppDomain').val();
       var fail = function() {
-         statusBosh.addClass('jsxc_fail').text('BOSH server NOT reachable. Please beware of the SOP. If your XMPP server doesn\'t reside on the same host as your OwnCloud, use the Apache ProxyRequest or modify the CSP by defining "custom_csp_policy" in OwnCloud\'s config.php.');
+         statusBosh.addClass('jsxc_fail').text('BOSH server NOT reachable. Please beware of the same-origin-policy (SOP). If your XMPP server doesn\'t reside on the same host as your OwnCloud (same port/protocol), use the Apache ProxyRequest or modify the content-security-policy (CSP) by defining "custom_csp_policy" in OwnCloud\'s config.php.');
       };
       
       $.post($('#boshUrl').val(), "<body rid='"+rid+"' xmlns='http://jabber.org/protocol/httpbind' to='"+xmppDomain+"' xml:lang='en' wait='60' hold='1' content='text/xml; charset=utf-8' ver='1.6' xmpp:version='1.0' xmlns:xmpp='urn:xmpp:xbosh'/>").done(function(stanza) {

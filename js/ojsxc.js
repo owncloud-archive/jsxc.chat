@@ -46,7 +46,7 @@ $(function() {
    if (location.pathname.substring(location.pathname.lastIndexOf("/") + 1) === 'public.php') {
       return;
    }
-   
+
    $(document).on('ready.roster.jsxc', onRosterReady);
    $(document).on('toggle.roster.jsxc', onRosterToggle);
 
@@ -100,10 +100,11 @@ $(function() {
       },
       defaultAvatar: function(jid) {
          var cache = jsxc.storage.getUserItem('defaultAvatars') || {};
+         var user = jid.replace(/@.+/, '');
+         var ie8fix = true;
 
          $(this).each(function() {
-            var user = jid.replace(/@.+/, '');
-            var ie8fix = true;
+
             var $div = $(this).find('.jsxc_avatar');
             var size = $div.width();
             var key = user + '@' + size;
@@ -126,20 +127,31 @@ $(function() {
             };
 
             if (typeof cache[key] === 'undefined' || cache[key] === null) {
-               OC.Router.registerLoadedCallback(function() {
-                  var url = OC.Router.generate('core_avatar_get', {
+               var url;
+               
+               if (OC.generateUrl) {
+                  // oc >= 7
+                  url = OC.generateUrl('/avatar/' + user + '/' + size + '?requesttoken={requesttoken}', {
+                     user: user,
+                     size: size,
+                     requesttoken: oc_requesttoken
+                  });
+               } else {
+                  // oc < 7
+                  url = OC.Router.generate('core_avatar_get', {
                      user: user,
                      size: size
                   }) + '?requesttoken=' + oc_requesttoken;
+               }
+               
+               $.get(url, function(result) {
 
-                  $.get(url, function(result) {
+                  var val = (typeof result === 'object') ? result : url;
+                  handleResponse(val);
 
-                     var val = (typeof result === 'object') ? result : url;
-                     handleResponse(val);
-
-                     jsxc.storage.updateUserItem('defaultAvatars', key, val);
-                  });
+                  jsxc.storage.updateUserItem('defaultAvatars', key, val);
                });
+
             } else {
                handleResponse(cache[key]);
             }
