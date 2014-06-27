@@ -1,5 +1,5 @@
 /**
- * ojsxc v0.7.2 - 2014-05-28
+ * ojsxc v0.8.0-beta - 2014-06-27
  * 
  * Copyright (c) 2014 Klaus Herberth <klaus@jsxc.org> <br>
  * Released under the MIT license
@@ -7,7 +7,7 @@
  * Please see http://www.jsxc.org/
  * 
  * @author Klaus Herberth <klaus@jsxc.org>
- * @version 0.7.2
+ * @version 0.8.0-beta
  */
 
 /* global jsxc, oc_appswebroots, OC, $, oc_requesttoken */
@@ -55,6 +55,10 @@ function onRosterReady() {
 $(function() {
    "use strict";
 
+   if (location.pathname.substring(location.pathname.lastIndexOf("/") + 1) === 'public.php') {
+      return;
+   }
+
    $(document).on('ready.roster.jsxc', onRosterReady);
    $(document).on('toggle.roster.jsxc', onRosterToggle);
 
@@ -95,7 +99,7 @@ $(function() {
       logoutElement: $('#logout'),
       checkFlash: false,
       rosterAppend: 'body',
-      root: oc_appswebroots.ojsxc,
+      root: oc_appswebroots.ojsxc + '/js/jsxc',
       // @TODO: don't include get turn credentials routine into jsxc
       turnCredentialsPath: OC.filePath('ojsxc', 'ajax', 'getturncredentials.php'),
       displayRosterMinimized: function() {
@@ -108,10 +112,11 @@ $(function() {
       },
       defaultAvatar: function(jid) {
          var cache = jsxc.storage.getUserItem('defaultAvatars') || {};
+         var user = jid.replace(/@.+/, '');
+         var ie8fix = true;
 
          $(this).each(function() {
-            var user = jid.replace(/@.+/, '');
-            var ie8fix = true;
+
             var $div = $(this).find('.jsxc_avatar');
             var size = $div.width();
             var key = user + '@' + size;
@@ -134,20 +139,31 @@ $(function() {
             };
 
             if (typeof cache[key] === 'undefined' || cache[key] === null) {
-               OC.Router.registerLoadedCallback(function() {
-                  var url = OC.Router.generate('core_avatar_get', {
+               var url;
+               
+               if (OC.generateUrl) {
+                  // oc >= 7
+                  url = OC.generateUrl('/avatar/' + user + '/' + size + '?requesttoken={requesttoken}', {
+                     user: user,
+                     size: size,
+                     requesttoken: oc_requesttoken
+                  });
+               } else {
+                  // oc < 7
+                  url = OC.Router.generate('core_avatar_get', {
                      user: user,
                      size: size
                   }) + '?requesttoken=' + oc_requesttoken;
+               }
+               
+               $.get(url, function(result) {
 
-                  $.get(url, function(result) {
+                  var val = (typeof result === 'object') ? result : url;
+                  handleResponse(val);
 
-                     var val = (typeof result === 'object') ? result : url;
-                     handleResponse(val);
-
-                     jsxc.storage.updateUserItem('defaultAvatars', key, val);
-                  });
+                  jsxc.storage.updateUserItem('defaultAvatars', key, val);
                });
+
             } else {
                handleResponse(cache[key]);
             }
@@ -156,7 +172,7 @@ $(function() {
    });
 
    // Add submit link without chat functionality
-   if (jsxc.el_exists($('#body-login form'))) {
+   if (jsxc.el_exists(jsxc.options.loginForm.form) && jsxc.el_exists(jsxc.options.loginForm.jid) && jsxc.el_exists(jsxc.options.loginForm.pass)) {
 
       var link = $('<a/>').text('Log in without chat').attr('href', '#').click(function() {
          jsxc.submitLoginForm();

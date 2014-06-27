@@ -1,3 +1,9 @@
+v0.8.0 / 2014-??-??
+===
+- upgrade jsxc to v0.8.0
+- prepare for oc 7
+- adjust jsxc root
+
 v0.7.2 / 2014-05-28
 ===
 - ugrade jsxc to v0.7.2

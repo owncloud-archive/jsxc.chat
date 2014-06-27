@@ -1,6 +1,6 @@
 {
    "name": "ojsxc",
-   "version": "0.7.2",
+   "version": "0.8.0-beta",
    "description": "Real-time chat app for owncloud",
    "homepage": "http://www.jsxc.org/",
    "bugs": "https://github.com/sualko/jsxc/issues",
