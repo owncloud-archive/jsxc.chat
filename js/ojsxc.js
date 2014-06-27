@@ -87,7 +87,7 @@ $(function() {
       logoutElement: $('#logout'),
       checkFlash: false,
       rosterAppend: 'body',
-      root: oc_appswebroots.ojsxc,
+      root: oc_appswebroots.ojsxc + '/js/jsxc',
       // @TODO: don't include get turn credentials routine into jsxc
       turnCredentialsPath: OC.filePath('ojsxc', 'ajax', 'getturncredentials.php'),
       displayRosterMinimized: function() {
