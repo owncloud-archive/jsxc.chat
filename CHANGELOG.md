@@ -1,4 +1,4 @@
-v0.8.0 / 2014-??-??
+v0.8.0 / 2014-07-02
 ===
 - upgrade jsxc to v0.8.0
 - prepare for oc 7
