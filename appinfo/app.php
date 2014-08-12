@@ -44,6 +44,8 @@ OCP\Util::addStyle ( 'ojsxc', '../js/jsxc/jsxc' );
 OCP\Util::addStyle ( 'ojsxc', '../js/jsxc/jsxc.webrtc' );
 OCP\Util::addStyle ( 'ojsxc', 'jsxc.oc' );
 OCP\Util::addStyle ( 'ojsxc', 'muc' );
-// OCP\Util::addStyle ( 'ojsxc', 'log' );
+
+if(OC_Util::getVersion()[0] <= 6)
+	OCP\Util::addStyle ( 'ojsxc', 'jsxc.oc.lte6' );
 
 ?>
