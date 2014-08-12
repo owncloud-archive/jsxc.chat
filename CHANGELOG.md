@@ -1,3 +1,8 @@
+v0.8.1 / 2014-08-12
+===
+- upgrade jsxc to v0.8.1
+- update to oc7
+
 v0.8.0 / 2014-07-02
 ===
 - upgrade jsxc to v0.8.0
