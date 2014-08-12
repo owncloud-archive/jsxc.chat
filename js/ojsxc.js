@@ -61,28 +61,7 @@ $(function() {
       loginForm: {
          form: '#body-login form',
          jid: '#user',
-         pass: '#password',
-         preJid: function(jid) {
-            var data = null;
-
-            $.ajax(OC.filePath('ojsxc', 'ajax', 'getsettings.php'), {
-               async: false,
-               success: function(d) {
-                  data = d;
-               }
-            });
-
-            var resource = (data.xmppResource) ? '/' + data.xmppResource : '';
-            var domain = data.xmppDomain;
-
-            jsxc.storage.setItem('boshUrl', data.boshUrl);
-
-            if (jid.match(/@(.*)$/)) {
-               return (jid.match(/\/(.*)$/)) ? jid : jid + resource;
-            }
-
-            return jid + '@' + domain + resource;
-         }
+         pass: '#password'
       },
       logoutElement: $('#logout'),
       checkFlash: false,
@@ -128,7 +107,7 @@ $(function() {
 
             if (typeof cache[key] === 'undefined' || cache[key] === null) {
                var url;
-               
+
                if (OC.generateUrl) {
                   // oc >= 7
                   url = OC.generateUrl('/avatar/' + user + '/' + size + '?requesttoken={requesttoken}', {
@@ -143,7 +122,7 @@ $(function() {
                      size: size
                   }) + '?requesttoken=' + oc_requesttoken;
                }
-               
+
                $.get(url, function(result) {
 
                   var val = (typeof result === 'object') ? result : url;
@@ -156,6 +135,44 @@ $(function() {
                handleResponse(cache[key]);
             }
          });
+      },
+      loadSettings: function(username, password) {
+         var data = null;
+
+         $.ajax({
+            async: false,
+            type: 'POST',
+            url: OC.filePath('ojsxc', 'ajax', 'getsettings.php'),
+            data: {
+               username: username,
+               password: password
+            },
+            success: function(d) {
+               data = d.data;
+            },
+            error: function() {
+               jsxc.error('XHR error on getsettings.php');
+            }
+         });
+
+         return data;
+      },
+      saveSettinsPermanent: function(data) {
+         var ret = 1;
+
+         $.ajax({
+            async: false,
+            type: 'POST',
+            url: OC.filePath('ojsxc', 'ajax', 'setUserSettings.php'),
+            data: data,
+            success: function(data) {
+               if (data.trim() === 'true') {
+                  ret = 0;
+               }
+            }
+         });
+
+         return ret;
       }
    });
 

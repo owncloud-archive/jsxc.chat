@@ -18,6 +18,11 @@
 				<td></td>
 			</tr>
 			<tr>
+				<td><label for="xmppOverwrite">Allow user to overwrite XMPP settings</label></td>
+				<td><input type="checkbox" name="xmppOverwrite" id="xmppOverwrite" value="true" <?php if($_['xmppOverwrite'] == 'true') echo "checked"; ?> /></td>
+				<td></td>
+			</tr>
+			<tr>
 				<td><label for="iceUrl">TURN Url</label></td>
 				<td><input type="text" name="iceUrl" id="iceUrl" value="<?php p($_['iceUrl']); ?>" /></td>
 				<td></td>

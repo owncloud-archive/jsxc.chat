@@ -34,7 +34,7 @@ $(document).ready(function() {
 
       var statusSet = status.clone().html(status.html() + " Saving...");
       $('#ojsxc .msg').append(statusSet);
-      
+      console.log(post)
       $.post(OC.filePath('ojsxc', 'ajax', 'setsettings.php'), post, function(data) {
          if (data)
             statusSet.addClass('jsxc_success').text('Settings saved.');
