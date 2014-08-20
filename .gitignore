@@ -1,3 +1,7 @@
 /nbproject/private/
+.buildpath
+.classpath
+WebContent/
+node_modules/
 *.zip
 *.zip.sig

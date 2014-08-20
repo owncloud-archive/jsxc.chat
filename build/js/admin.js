@@ -1,5 +1,5 @@
 /**
- * ojsxc v0.8.1 - 2014-08-12
+ * ojsxc v0.8.2 - 2014-08-20
  * 
  * Copyright (c) 2014 Klaus Herberth <klaus@jsxc.org> <br>
  * Released under the MIT license
@@ -7,7 +7,7 @@
  * Please see http://www.jsxc.org/
  * 
  * @author Klaus Herberth <klaus@jsxc.org>
- * @version 0.8.1
+ * @version 0.8.2
  */
 
 $(document).ready(function() {
@@ -46,7 +46,7 @@ $(document).ready(function() {
 
       var statusSet = status.clone().html(status.html() + " Saving...");
       $('#ojsxc .msg').append(statusSet);
-      console.log(post)
+
       $.post(OC.filePath('ojsxc', 'ajax', 'setsettings.php'), post, function(data) {
          if (data)
             statusSet.addClass('jsxc_success').text('Settings saved.');

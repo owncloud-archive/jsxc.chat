@@ -1,3 +1,8 @@
+v0.8.2 / 2014-08-20
+===
+- fix issue with php < 5.4
+- upgrade jsxc to v0.8.2
+
 v0.8.1 / 2014-08-12
 ===
 - upgrade jsxc to v0.8.1
