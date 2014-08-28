@@ -45,7 +45,7 @@ OCP\Util::addStyle ( 'ojsxc', '../js/jsxc/jsxc.webrtc' );
 OCP\Util::addStyle ( 'ojsxc', 'jsxc.oc' );
 OCP\Util::addStyle ( 'ojsxc', 'muc' );
 
-$version = OC_Util::getVersion();
+$version = OCP\Util::getVersion();
 
 if($version[0] <= 6)
 	OCP\Util::addStyle ( 'ojsxc', 'jsxc.oc.lte6' );
