@@ -23,6 +23,10 @@ $data ['xmpp'] ['resource'] = OCP\Config::getAppValue ( 'ojsxc', 'xmppResource' 
 $data ['xmpp'] ['overwrite'] = OCP\Config::getAppValue ( 'ojsxc', 'xmppOverwrite' );
 $data ['xmpp'] ['onlogin'] = 'true';
 
+if ($data ['xmpp'] ['overwrite'] == null) {
+	$data ['xmpp'] ['overwrite'] = false;
+}
+
 if ($data ['xmpp'] ['overwrite']) {
 	$options = OCP\Config::getUserValue ( $username, 'ojsxc', 'options' );
 	
