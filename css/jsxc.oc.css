@@ -1,6 +1,11 @@
 div#jsxc_roster {
 	top: 45px;
 	background-color: #383C43;
+	z-index: 650;
+}
+
+div#jsxc_windowList, div#jsxc_windowListSB {
+	z-index: 650;
 }
 
 ul#jsxc_buddylist.jsxc_hideOffline .jsxc_offline {
@@ -66,4 +71,10 @@ ul#jsxc_buddylist.jsxc_hideOffline .jsxc_offline {
 
 .jsxc_log {
 	width: 500px;
+}
+
+#mainContainer, #odf-toolbar {
+	right: 205px;
+	left: 0px;
+	width: auto !important;
 }

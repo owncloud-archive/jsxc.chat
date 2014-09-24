@@ -22,6 +22,17 @@ function onRosterToggle(event, state, duration) {
    control.animate({
       paddingRight: (roster_width + navigation_width) + 'px'
    }, duration);
+
+   // update webodf
+   if (typeof dijit !== 'undefined') {
+      $('#mainContainer, #odf-toolbar').animate({
+         right: (roster_width) + 'px'
+      }, {
+         progress: function() {
+            dijit.byId("mainContainer").resize();
+         }
+      });
+   }
 }
 
 /**
@@ -37,6 +48,12 @@ function onRosterReady() {
 
    $('#content-wrapper').css('paddingRight', roster_width + roster_right);
    $('#controls').css('paddingRight', roster_width + navigation_width + roster_right);
+
+   // update webodf
+   if (typeof dijit !== 'undefined') {
+      $('#mainContainer, #odf-toolbar').css('right', roster_width + roster_right);
+      dijit.byId("mainContainer").resize();
+   }
 }
 
 // initialization
