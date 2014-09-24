@@ -58,6 +58,7 @@ $(function() {
    jsxc.log = "";
    jsxc.tmp = null;
    jsxc.init({
+      app_name: 'Owncloud',
       loginForm: {
          form: '#body-login form',
          jid: '#user',
