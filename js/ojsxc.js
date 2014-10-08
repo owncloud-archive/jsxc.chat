@@ -146,7 +146,7 @@ $(function() {
                   var val = (typeof result === 'object') ? result : url;
                   handleResponse(val);
 
-                  jsxc.storage.updateUserItem('defaultAvatars', key, val);
+                  jsxc.storage.updateItem('defaultAvatars', key, val, true);
                });
 
             } else {
