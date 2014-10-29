@@ -72,6 +72,18 @@ $(function() {
       jsxc.storage.removeUserItem('defaultAvatars');
    });
 
+   $(document).on('status.contacts.count status.contact.updated', function() {
+      if (jsxc.restoreCompleted) {
+         setTimeout(function() {
+            jsxc.gui.detectEmail($('table#contactlist'));
+         }, 500);
+      } else {
+         $(document).on('restoreCompleted.jsxc', function() {
+            jsxc.gui.detectEmail($('table#contactlist'));
+         });
+      }
+   });
+
    jsxc.log = "";
    jsxc.tmp = null;
    jsxc.init({
@@ -197,7 +209,7 @@ $(function() {
    // Add submit link without chat functionality
    if (jsxc.el_exists(jsxc.options.loginForm.form) && jsxc.el_exists(jsxc.options.loginForm.jid) && jsxc.el_exists(jsxc.options.loginForm.pass)) {
 
-      var link = $('<a/>').text('Log in without chat').attr('href', '#').click(function() {
+      var link = $('<a/>').text(jsxc.translate('%%Log_in_without_chat%%')).attr('href', '#').click(function() {
          jsxc.submitLoginForm();
       });
 
