@@ -63,7 +63,7 @@ module.exports = function(grunt) {
       search: {
          console: {
             files: {
-               src: ['js/*.js']
+               src: [ 'js/*.js' ]
             },
             options: {
                searchString: /console\.log\((?!'[<>]|msg)/g,
@@ -73,17 +73,30 @@ module.exports = function(grunt) {
          },
          changelog: {
             files: {
-               src: ['CHANGELOG.md']
+               src: [ 'CHANGELOG.md' ]
             },
             options: {
                searchString: "<%= app.version %>",
                logFormat: 'console',
                onComplete: function(m) {
-                  if(m.numMatches === 0) {
+                  if (m.numMatches === 0) {
                      grunt.fail.fatal("No entry in README.md for current version found.");
                   }
                }
             }
+         }
+      },
+      compress: {
+         main: {
+            options: {
+               archive: "ojsxc-<%= app.version %>.zip"
+            },
+            files: [ {
+               src: [ '**' ],
+               expand: true,
+               dest: 'ojsxc/',
+               cwd: 'build/'
+            } ]
          }
       }
    });
@@ -95,8 +108,10 @@ module.exports = function(grunt) {
    grunt.loadNpmTasks('grunt-banner');
    grunt.loadNpmTasks('grunt-text-replace');
    grunt.loadNpmTasks('grunt-search');
+   grunt.loadNpmTasks('grunt-contrib-compress');
 
    // Default task.
-   grunt.registerTask('default', [ 'jshint', 'search', 'clean', 'copy', 'usebanner', 'replace' ]);
+   grunt.registerTask('default', [ 'jshint', 'search', 'clean', 'copy', 'usebanner', 'replace', 'compress' ]);
 
+   grunt.registerTask('pre', [ 'jshint', 'search:console', 'clean', 'copy', 'usebanner', 'replace', 'compress' ]);
 };

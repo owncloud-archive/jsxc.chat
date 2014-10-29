@@ -1,4 +1,4 @@
-/* global jsxc, oc_appswebroots, OC, $, oc_requesttoken */
+/* global jsxc, oc_appswebroots, OC, $, oc_requesttoken, dijit */
 
 /**
  * Make room for the roster inside the owncloud template.

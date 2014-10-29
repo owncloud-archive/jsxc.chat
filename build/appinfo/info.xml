@@ -3,7 +3,7 @@
 	<id>ojsxc</id>
 	<name>JavaScript XMPP Chat</name>
 	<description>XMPP Chat with OTR</description>
-	<version>0.8.2</version>
+	<version>1.0.0-beta1</version>
 	<licence>MIT</licence>
 	<author>Klaus Herberth</author>
 	<require>5</require>

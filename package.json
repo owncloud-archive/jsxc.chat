@@ -1,6 +1,6 @@
 {
   "name": "ojsxc",
-  "version": "0.8.2",
+  "version": "1.0.0-beta1",
   "description": "Real-time chat app for owncloud",
   "homepage": "http://www.jsxc.org/",
   "bugs": "https://github.com/sualko/jsxc/issues",
@@ -15,6 +15,7 @@
     "grunt-banner": "~0.2.2",
     "grunt-cli": "~0.1.13",
     "grunt-contrib-clean": "~0.5.0",
+    "grunt-contrib-compress": "^0.10.0",
     "grunt-contrib-copy": "~0.5.0",
     "grunt-contrib-jshint": "~0.9.2",
     "grunt-search": "^0.1.6",

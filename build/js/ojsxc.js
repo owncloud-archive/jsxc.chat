@@ -1,5 +1,5 @@
-/**
- * ojsxc v0.8.2 - 2014-08-20
+/*!
+ * ojsxc v1.0.0-beta1 - 2014-10-29
  * 
  * Copyright (c) 2014 Klaus Herberth <klaus@jsxc.org> <br>
  * Released under the MIT license
@@ -7,10 +7,11 @@
  * Please see http://www.jsxc.org/
  * 
  * @author Klaus Herberth <klaus@jsxc.org>
- * @version 0.8.2
+ * @version 1.0.0-beta1
+ * @license MIT
  */
 
-/* global jsxc, oc_appswebroots, OC, $, oc_requesttoken */
+/* global jsxc, oc_appswebroots, OC, $, oc_requesttoken, dijit */
 
 /**
  * Make room for the roster inside the owncloud template.
@@ -34,6 +35,17 @@ function onRosterToggle(event, state, duration) {
    control.animate({
       paddingRight: (roster_width + navigation_width) + 'px'
    }, duration);
+
+   // update webodf
+   if (typeof dijit !== 'undefined') {
+      $('#mainContainer, #odf-toolbar').animate({
+         right: (roster_width) + 'px'
+      }, {
+         progress: function() {
+            dijit.byId("mainContainer").resize();
+         }
+      });
+   }
 }
 
 /**
@@ -49,6 +61,12 @@ function onRosterReady() {
 
    $('#content-wrapper').css('paddingRight', roster_width + roster_right);
    $('#controls').css('paddingRight', roster_width + navigation_width + roster_right);
+
+   // update webodf
+   if (typeof dijit !== 'undefined') {
+      $('#mainContainer, #odf-toolbar').css('right', roster_width + roster_right);
+      dijit.byId("mainContainer").resize();
+   }
 }
 
 // initialization
@@ -67,9 +85,22 @@ $(function() {
       jsxc.storage.removeUserItem('defaultAvatars');
    });
 
+   $(document).on('status.contacts.count status.contact.updated', function() {
+      if (jsxc.restoreCompleted) {
+         setTimeout(function() {
+            jsxc.gui.detectEmail($('table#contactlist'));
+         }, 500);
+      } else {
+         $(document).on('restoreCompleted.jsxc', function() {
+            jsxc.gui.detectEmail($('table#contactlist'));
+         });
+      }
+   });
+
    jsxc.log = "";
    jsxc.tmp = null;
    jsxc.init({
+      app_name: 'Owncloud',
       loginForm: {
          form: '#body-login form',
          jid: '#user',
@@ -140,7 +171,7 @@ $(function() {
                   var val = (typeof result === 'object') ? result : url;
                   handleResponse(val);
 
-                  jsxc.storage.updateUserItem('defaultAvatars', key, val);
+                  jsxc.storage.updateItem('defaultAvatars', key, val, true);
                });
 
             } else {
@@ -191,7 +222,7 @@ $(function() {
    // Add submit link without chat functionality
    if (jsxc.el_exists(jsxc.options.loginForm.form) && jsxc.el_exists(jsxc.options.loginForm.jid) && jsxc.el_exists(jsxc.options.loginForm.pass)) {
 
-      var link = $('<a/>').text('Log in without chat').attr('href', '#').click(function() {
+      var link = $('<a/>').text(jsxc.translate('%%Log_in_without_chat%%')).attr('href', '#').click(function() {
          jsxc.submitLoginForm();
       });
 

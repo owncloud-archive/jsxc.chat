@@ -5,3 +5,4 @@ WebContent/
 node_modules/
 *.zip
 *.zip.sig
+.settings/
