@@ -39,7 +39,7 @@ if(DEBUG === true) {
 	OCP\Util::addScript ( 'ojsxc', 'jsxc/lib/jquery.colorbox-min' );
 	OCP\Util::addScript ( 'ojsxc', 'jsxc/lib/jquery.slimscroll' );
 	OCP\Util::addScript ( 'ojsxc', 'jsxc/lib/jquery.fullscreen' );
-	OCP\Util::addScript ( 'ojsxc', 'jsxc/jsxc.dep.min' );
+	OCP\Util::addScript ( 'ojsxc', 'jsxc/lib/jsxc.dep.min' );
 	OCP\Util::addScript ( 'ojsxc', 'jsxc/jsxc.min' );
 }
 
