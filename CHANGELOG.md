@@ -1,3 +1,15 @@
+v1.0.0 / 2014-11-06
+===
+- upgrade jsxc to v1.0.0
+- add application name
+- add spot to contacts
+- fix badcode issue
+- fix 'invalid argument foreach' warning
+- fix TURN-REST-API
+- fix documents support
+- handle overwrite flag null as false
+- use concatenated and minified version
+
 v0.8.2 / 2014-08-20
 ===
 - fix issue with php < 5.4
