@@ -10,7 +10,7 @@
 */
 OCP\App::registerAdmin ( 'ojsxc', 'settings' );
 
-if(DEBUG === true) {
+if(defined('DEBUG') && DEBUG === true) {
 	// ############# Javascript #############
 	OCP\Util::addScript ( 'ojsxc', 'jsxc/lib/jquery.colorbox-min' );
 	OCP\Util::addScript ( 'ojsxc', 'jsxc/lib/jquery.slimscroll' );
