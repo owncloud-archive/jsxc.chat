@@ -1,0 +1,16 @@
+@import 'js/jsxc/scss/colors';
+
+//fonts
+$font_sans: Arial, sans-serif;
+$font_serif: serif;
+
+@import 'js/jsxc/scss/modules',
+        'js/jsxc/scss/buddylist',
+        'js/jsxc/scss/state',
+        'js/jsxc/scss/emoticons',
+        'js/jsxc/scss/roster';
+        
+@import 'js/jsxc/scss/jsxc';
+@import 'js/jsxc/scss/jsxc.webrtc';
+
+@import '_oc';

@@ -98,7 +98,33 @@ module.exports = function(grunt) {
                cwd: 'build/'
             } ]
          }
-      }
+      },
+      autoprefixer: {
+         no_dest: {
+             src: 'css/*.css'
+         }
+      },
+      sass: {
+         options: {
+            imagePath: '../js/jsxc/img'
+         },
+         dist: {
+             files: {
+                'css/jsxc.oc.css': 'scss/jsxc.oc.scss'
+             }
+         }
+       },
+       dataUri: {
+          dist: {
+            src: 'css/*.css',
+            dest: 'build/css/',
+            options: {
+              target: ['img/*.*', 'js/jsxc/img/*.*', 'js/jsxc/img/**/*.*'],
+              fixDirLevel: true,
+              baseDir: './'
+            }
+          }
+        }
    });
 
    // These plugins provide necessary tasks.
@@ -109,9 +135,14 @@ module.exports = function(grunt) {
    grunt.loadNpmTasks('grunt-text-replace');
    grunt.loadNpmTasks('grunt-search');
    grunt.loadNpmTasks('grunt-contrib-compress');
+   grunt.loadNpmTasks('grunt-sass');
+   grunt.loadNpmTasks('grunt-autoprefixer');
+   grunt.loadNpmTasks('grunt-data-uri');
 
    // Default task.
-   grunt.registerTask('default', [ 'jshint', 'search', 'clean', 'copy', 'usebanner', 'replace', 'compress' ]);
+   grunt.registerTask('default', [ 'jshint', 'search', 'clean', 'css', 'dataUri', 'copy', 'usebanner', 'replace', 'compress' ]);
 
-   grunt.registerTask('pre', [ 'jshint', 'search:console', 'clean', 'copy', 'usebanner', 'replace', 'compress' ]);
+   grunt.registerTask('pre', [ 'jshint', 'search:console', 'clean', 'css', 'dataUri', 'copy', 'usebanner', 'replace', 'compress' ]);
+
+   grunt.registerTask('css', [ 'sass', 'autoprefixer' ]);
 };

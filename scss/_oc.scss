@@ -1,0 +1,73 @@
+#jsxc_roster {
+   top: 45px;
+   background-color: #383C43;
+}
+
+#jsxc_windowList, #jsxc_windowListSB {
+   z-index: 80;
+}
+
+#jsxc {
+   padding: 20px;
+   h1 {
+      margin: 15px 0px 5px 0px;
+      font-size: 1.5em;
+   }
+   a {
+      color: blue;
+      text-decoration: underline;
+      &:hover {
+         text-decoration: none;
+      }
+   }
+}
+
+#jsxc_alt {
+   text-align: right;
+   margin: 15px;
+   opacity: 0.5;
+   font-style: italic;
+   padding-top: 5px;
+   &:hover {
+      opacity: 0.8;
+   }
+}
+
+%msg {
+   border: 1px solid #fff;
+   border-radius: 3px;
+   padding: 3px;
+   padding-left: 22px;
+   background-position: 3px center;
+   background-repeat: no-repeat;
+   margin: 3px;
+   width: -moz-fit-content;
+   width: -webkit-fit-content;
+}
+
+.jsxc_success {
+   @extend %msg;
+   background-color: #A1F6BB;
+   background-image: url('../img/pass-icon.png');
+   color: #003300;
+   border-color: #003300;
+}
+
+.jsxc_fail {
+   @extend %msg;
+   background-color: #FF9999;
+   background-image: url('../img/fail-icon.png');
+   color: #800000;
+   border-color: #800000;
+}
+
+.jsxc_log {
+   width: 500px;
+}
+
+#mainContainer, #odf-toolbar {
+   right: 205px;
+   left: 0px;
+   width: auto !important;
+   z-index: 70 !important;
+}
