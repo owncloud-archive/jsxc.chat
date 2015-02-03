@@ -1,13 +1,13 @@
 /*!
- * ojsxc v1.0.0 - 2014-11-06
+ * ojsxc v1.1.0-beta - 2015-02-03
  * 
- * Copyright (c) 2014 Klaus Herberth <klaus@jsxc.org> <br>
+ * Copyright (c) 2015 Klaus Herberth <klaus@jsxc.org> <br>
  * Released under the MIT license
  * 
  * Please see http://www.jsxc.org/
  * 
  * @author Klaus Herberth <klaus@jsxc.org>
- * @version 1.0.0
+ * @version 1.1.0-beta
  * @license MIT
  */
 
@@ -114,11 +114,6 @@ $(function() {
       turnCredentialsPath: OC.filePath('ojsxc', 'ajax', 'getturncredentials.php'),
       displayRosterMinimized: function() {
          return OC.currentUser != null;
-      },
-      otr: {
-         debug: true,
-         SEND_WHITESPACE_TAG: true,
-         WHITESPACE_START_AKE: true
       },
       defaultAvatar: function(jid) {
          var cache = jsxc.storage.getUserItem('defaultAvatars') || {};

@@ -89,7 +89,7 @@ module.exports = function(grunt) {
       compress: {
          main: {
             options: {
-               archive: "ojsxc-<%= app.version %>.zip"
+               archive: "archives/ojsxc-<%= app.version %>.zip"
             },
             files: [ {
                src: [ '**' ],
@@ -116,12 +116,13 @@ module.exports = function(grunt) {
        },
        dataUri: {
           dist: {
-            src: 'css/*.css',
+            src: 'css/jsxc.oc.css',
             dest: 'build/css/',
             options: {
               target: ['img/*.*', 'js/jsxc/img/*.*', 'js/jsxc/img/**/*.*'],
-              fixDirLevel: true,
-              baseDir: './'
+              /*fixDirLevel: true,
+              baseDir: './',*/
+              maxBytes: 2048
             }
           }
         }
@@ -140,9 +141,9 @@ module.exports = function(grunt) {
    grunt.loadNpmTasks('grunt-data-uri');
 
    // Default task.
-   grunt.registerTask('default', [ 'jshint', 'search', 'clean', 'css', 'dataUri', 'copy', 'usebanner', 'replace', 'compress' ]);
+   grunt.registerTask('default', [ 'jshint', 'search', 'clean', 'css', 'copy', 'dataUri', 'usebanner', 'replace', 'compress' ]);
 
-   grunt.registerTask('pre', [ 'jshint', 'search:console', 'clean', 'css', 'dataUri', 'copy', 'usebanner', 'replace', 'compress' ]);
+   grunt.registerTask('pre', [ 'jshint', 'search:console', 'clean', 'css', 'copy', 'dataUri', 'usebanner', 'replace', 'compress' ]);
 
    grunt.registerTask('css', [ 'sass', 'autoprefixer' ]);
 };

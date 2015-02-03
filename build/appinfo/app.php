@@ -7,10 +7,10 @@
  * Released under the MIT license
  * 
  * @author Klaus Herberth
-*/
+ */
 OCP\App::registerAdmin ( 'ojsxc', 'settings' );
 
-if(DEBUG === true) {
+if(defined('DEBUG') && DEBUG === true) {
 	// ############# Javascript #############
 	OCP\Util::addScript ( 'ojsxc', 'jsxc/lib/jquery.colorbox-min' );
 	OCP\Util::addScript ( 'ojsxc', 'jsxc/lib/jquery.slimscroll' );
@@ -34,7 +34,7 @@ if(DEBUG === true) {
 	OCP\Util::addScript ( 'ojsxc', 'jsxc/lib/otr/build/otr' );
 	OCP\Util::addScript ( 'ojsxc', 'jsxc/jsxc.lib' );
 	OCP\Util::addScript ( 'ojsxc', 'jsxc/jsxc.lib.webrtc' );
-	// OCP\Util::addScript ( 'ojsxc', 'lib/jsxc.lib.muc' );
+	//OCP\Util::addScript ( 'ojsxc', 'jsxc/jsxc.lib.muc' );
 } else {
 	OCP\Util::addScript ( 'ojsxc', 'jsxc/lib/jquery.colorbox-min' );
 	OCP\Util::addScript ( 'ojsxc', 'jsxc/lib/jquery.slimscroll' );
@@ -48,10 +48,8 @@ OCP\Util::addScript ( 'ojsxc', 'ojsxc' );
 // ############# CSS #############
 OCP\Util::addStyle ( 'ojsxc', 'jquery.mCustomScrollbar' );
 OCP\Util::addStyle ( 'ojsxc', 'jquery.colorbox' );
-OCP\Util::addStyle ( 'ojsxc', '../js/jsxc/jsxc' );
-OCP\Util::addStyle ( 'ojsxc', '../js/jsxc/jsxc.webrtc' );
 OCP\Util::addStyle ( 'ojsxc', 'jsxc.oc' );
-OCP\Util::addStyle ( 'ojsxc', 'muc' );
+//OCP\Util::addStyle ( 'ojsxc', 'muc' );
 
 $version = OCP\Util::getVersion();
 

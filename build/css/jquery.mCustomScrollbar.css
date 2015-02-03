@@ -24,8 +24,6 @@
 
 .mCSB_scrollTools .mCSB_draggerContainer {
 	height: 100%;
-	-webkit-box-sizing: border-box;
-	-moz-box-sizing: border-box;
 	box-sizing: border-box;
 }
 
@@ -37,8 +35,6 @@
 	width: 2px;
 	height: 100%;
 	margin: 0 auto;
-	-webkit-border-radius: 10px;
-	-moz-border-radius: 10px;
 	border-radius: 10px;
 }
 
@@ -52,8 +48,6 @@
 	width: 4px;
 	height: 100%;
 	margin: 0 auto;
-	-webkit-border-radius: 10px;
-	-moz-border-radius: 10px;
 	border-radius: 10px;
 	text-align: center;
 }
@@ -100,8 +94,6 @@
 .mCSB_horizontal .mCSB_scrollTools .mCSB_draggerContainer {
 	height: 100%;
 	width: auto;
-	-webkit-box-sizing: border-box;
-	-moz-box-sizing: border-box;
 	box-sizing: border-box;
 	overflow: hidden;
 }
@@ -116,8 +108,6 @@
 	width: 100%;
 	height: 2px;
 	margin: 7px 0;
-	-webkit-border-radius: 10px;
-	-moz-border-radius: 10px;
 	border-radius: 10px;
 }
 
@@ -130,8 +120,6 @@
 	width: 100%;
 	height: 4px;
 	margin: 6px auto;
-	-webkit-border-radius: 10px;
-	-moz-border-radius: 10px;
 	border-radius: 10px;
 }
 

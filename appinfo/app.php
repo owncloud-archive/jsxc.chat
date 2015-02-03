@@ -7,7 +7,7 @@
  * Released under the MIT license
  * 
  * @author Klaus Herberth
-*/
+ */
 OCP\App::registerAdmin ( 'ojsxc', 'settings' );
 
 if(defined('DEBUG') && DEBUG === true) {

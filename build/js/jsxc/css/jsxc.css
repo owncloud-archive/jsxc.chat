@@ -18,7 +18,7 @@
   background-position: center center; }
 
 div.jsxc_transfer, div.jsxc_transfer.jsxc_disabled:hover {
-  background-image: url("../js/jsxc/img/padlock_open_grey.svg");
+  background-image: url("../../../img/padlock_open_grey.svg");
   background-repeat: no-repeat;
   background-position: center center;
   background-size: 12px 12px; }
@@ -43,7 +43,7 @@ div.jsxc_transfer, div.jsxc_transfer.jsxc_disabled:hover {
   background-position: center center; }
 
 div.jsxc_transfer, div.jsxc_transfer.jsxc_disabled:hover {
-  background-image: url("../js/jsxc/img/padlock_open_grey.svg");
+  background-image: url("../../../img/padlock_open_grey.svg");
   background-repeat: no-repeat;
   background-position: center center;
   background-size: 12px 12px; }
@@ -151,10 +151,10 @@ div.jsxc_transfer, div.jsxc_transfer.jsxc_disabled:hover {
       #jsxc_buddylist .jsxc_options > div:hover {
         opacity: 1; }
   #jsxc_buddylist .jsxc_chaticon {
-    background-image: url("../js/jsxc/img/speech_balloon_white.svg");
+    background-image: url("../../../img/speech_balloon_white.svg");
     background-size: 15px 15px; }
   #jsxc_buddylist .jsxc_videoicon {
-    background-image: url("../js/jsxc/img/camera_icon_white.svg");
+    background-image: url("../../../img/camera_icon_white.svg");
     background-size: 13px 13px; }
   #jsxc_buddylist .jsxc_vcardicon {
     font-size: 15px;
@@ -201,70 +201,70 @@ div.jsxc_transfer, div.jsxc_transfer.jsxc_disabled:hover {
   border: 0; }
 
 .jsxc_angel {
-  background: url("../js/jsxc/img/emotions/angel.png"); }
+  background: url("../../../img/emotions/angel.png"); }
 
 .jsxc_angry {
-  background: url("../js/jsxc/img/emotions/angry.png"); }
+  background: url("../../../img/emotions/angry.png"); }
 
 .jsxc_smile {
-  background: url("../js/jsxc/img/emotions/smile.png"); }
+  background: url("../../../img/emotions/smile.png"); }
 
 .jsxc_grin {
-  background: url("../js/jsxc/img//emotions/grin.png"); }
+  background: url("../../../img//emotions/grin.png"); }
 
 .jsxc_sad {
-  background: url("../js/jsxc/img/emotions/sad.png"); }
+  background: url("../../../img/emotions/sad.png"); }
 
 .jsxc_wink {
-  background: url("../js/jsxc/img/emotions/wink.png"); }
+  background: url("../../../img/emotions/wink.png"); }
 
 .jsxc_tonguesmile {
-  background: url("../js/jsxc/img/emotions/tonguesmile.png"); }
+  background: url("../../../img/emotions/tonguesmile.png"); }
 
 .jsxc_surprised {
-  background: url("../js/jsxc/img/emotions/surprised.png"); }
+  background: url("../../../img/emotions/surprised.png"); }
 
 .jsxc_kiss {
-  background: url("../js/jsxc/img/emotions/kiss.png"); }
+  background: url("../../../img/emotions/kiss.png"); }
 
 .jsxc_sunglassess {
-  background: url("../js/jsxc/img/emotions/sunglassess.png"); }
+  background: url("../../../img/emotions/sunglassess.png"); }
 
 .jsxc_crysad {
-  background: url("../js/jsxc/img/emotions/crysad.png"); }
+  background: url("../../../img/emotions/crysad.png"); }
 
 .jsxc_doubt {
-  background: url("../js/jsxc/img/emotions/doubt.png"); }
+  background: url("../../../img/emotions/doubt.png"); }
 
 .jsxc_zip {
-  background: url("../js/jsxc/img/emotions/zip.png"); }
+  background: url("../../../img/emotions/zip.png"); }
 
 .jsxc_thumbsup {
-  background: url("../js/jsxc/img/emotions/thumbsup.png"); }
+  background: url("../../../img/emotions/thumbsup.png"); }
 
 .jsxc_thumbsdown {
-  background: url("../js/jsxc/img/emotions/thumbsdown.png"); }
+  background: url("../../../img/emotions/thumbsdown.png"); }
 
 .jsxc_beer {
-  background: url("../js/jsxc/img/emotions/beer.png"); }
+  background: url("../../../img/emotions/beer.png"); }
 
 .jsxc_devil {
-  background: url("../js/jsxc/img/emotions/devil.png"); }
+  background: url("../../../img/emotions/devil.png"); }
 
 .jsxc_kissing {
-  background: url("../js/jsxc/img/emotions/kissing.png"); }
+  background: url("../../../img/emotions/kissing.png"); }
 
 .jsxc_rose {
-  background: url("../js/jsxc/img/emotions/rose.png"); }
+  background: url("../../../img/emotions/rose.png"); }
 
 .jsxc_music {
-  background: url("../js/jsxc/img/emotions/music.png"); }
+  background: url("../../../img/emotions/music.png"); }
 
 .jsxc_love {
-  background: url("../js/jsxc/img/emotions/love.png"); }
+  background: url("../../../img/emotions/love.png"); }
 
 .jsxc_tired {
-  background: url("../js/jsxc/img/emotions/tired.png"); }
+  background: url("../../../img/emotions/tired.png"); }
 
 #jsxc_roster {
   position: fixed;
@@ -542,7 +542,7 @@ ul.jsxc_vCard {
   display: block;
   width: 25px;
   height: 30px;
-  background-image: url("../js/jsxc/img/gear_white.svg");
+  background-image: url("../../../img/gear_white.svg");
   background-size: 18px 18px;
   background-repeat: no-repeat;
   background-position: center center; }
@@ -713,7 +713,7 @@ ul.jsxc_vCard {
     cursor: pointer; }
     .jsxc_window .jsxc_emoticons:after {
       content: ' ';
-      background-image: url("../js/jsxc/img/smiley.png");
+      background-image: url("../../../img/smiley.png");
       background-position: center center;
       background-repeat: no-repeat;
       height: 30px;
@@ -922,13 +922,13 @@ ul.jsxc_vCard {
   border-radius: 3px; }
 
 div.jsxc_settings {
-  background-image: url("../js/jsxc/img/gear_grey.svg");
+  background-image: url("../../../img/gear_grey.svg");
   background-size: 15px 15px;
   background-repeat: no-repeat;
   background-position: center center;
   overflow: visible; }
   div.jsxc_settings:hover, div.jsxc_settings .hover {
-    background-image: url("../js/jsxc/img/gear_white.svg"); }
+    background-image: url("../../../img/gear_white.svg"); }
   div.jsxc_settings ul {
     list-style: none;
     padding: 0;
@@ -959,13 +959,13 @@ div.jsxc_settings {
       background-color: #3f8fba; }
 
 div.jsxc_transfer:hover {
-  background-image: url("../js/jsxc/img/padlock_open_white.svg"); }
+  background-image: url("../../../img/padlock_open_white.svg"); }
 div.jsxc_transfer.jsxc_fin {
-  background-image: url("../js/jsxc/img/padlock_close_grey.svg"); }
+  background-image: url("../../../img/padlock_close_grey.svg"); }
 div.jsxc_transfer.jsxc_enc {
-  background-image: url("../js/jsxc/img/padlock_close_orange.svg"); }
+  background-image: url("../../../img/padlock_close_orange.svg"); }
   div.jsxc_transfer.jsxc_enc.jsxc_trust {
-    background-image: url("../js/jsxc/img/padlock_close_green.svg"); }
+    background-image: url("../../../img/padlock_close_green.svg"); }
 
 #colorbox {
   outline: none; }
@@ -979,7 +979,7 @@ div.jsxc_transfer.jsxc_enc {
   height: 32px;
   border: 0;
   background-size: 32px 32px !important;
-  background: url("../js/jsxc/img/loading.gif"); }
+  background: url("../../../img/loading.gif"); }
 
 /* @TODO: check */
 #jsxc_loginForm input[type="submit"] {
@@ -1024,303 +1024,3 @@ img.jsxc_vCard {
   max-height: 200px;
   border: 5px solid #fff;
   border-radius: 2px; }
-
-.jsxc_remotevideo, .jsxc_noRemoteVideo {
-  width: 100%;
-  height: 100%;
-  position: absolute;
-  top: 0;
-  left: 0;
-  z-index: 9000;
-  background-color: #999999; }
-
-.jsxc_webrtc {
-  width: 900px; }
-  .jsxc_webrtc .jsxc_status {
-    z-index: 9999;
-    border-radius: 20px;
-    display: none;
-    position: absolute;
-    top: 30px;
-    left: 50%;
-    background-color: rgba(0, 0, 0, 0.5);
-    color: #fff;
-    padding: 15px;
-    font-weight: bold;
-    text-align: center; }
-  .jsxc_webrtc .slimScrollDiv {
-    opacity: 1 !important; }
-  .jsxc_webrtc li .jsxc_name {
-    cursor: auto; }
-    .jsxc_webrtc li .jsxc_name:hover {
-      color: gray; }
-
-.jsxc_videoContainer {
-  width: 640px;
-  height: 480px;
-  position: relative;
-  background-color: #999999; }
-  .jsxc_videoContainer video {
-    display: none; }
-  .jsxc_videoContainer .jsxc_noRemoteVideo {
-    display: none; }
-
-.jsxc_noRemoteVideo p {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  text-align: center;
-  color: #fff;
-  width: 100%;
-  z-index: 100; }
-.jsxc_noRemoteVideo > div {
-  width: 200px;
-  height: 200px;
-  overflow: hidden;
-  position: absolute;
-  top: 50%;
-  margin-top: -100px;
-  left: 50%;
-  margin-left: -100px; }
-  .jsxc_noRemoteVideo > div > div {
-    background-color: #4d4d4d; }
-    .jsxc_noRemoteVideo > div > div:first-child {
-      width: 50%;
-      height: 50%;
-      border-radius: 50%;
-      position: absolute;
-      left: 50%;
-      margin-left: -25%;
-      top: 10%; }
-    .jsxc_noRemoteVideo > div > div:last-child {
-      position: absolute;
-      bottom: -50%;
-      width: 100%;
-      height: 100%;
-      border-radius: 50%; }
-
-.jsxc_localvideo {
-  width: 160px;
-  height: 120px;
-  position: absolute;
-  right: 10px;
-  bottom: 10px;
-  z-index: 9990;
-  background-color: #000;
-  cursor: pointer; }
-
-div:full-screen {
-  width: 100%;
-  height: 100%;
-  background-color: #000; }
-  div:full-screen.jsxc_localvideo {
-    border: 1px solid #fff; }
-div:-webkit-full-screen {
-  width: 100%;
-  height: 100%;
-  background-color: #000; }
-div:-moz-full-screen {
-  width: 100%;
-  height: 100%;
-  background-color: #000; }
-div:-ms-fullscreen {
-  width: 100%;
-  height: 100%;
-  background-color: #000; }
-div:fullscreen {
-  width: 100%;
-  height: 100%;
-  background-color: #000; }
-  div:-webkit-full-screen.jsxc_localvideo {
-  border: 1px solid #fff; }
-  div:-moz-full-screen.jsxc_localvideo {
-  border: 1px solid #fff; }
-  div:-ms-fullscreen.jsxc_localvideo {
-  border: 1px solid #fff; }
-  div:fullscreen.jsxc_localvideo {
-    border: 1px solid #fff; }
-div.jsxc_video {
-  background-image: url("../js/jsxc/img/camera_icon_grey.svg");
-  background-repeat: no-repeat;
-  background-position: center center;
-  background-size: 15px 15px; }
-  div.jsxc_video:not(.jsxc_disabled):hover {
-    background-image: url("../js/jsxc/img/camera_icon_white.svg"); }
-
-.jsxc_controlbar {
-  width: 640px; }
-  .jsxc_controlbar .jsxc_showchat {
-    float: right; }
-
-.jsxc_multi > div {
-  display: none; }
-
-.jsxc_snapshotbar {
-  width: 100%;
-  display: none; }
-  .jsxc_snapshotbar img {
-    height: 50px; }
-
-.jsxc_buttongroup {
-  display: inline; }
-  .jsxc_buttongroup button:first-child {
-    border-top-right-radius: 0;
-    border-bottom-right-radius: 0;
-    margin-right: 0; }
-  .jsxc_buttongroup button:last-child {
-    border-top-left-radius: 0;
-    border-bottom-left-radius: 0;
-    margin-left: 0; }
-
-.jsxc_chatarea {
-  position: relative;
-  float: right;
-  height: 480px;
-  width: 250px;
-  background-color: #999999; }
-  .jsxc_chatarea .jsxc_settings {
-    display: none !important; }
-  .jsxc_chatarea .jsxc_close {
-    display: none !important; }
-  .jsxc_chatarea .jsxc_video {
-    display: none !important; }
-  .jsxc_chatarea .jsxc_window {
-    bottom: 0;
-    box-shadow: none; }
-  .jsxc_chatarea > ul {
-    width: 250px;
-    height: 480px;
-    list-style: none;
-    padding: 0; }
-
-.bubblingG {
-  text-align: center;
-  width: 129px;
-  height: 80px;
-  position: absolute;
-  top: 40%;
-  left: 50%;
-  margin-left: -64px; }
-  .bubblingG span {
-    display: inline-block;
-    vertical-align: middle;
-    width: 16px;
-    height: 16px;
-    margin: 40px auto;
-    background: #000;
-    border-radius: 81px;
-    -webkit-animation: bubblingG 1.3s infinite alternate;
-            animation: bubblingG 1.3s infinite alternate; }
-
-#bubblingG_1 {
-  -webkit-animation-delay: 0s;
-          animation-delay: 0s; }
-
-#bubblingG_2 {
-  -webkit-animation-delay: 0.39s;
-          animation-delay: 0.39s; }
-
-#bubblingG_3 {
-  -webkit-animation-delay: 0.78s;
-          animation-delay: 0.78s; }
-
-@-webkit-keyframes bubblingG {
-
-  0% {
-    width: 16px;
-    height: 16px;
-    background-color: #000;
-    -webkit-transform: translateY(0);
-            transform: translateY(0); }
-
-  100% {
-    width: 39px;
-    height: 39px;
-    background-color: #fff;
-    -webkit-transform: translateY(-34px);
-            transform: translateY(-34px); } }
-
-@keyframes bubblingG {
-  0% {
-    width: 16px;
-    height: 16px;
-    background-color: #000;
-    -webkit-transform: translateY(0);
-            transform: translateY(0); }
-
-  100% {
-    width: 39px;
-    height: 39px;
-    background-color: #fff;
-    -webkit-transform: translateY(-34px);
-            transform: translateY(-34px); } }
-
-.jsxc_fullscreen.jsxc_localvideo {
-  border: 1px solid #fff; }
-
-.jsxc_videoSuitable .jsxc_name {
-  font-style: italic; }
-
-#jsxc_buddylist .jsxc_options .jsxc_video {
-  background-image: url("../js/jsxc/img/camera_icon_white.svg"); }
-  #jsxc_buddylist .jsxc_options .jsxc_video.jsxc_disabled {
-    opacity: 0.2; }
-
-#jsxc_roster {
-  top: 45px;
-  background-color: #383C43; }
-
-#jsxc_windowList, #jsxc_windowListSB {
-  z-index: 80; }
-
-#jsxc {
-  padding: 20px; }
-  #jsxc h1 {
-    margin: 15px 0px 5px 0px;
-    font-size: 1.5em; }
-  #jsxc a {
-    color: blue;
-    text-decoration: underline; }
-    #jsxc a:hover {
-      text-decoration: none; }
-
-#jsxc_alt {
-  text-align: right;
-  margin: 15px;
-  opacity: 0.5;
-  font-style: italic;
-  padding-top: 5px; }
-  #jsxc_alt:hover {
-    opacity: 0.8; }
-
-.jsxc_success, .jsxc_fail {
-  border: 1px solid #fff;
-  border-radius: 3px;
-  padding: 3px;
-  padding-left: 22px;
-  background-position: 3px center;
-  background-repeat: no-repeat;
-  margin: 3px;
-  width: -moz-fit-content;
-  width: -webkit-fit-content; }
-
-.jsxc_success {
-  background-color: #A1F6BB;
-  background-image: url('../img/pass-icon.png');
-  color: #003300;
-  border-color: #003300; }
-
-.jsxc_fail {
-  background-color: #FF9999;
-  background-image: url('../img/fail-icon.png');
-  color: #800000;
-  border-color: #800000; }
-
-.jsxc_log {
-  width: 500px; }
-
-#mainContainer, #odf-toolbar {
-  right: 205px;
-  left: 0px;
-  width: auto !important;
-  z-index: 70 !important; }
