@@ -1,5 +1,5 @@
 /*!
- * ojsxc v1.1.0-beta - 2015-02-03
+ * ojsxc v1.1.0 - 2015-02-16
  * 
  * Copyright (c) 2015 Klaus Herberth <klaus@jsxc.org> <br>
  * Released under the MIT license
@@ -7,10 +7,11 @@
  * Please see http://www.jsxc.org/
  * 
  * @author Klaus Herberth <klaus@jsxc.org>
- * @version 1.1.0-beta
+ * @version 1.1.0
  * @license MIT
  */
 
+@charset "UTF-8";
 #jsxc_buddylist li:hover .jsxc_avatar, .jsxc_avatar {
   width: 25px;
   height: 25px;
@@ -93,7 +94,7 @@ div.jsxc_transfer, div.jsxc_transfer.jsxc_disabled:hover {
       width: 0;
       height: 0;
       display: inline-block;
-      opacity: 0;
+      opacity: 0.0;
       -webkit-transition: width 0.5s, opacity 0.5s;
               transition: width 0.5s, opacity 0.5s; }
     #jsxc_buddylist li.jsxc_unreadMsg .jsxc_name:before {
@@ -102,7 +103,7 @@ div.jsxc_transfer, div.jsxc_transfer.jsxc_disabled:hover {
       border-radius: 6px;
       background-color: #ffa500;
       margin-right: 3px;
-      opacity: 1;
+      opacity: 1.0;
       -webkit-transition: width 0.5s, opacity 0.5s;
               transition: width 0.5s, opacity 0.5s; }
   #jsxc_buddylist .jsxc_name {
@@ -119,7 +120,7 @@ div.jsxc_transfer, div.jsxc_transfer.jsxc_disabled:hover {
       line-height: 20px;
       color: #fff; }
       #jsxc_buddylist .jsxc_right div:hover {
-        opacity: 1; }
+        opacity: 1.0; }
   #jsxc_buddylist .jsxc_control {
     position: absolute;
     width: 30px;
@@ -146,7 +147,7 @@ div.jsxc_transfer, div.jsxc_transfer.jsxc_disabled:hover {
               transition: transform 0.5s; }
     #jsxc_buddylist .jsxc_control:hover:after {
       color: #fff;
-      opacity: 1; }
+      opacity: 1.0; }
   #jsxc_buddylist .jsxc_options {
     height: 20px;
     float: left;
@@ -561,7 +562,6 @@ ul.jsxc_vCard {
   background-position: center center; }
 
 @-webkit-keyframes bounce {
-
   0% {
     bottom: 0;
     -webkit-animation-timing-function: ease-in;
@@ -780,8 +780,8 @@ ul.jsxc_vCard {
     right: 0;
     height: 15px;
     z-index: 100;
-    background: -webkit-linear-gradient(top, #999999 0, rgba(0, 0, 0, 0) 100%);
-    background: linear-gradient(to bottom, #999999 0, rgba(0, 0, 0, 0) 100%);
+    background: -webkit-linear-gradient(top, #999999 0, transparent 100%);
+    background: linear-gradient(to bottom, #999999 0, transparent 100%);
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='$window_gradient', endColorstr='#00282323', GradientType=0); }
   .jsxc_window .jsxc_avatar {
     margin-top: 1px; }
@@ -804,14 +804,14 @@ ul.jsxc_vCard {
     box-sizing: border-box;
     text-align: right; }
   .jsxc_window input::-webkit-input-placeholder {
-  color: #000;
-  opacity: 0.3; }
+    color: #000;
+    opacity: 0.3; }
   .jsxc_window input::-moz-placeholder {
-  color: #000;
-  opacity: 0.3; }
+    color: #000;
+    opacity: 0.3; }
   .jsxc_window input:-ms-input-placeholder {
-  color: #000;
-  opacity: 0.3; }
+    color: #000;
+    opacity: 0.3; }
   .jsxc_window input::placeholder {
     color: #000;
     opacity: 0.3; }
@@ -1145,11 +1145,11 @@ div:fullscreen {
   height: 100%;
   background-color: #000; }
   div:-webkit-full-screen.jsxc_localvideo {
-  border: 1px solid #fff; }
+    border: 1px solid #fff; }
   div:-moz-full-screen.jsxc_localvideo {
-  border: 1px solid #fff; }
+    border: 1px solid #fff; }
   div:-ms-fullscreen.jsxc_localvideo {
-  border: 1px solid #fff; }
+    border: 1px solid #fff; }
   div:fullscreen.jsxc_localvideo {
     border: 1px solid #fff; }
 div.jsxc_video {
@@ -1238,7 +1238,6 @@ div.jsxc_video {
           animation-delay: 0.78s; }
 
 @-webkit-keyframes bubblingG {
-
   0% {
     width: 16px;
     height: 16px;

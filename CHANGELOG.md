@@ -1,3 +1,12 @@
+v1.1.0 / 2015-02-16
+===
+- upgrade jsxc to v1.1.0
+- add routes
+- fix bosh test with csp
+- prepare oc 8
+- switch to sass
+- supress php notice
+
 v1.0.0 / 2014-11-06
 ===
 - upgrade jsxc to v1.0.0

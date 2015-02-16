@@ -3,12 +3,12 @@
 	<id>ojsxc</id>
 	<name>JavaScript XMPP Chat</name>
 	<description>XMPP Chat with OTR</description>
-	<version>1.1.0-beta</version>
+	<version>1.1.0</version>
 	<licence>MIT</licence>
 	<author>Klaus Herberth</author>
 	<require>5</require>
 	<website>https://www.jsxc.org</website>
-	<bugs>http://github.com/sualko/jsxc/issues</bugs>
-	<repository type="git">http://github.com/sualko/jsxc.owncloud.git</repository>
+	<bugs>http://github.com/jsxc/jsxc/issues</bugs>
+	<repository type="git">http://github.com/jsxc/jsxc.owncloud.git</repository>
 	<ocsid>162257</ocsid>
 </info>
