@@ -10,38 +10,13 @@
  */
 OCP\App::registerAdmin ( 'ojsxc', 'settings' );
 
-if(defined('DEBUG') && DEBUG === true) {
-	// ############# Javascript #############
-	OCP\Util::addScript ( 'ojsxc', 'jsxc/lib/jquery.colorbox-min' );
-	OCP\Util::addScript ( 'ojsxc', 'jsxc/lib/jquery.slimscroll' );
-	OCP\Util::addScript ( 'ojsxc', 'jsxc/lib/jquery.fullscreen' );
-	OCP\Util::addScript ( 'ojsxc', 'jsxc/lib/strophe' );
-	
-	OCP\Util::addScript ( 'ojsxc', 'jsxc/lib/strophe.muc' );
-	OCP\Util::addScript ( 'ojsxc', 'jsxc/lib/strophe.disco' );
-	OCP\Util::addScript ( 'ojsxc', 'jsxc/lib/strophe.caps' );
-	OCP\Util::addScript ( 'ojsxc', 'jsxc/lib/strophe.vcard' );
-	OCP\Util::addScript ( 'ojsxc', 'jsxc/lib/strophe.jingle/strophe.jingle' );
-	OCP\Util::addScript ( 'ojsxc', 'jsxc/lib/strophe.jingle/strophe.jingle.session' );
-	OCP\Util::addScript ( 'ojsxc', 'jsxc/lib/strophe.jingle/strophe.jingle.sdp' );
-	OCP\Util::addScript ( 'ojsxc', 'jsxc/lib/strophe.jingle/strophe.jingle.adapter' );
-	
-	OCP\Util::addScript ( 'ojsxc', 'jsxc/lib/otr/build/dep/salsa20' );
-	OCP\Util::addScript ( 'ojsxc', 'jsxc/lib/otr/build/dep/bigint' );
-	OCP\Util::addScript ( 'ojsxc', 'jsxc/lib/otr/build/dep/crypto' );
-	OCP\Util::addScript ( 'ojsxc', 'eof' );
-	OCP\Util::addScript ( 'ojsxc', 'jsxc/lib/otr/build/dep/eventemitter' );
-	OCP\Util::addScript ( 'ojsxc', 'jsxc/lib/otr/build/otr' );
-	OCP\Util::addScript ( 'ojsxc', 'jsxc/jsxc.lib' );
-	OCP\Util::addScript ( 'ojsxc', 'jsxc/jsxc.lib.webrtc' );
-	//OCP\Util::addScript ( 'ojsxc', 'jsxc/jsxc.lib.muc' );
-} else {
-	OCP\Util::addScript ( 'ojsxc', 'jsxc/lib/jquery.colorbox-min' );
-	OCP\Util::addScript ( 'ojsxc', 'jsxc/lib/jquery.slimscroll' );
-	OCP\Util::addScript ( 'ojsxc', 'jsxc/lib/jquery.fullscreen' );
-	OCP\Util::addScript ( 'ojsxc', 'jsxc/lib/jsxc.dep.min' );
-	OCP\Util::addScript ( 'ojsxc', 'jsxc/jsxc.min' );
-}
+$jsxc_root = (defined('JSXC_ENV') && JSXC_ENV === 'dev')? 'jsxc/dev/' : 'jsxc/';
+
+OCP\Util::addScript ( 'ojsxc', $jsxc_root.'lib/jquery.colorbox-min' );
+OCP\Util::addScript ( 'ojsxc', $jsxc_root.'lib/jquery.slimscroll' );
+OCP\Util::addScript ( 'ojsxc', $jsxc_root.'lib/jquery.fullscreen' );
+OCP\Util::addScript ( 'ojsxc', $jsxc_root.'lib/jsxc.dep' );
+OCP\Util::addScript ( 'ojsxc', $jsxc_root.'jsxc' );
 
 OCP\Util::addScript ( 'ojsxc', 'ojsxc' );
 

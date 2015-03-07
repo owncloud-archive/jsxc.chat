@@ -17,7 +17,7 @@ module.exports = function(grunt) {
          files: [ 'js/ojsxc.js' ]
       },
       copy: {
-         main: {
+         build: {
             files: [ {
                expand: true,
                src: [ 'js/*.js', 'css/*', 'appinfo/*', 'ajax/*', 'img/**', 'templates/*', 'sound/*', 'settings.php', 'LICENSE' ],
@@ -27,6 +27,14 @@ module.exports = function(grunt) {
                cwd: 'js/jsxc/build/',
                src: [ '**' ],
                dest: 'build/js/jsxc/'
+            } ]
+         },
+         css: {
+            files: [ {
+               expand: true,
+               cwd: 'js/jsxc/lib/',
+               src: ['*.css'],
+               dest: 'css/'
             } ]
          }
       },
@@ -125,6 +133,12 @@ module.exports = function(grunt) {
               maxBytes: 2048
             }
           }
+        },
+        watch: {
+            css: {
+                files: ['js/jsxc/scss/*', 'scss/*'],
+                tasks: ['sass', 'autoprefixer']
+            }
         }
    });
 
@@ -139,11 +153,14 @@ module.exports = function(grunt) {
    grunt.loadNpmTasks('grunt-sass');
    grunt.loadNpmTasks('grunt-autoprefixer');
    grunt.loadNpmTasks('grunt-data-uri');
+   grunt.loadNpmTasks('grunt-contrib-watch');
 
-   // Default task.
-   grunt.registerTask('default', [ 'jshint', 'search', 'clean', 'css', 'copy', 'dataUri', 'usebanner', 'replace', 'compress' ]);
+   grunt.registerTask('default', [ 'copy:css', 'sass', 'autoprefixer', 'watch' ]);
 
-   grunt.registerTask('pre', [ 'jshint', 'search:console', 'clean', 'css', 'copy', 'dataUri', 'usebanner', 'replace', 'compress' ]);
+   grunt.registerTask('build:prerelease', [ 'jshint', 'search:console', 'clean', 'sass', 'autoprefixer', 'copy:css', 'copy:build', 'dataUri', 'usebanner', 'replace', 'compress' ]);
 
-   grunt.registerTask('css', [ 'sass', 'autoprefixer' ]);
+   grunt.registerTask('build:release', [ 'search:changelog', 'build:prerelease' ]);
+
+   // @deprecated
+   grunt.registerTask('pre', [ 'build:prerelease' ]);
 };
