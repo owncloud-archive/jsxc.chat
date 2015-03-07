@@ -204,7 +204,7 @@ $(function() {
    // Add submit link without chat functionality
    if (jsxc.el_exists(jsxc.options.loginForm.form) && jsxc.el_exists(jsxc.options.loginForm.jid) && jsxc.el_exists(jsxc.options.loginForm.pass)) {
 
-      var link = $('<a/>').text(jsxc.translate('%%Log_in_without_chat%%')).attr('href', '#').click(function() {
+      var link = $('<a/>').text($.t('Log_in_without_chat')).attr('href', '#').click(function() {
          jsxc.submitLoginForm();
       });
 
