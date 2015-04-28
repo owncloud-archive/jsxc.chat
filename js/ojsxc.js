@@ -198,6 +198,19 @@ $(function() {
          });
 
          return ret;
+      },
+      getUsers: function(search, cb) {
+         $.ajax({
+            type: 'GET',
+            url: OC.filePath('ojsxc', 'ajax', 'getUsers.php'),
+            data: {
+               search: search
+            },
+            success: cb,
+            error: function() {
+               jsxc.error('XHR error on getUsers.php');
+            }
+         });
       }
    });
 

@@ -18,5 +18,8 @@ $this->create('ojsxc_ajax_setsettings', 'ajax/setsettings.php')
 	
 $this->create('ojsxc_ajax_setUserSettings', 'ajax/setUserSettings.php')
 	->actionInclude('ojsxc/ajax/setUserSettings.php');
+
+$this->create('ojsxc_ajax_getUsers', 'ajax/getUsers.php')
+	->actionInclude('ojsxc/ajax/getUsers.php');
 	
 ?>
