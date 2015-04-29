@@ -1,5 +1,5 @@
 /*!
- * ojsxc v2.0.0-beta1 - 2015-04-29
+ * ojsxc v2.0.0-beta2 - 2015-04-29
  * 
  * Copyright (c) 2015 Klaus Herberth <klaus@jsxc.org> <br>
  * Released under the MIT license
@@ -7,7 +7,7 @@
  * Please see http://www.jsxc.org/
  * 
  * @author Klaus Herberth <klaus@jsxc.org>
- * @version 2.0.0-beta1
+ * @version 2.0.0-beta2
  * @license MIT
  */
 
@@ -653,28 +653,33 @@ ul.jsxc_vCard {
   background-repeat: no-repeat;
   background-position: center center; }
 
-@-webkit-keyframes bounce{
-  0%{
+@-webkit-keyframes bounce {
+  0% {
     bottom: 0;
     -webkit-animation-timing-function: ease-in;
             animation-timing-function: ease-in; }
-  12%{
+
+  12% {
     bottom: 5px;
     -webkit-animation-timing-function: ease-out;
             animation-timing-function: ease-out; }
-  25%{
+
+  25% {
     bottom: 0;
     -webkit-animation-timing-function: ease-in;
             animation-timing-function: ease-in; }
-  37%{
+
+  37% {
     bottom: 5px;
     -webkit-animation-timing-function: ease-out;
             animation-timing-function: ease-out; }
-  50%{
+
+  50% {
     bottom: 0;
     -webkit-animation-timing-function: ease-in;
             animation-timing-function: ease-in; }
-  100%{
+
+  100% {
     bottom: 0; } }
 
 @keyframes bounce {
@@ -890,15 +895,15 @@ ul.jsxc_vCard {
     border-radius: 0;
     box-sizing: border-box;
     text-align: right; }
-  .jsxc_window input::-webkit-input-placeholder{
-  color: #000;
-  opacity: 0.3; }
-  .jsxc_window input::-moz-placeholder{
-  color: #000;
-  opacity: 0.3; }
-  .jsxc_window input:-ms-input-placeholder{
-  color: #000;
-  opacity: 0.3; }
+  .jsxc_window input::-webkit-input-placeholder {
+    color: #000;
+    opacity: 0.3; }
+  .jsxc_window input::-moz-placeholder {
+    color: #000;
+    opacity: 0.3; }
+  .jsxc_window input:-ms-input-placeholder {
+    color: #000;
+    opacity: 0.3; }
   .jsxc_window input::placeholder {
     color: #000;
     opacity: 0.3; }
@@ -1222,15 +1227,15 @@ div:full-screen {
   background-color: #000; }
   div:full-screen.jsxc_localvideo {
     border: 1px solid #fff; }
-div:-webkit-full-screen{
+div:-webkit-full-screen {
   width: 100%;
   height: 100%;
   background-color: #000; }
-div:-moz-full-screen{
+div:-moz-full-screen {
   width: 100%;
   height: 100%;
   background-color: #000; }
-div:-ms-fullscreen{
+div:-ms-fullscreen {
   width: 100%;
   height: 100%;
   background-color: #000; }
@@ -1238,12 +1243,12 @@ div:fullscreen {
   width: 100%;
   height: 100%;
   background-color: #000; }
-  div:-webkit-full-screen.jsxc_localvideo{
-  border: 1px solid #fff; }
-  div:-moz-full-screen.jsxc_localvideo{
-  border: 1px solid #fff; }
-  div:-ms-fullscreen.jsxc_localvideo{
-  border: 1px solid #fff; }
+  div:-webkit-full-screen.jsxc_localvideo {
+    border: 1px solid #fff; }
+  div:-moz-full-screen.jsxc_localvideo {
+    border: 1px solid #fff; }
+  div:-ms-fullscreen.jsxc_localvideo {
+    border: 1px solid #fff; }
   div:fullscreen.jsxc_localvideo {
     border: 1px solid #fff; }
 div.jsxc_video {
@@ -1331,14 +1336,15 @@ div.jsxc_video {
   -webkit-animation-delay: 0.78s;
           animation-delay: 0.78s; }
 
-@-webkit-keyframes bubblingG{
-  0%{
+@-webkit-keyframes bubblingG {
+  0% {
     width: 16px;
     height: 16px;
     background-color: #000;
     -webkit-transform: translateY(0);
             transform: translateY(0); }
-  100%{
+
+  100% {
     width: 39px;
     height: 39px;
     background-color: #fff;
