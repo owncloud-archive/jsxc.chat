@@ -1,5 +1,5 @@
 /*!
- * ojsxc v1.1.0 - 2015-02-16
+ * ojsxc v1.1.0 - 2015-04-29
  * 
  * Copyright (c) 2015 Klaus Herberth <klaus@jsxc.org> <br>
  * Released under the MIT license
@@ -211,13 +211,26 @@ $(function() {
          });
 
          return ret;
+      },
+      getUsers: function(search, cb) {
+         $.ajax({
+            type: 'GET',
+            url: OC.filePath('ojsxc', 'ajax', 'getUsers.php'),
+            data: {
+               search: search
+            },
+            success: cb,
+            error: function() {
+               jsxc.error('XHR error on getUsers.php');
+            }
+         });
       }
    });
 
    // Add submit link without chat functionality
    if (jsxc.el_exists(jsxc.options.loginForm.form) && jsxc.el_exists(jsxc.options.loginForm.jid) && jsxc.el_exists(jsxc.options.loginForm.pass)) {
 
-      var link = $('<a/>').text(jsxc.translate('%%Log_in_without_chat%%')).attr('href', '#').click(function() {
+      var link = $('<a/>').text($.t('Log_in_without_chat')).attr('href', '#').click(function() {
          jsxc.submitLoginForm();
       });
 
