@@ -1,5 +1,5 @@
 /*!
- * ojsxc v2.0.0-beta2 - 2015-04-29
+ * ojsxc v2.0.0 - 2015-05-08
  * 
  * Copyright (c) 2015 Klaus Herberth <klaus@jsxc.org> <br>
  * Released under the MIT license
@@ -7,7 +7,7 @@
  * Please see http://www.jsxc.org/
  * 
  * @author Klaus Herberth <klaus@jsxc.org>
- * @version 2.0.0-beta2
+ * @version 2.0.0
  * @license MIT
  */
 
@@ -423,7 +423,7 @@ div.jsxc_transfer, div.jsxc_transfer.jsxc_disabled:hover {
   display: none; }
 .jsxc_windowItem.jsxc_groupchat .jsxc_transfer {
   display: none; }
-.jsxc_windowItem.jsxc_groupchat .jsxc_fingerprints, .jsxc_windowItem.jsxc_groupchat jsxc_verification, .jsxc_windowItem.jsxc_groupchat jsxc_transfer {
+.jsxc_windowItem.jsxc_groupchat .jsxc_fingerprints, .jsxc_windowItem.jsxc_groupchat .jsxc_verification, .jsxc_windowItem.jsxc_groupchat .jsxc_transfer {
   display: none; }
 .jsxc_windowItem.jsxc_groupchat .jsxc_members {
   background-image: url("../js/jsxc/img/group_grey.svg");
@@ -457,7 +457,8 @@ div.jsxc_transfer, div.jsxc_transfer.jsxc_disabled:hover {
     color: gray;
     overflow: hidden;
     -webkit-transition: left 400ms;
-            transition: left 400ms; }
+            transition: left 400ms;
+    padding: 0px; }
     .jsxc_windowItem .jsxc_memberlist ul > li {
       display: inline-block;
       white-space: normal; }
@@ -571,6 +572,8 @@ li[data-type="groupchat"] .jsxc_video {
     background-size: 100%;
     margin: 0 3px 0 0;
     background-image: url("../js/jsxc/img/loading.gif"); }
+  #jsxc_dialog .jsxc_libraries {
+    max-width: 300px; }
 
 .jsxc_avatar img {
   display: block;
@@ -653,33 +656,28 @@ ul.jsxc_vCard {
   background-repeat: no-repeat;
   background-position: center center; }
 
-@-webkit-keyframes bounce {
-  0% {
+@-webkit-keyframes bounce{
+  0%{
     bottom: 0;
     -webkit-animation-timing-function: ease-in;
             animation-timing-function: ease-in; }
-
-  12% {
+  12%{
     bottom: 5px;
     -webkit-animation-timing-function: ease-out;
             animation-timing-function: ease-out; }
-
-  25% {
+  25%{
     bottom: 0;
     -webkit-animation-timing-function: ease-in;
             animation-timing-function: ease-in; }
-
-  37% {
+  37%{
     bottom: 5px;
     -webkit-animation-timing-function: ease-out;
             animation-timing-function: ease-out; }
-
-  50% {
+  50%{
     bottom: 0;
     -webkit-animation-timing-function: ease-in;
             animation-timing-function: ease-in; }
-
-  100% {
+  100%{
     bottom: 0; } }
 
 @keyframes bounce {
@@ -895,15 +893,15 @@ ul.jsxc_vCard {
     border-radius: 0;
     box-sizing: border-box;
     text-align: right; }
-  .jsxc_window input::-webkit-input-placeholder {
-    color: #000;
-    opacity: 0.3; }
-  .jsxc_window input::-moz-placeholder {
-    color: #000;
-    opacity: 0.3; }
-  .jsxc_window input:-ms-input-placeholder {
-    color: #000;
-    opacity: 0.3; }
+  .jsxc_window input::-webkit-input-placeholder{
+  color: #000;
+  opacity: 0.3; }
+  .jsxc_window input::-moz-placeholder{
+  color: #000;
+  opacity: 0.3; }
+  .jsxc_window input:-ms-input-placeholder{
+  color: #000;
+  opacity: 0.3; }
   .jsxc_window input::placeholder {
     color: #000;
     opacity: 0.3; }
@@ -1227,15 +1225,15 @@ div:full-screen {
   background-color: #000; }
   div:full-screen.jsxc_localvideo {
     border: 1px solid #fff; }
-div:-webkit-full-screen {
+div:-webkit-full-screen{
   width: 100%;
   height: 100%;
   background-color: #000; }
-div:-moz-full-screen {
+div:-moz-full-screen{
   width: 100%;
   height: 100%;
   background-color: #000; }
-div:-ms-fullscreen {
+div:-ms-fullscreen{
   width: 100%;
   height: 100%;
   background-color: #000; }
@@ -1243,12 +1241,12 @@ div:fullscreen {
   width: 100%;
   height: 100%;
   background-color: #000; }
-  div:-webkit-full-screen.jsxc_localvideo {
-    border: 1px solid #fff; }
-  div:-moz-full-screen.jsxc_localvideo {
-    border: 1px solid #fff; }
-  div:-ms-fullscreen.jsxc_localvideo {
-    border: 1px solid #fff; }
+  div:-webkit-full-screen.jsxc_localvideo{
+  border: 1px solid #fff; }
+  div:-moz-full-screen.jsxc_localvideo{
+  border: 1px solid #fff; }
+  div:-ms-fullscreen.jsxc_localvideo{
+  border: 1px solid #fff; }
   div:fullscreen.jsxc_localvideo {
     border: 1px solid #fff; }
 div.jsxc_video {
@@ -1336,15 +1334,14 @@ div.jsxc_video {
   -webkit-animation-delay: 0.78s;
           animation-delay: 0.78s; }
 
-@-webkit-keyframes bubblingG {
-  0% {
+@-webkit-keyframes bubblingG{
+  0%{
     width: 16px;
     height: 16px;
     background-color: #000;
     -webkit-transform: translateY(0);
             transform: translateY(0); }
-
-  100% {
+  100%{
     width: 39px;
     height: 39px;
     background-color: #fff;

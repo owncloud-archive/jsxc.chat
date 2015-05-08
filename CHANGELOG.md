@@ -1,3 +1,10 @@
+v2.0.0 / 2015-05-08
+===
+- upgrade jsxc to v2.0.0
+- add username autocomplete
+- fix 'login without chat' style
+- fix zindex window list
+
 v1.1.0 / 2015-02-16
 ===
 - upgrade jsxc to v1.1.0

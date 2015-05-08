@@ -94,7 +94,6 @@ $(function() {
          pass: '#password'
       },
       logoutElement: $('#logout'),
-      checkFlash: false,
       rosterAppend: 'body',
       root: oc_appswebroots.ojsxc + '/js/jsxc',
       // @TODO: don't include get turn credentials routine into jsxc
