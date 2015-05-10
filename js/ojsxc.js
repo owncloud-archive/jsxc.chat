@@ -14,19 +14,20 @@ function onRosterToggle(event, state, duration) {
    var control = $('#controls');
 
    var roster_width = (state === 'shown') ? $('#jsxc_roster').outerWidth() : 0;
+   var toggle_width = $('#jsxc_toggleRoster').width();
    var navigation_width = $('#navigation').width();
 
    wrapper.animate({
-      paddingRight: (roster_width) + 'px'
+      paddingRight: (roster_width + toggle_width) + 'px'
    }, duration);
    control.animate({
-      paddingRight: (roster_width + navigation_width) + 'px'
+      paddingRight: (roster_width + navigation_width + toggle_width) + 'px'
    }, duration);
 
    // update webodf
    if (typeof dijit !== 'undefined') {
       $('#mainContainer, #odf-toolbar').animate({
-         right: (roster_width) + 'px'
+         right: (roster_width + toggle_width) + 'px'
       }, {
          progress: function() {
             dijit.byId("mainContainer").resize();
@@ -45,13 +46,14 @@ function onRosterReady() {
    var roster_width = $('#jsxc_roster').outerWidth();
    var navigation_width = $('#navigation').width();
    var roster_right = parseFloat($('#jsxc_roster').css('right'));
+   var toggle_width = $('#jsxc_toggleRoster').width();
 
-   $('#content-wrapper').css('paddingRight', roster_width + roster_right);
-   $('#controls').css('paddingRight', roster_width + navigation_width + roster_right);
+   $('#content-wrapper').css('paddingRight', roster_width + roster_right + toggle_width);
+   $('#controls').css('paddingRight', roster_width + navigation_width + roster_right + toggle_width);
 
    // update webodf
    if (typeof dijit !== 'undefined') {
-      $('#mainContainer, #odf-toolbar').css('right', roster_width + roster_right);
+      $('#mainContainer, #odf-toolbar').css('right', roster_width + roster_right + toggle_width);
       dijit.byId("mainContainer").resize();
    }
 }
