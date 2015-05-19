@@ -43,18 +43,37 @@ function onRosterToggle(event, state, duration) {
  */
 function onRosterReady() {
    "use strict";
-   var roster_width = $('#jsxc_roster').outerWidth();
-   var navigation_width = $('#navigation').width();
-   var roster_right = parseFloat($('#jsxc_roster').css('right'));
-   var toggle_width = $('#jsxc_toggleRoster').width();
+   var roster_width, navigation_width, roster_right, toggle_width;
 
-   $('#content-wrapper').css('paddingRight', roster_width + roster_right + toggle_width);
-   $('#controls').css('paddingRight', roster_width + navigation_width + roster_right + toggle_width);
+   getValues();
+
+   $('#content-wrapper').css('paddingRight', roster_width + roster_right);
+   $('#controls').css('paddingRight', roster_width + navigation_width + roster_right);
 
    // update webodf
-   if (typeof dijit !== 'undefined') {
-      $('#mainContainer, #odf-toolbar').css('right', roster_width + roster_right + toggle_width);
-      dijit.byId("mainContainer").resize();
+   var contentbg = $('#content-wrapper').css('background-color');
+   $(window).on('hashchange', function() {
+      $('#content-wrapper').css('background-color', contentbg);
+
+      if (window.location.pathname.match(/\/documents\/$/)) {
+         var docNo = window.location.hash.replace(/^#/, '');
+
+         if (docNo.match(/[0-9]+/) && typeof dijit !== 'undefined') {
+            getValues();
+
+            $('#content-wrapper').css('background-color', $('#mainContainer').css('background-color'));
+
+            $('#mainContainer, #odf-toolbar').css('right', roster_width + roster_right + toggle_width);
+            dijit.byId("mainContainer").resize();
+         }
+      }
+   });
+
+   function getValues() {
+      roster_width = $('#jsxc_roster').outerWidth();
+      navigation_width = $('#navigation').width();
+      roster_right = parseFloat($('#jsxc_roster').css('right'));
+      toggle_width = $('#jsxc_toggleRoster').width();
    }
 }
 
@@ -66,7 +85,7 @@ $(function() {
       return;
    }
 
-   $(document).on('ready.roster.jsxc', onRosterReady);
+   $(document).one('ready.roster.jsxc', onRosterReady);
    $(document).on('toggle.roster.jsxc', onRosterToggle);
 
    $(document).on('connected.jsxc', function() {
