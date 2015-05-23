@@ -1,4 +1,5 @@
 /* global jsxc, oc_appswebroots, OC, $, oc_requesttoken, dijit */
+/* jshint latedef: nofunc */
 
 /**
  * Make room for the roster inside the owncloud template.
@@ -47,8 +48,8 @@ function onRosterReady() {
 
    getValues();
 
-   $('#content-wrapper').css('paddingRight', roster_width + roster_right);
-   $('#controls').css('paddingRight', roster_width + navigation_width + roster_right);
+   $('#content-wrapper').css('paddingRight', roster_width + roster_right + toggle_width);
+   $('#controls').css('paddingRight', roster_width + navigation_width + roster_right + toggle_width);
 
    // update webodf
    var contentbg = $('#content-wrapper').css('background-color');
