@@ -1,5 +1,5 @@
 /*!
- * ojsxc v2.0.0 - 2015-05-08
+ * ojsxc v2.0.1 - 2015-05-23
  * 
  * Copyright (c) 2015 Klaus Herberth <klaus@jsxc.org> <br>
  * Released under the MIT license
@@ -7,7 +7,7 @@
  * Please see http://www.jsxc.org/
  * 
  * @author Klaus Herberth <klaus@jsxc.org>
- * @version 2.0.0
+ * @version 2.0.1
  * @license MIT
  */
 
@@ -656,28 +656,33 @@ ul.jsxc_vCard {
   background-repeat: no-repeat;
   background-position: center center; }
 
-@-webkit-keyframes bounce{
-  0%{
+@-webkit-keyframes bounce {
+  0% {
     bottom: 0;
     -webkit-animation-timing-function: ease-in;
             animation-timing-function: ease-in; }
-  12%{
+
+  12% {
     bottom: 5px;
     -webkit-animation-timing-function: ease-out;
             animation-timing-function: ease-out; }
-  25%{
+
+  25% {
     bottom: 0;
     -webkit-animation-timing-function: ease-in;
             animation-timing-function: ease-in; }
-  37%{
+
+  37% {
     bottom: 5px;
     -webkit-animation-timing-function: ease-out;
             animation-timing-function: ease-out; }
-  50%{
+
+  50% {
     bottom: 0;
     -webkit-animation-timing-function: ease-in;
             animation-timing-function: ease-in; }
-  100%{
+
+  100% {
     bottom: 0; } }
 
 @keyframes bounce {
@@ -871,8 +876,7 @@ ul.jsxc_vCard {
     height: 15px;
     z-index: 100;
     background: -webkit-linear-gradient(top, #999999 0, transparent 100%);
-    background: linear-gradient(to bottom, #999999 0, transparent 100%);
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='$window_gradient', endColorstr='#00282323', GradientType=0); }
+    background: linear-gradient(to bottom, #999999 0, transparent 100%); }
   .jsxc_window .jsxc_avatar {
     margin-top: 1px; }
   .jsxc_window .jsxc_textarea {
@@ -893,15 +897,15 @@ ul.jsxc_vCard {
     border-radius: 0;
     box-sizing: border-box;
     text-align: right; }
-  .jsxc_window input::-webkit-input-placeholder{
-  color: #000;
-  opacity: 0.3; }
-  .jsxc_window input::-moz-placeholder{
-  color: #000;
-  opacity: 0.3; }
-  .jsxc_window input:-ms-input-placeholder{
-  color: #000;
-  opacity: 0.3; }
+  .jsxc_window input::-webkit-input-placeholder {
+    color: #000;
+    opacity: 0.3; }
+  .jsxc_window input::-moz-placeholder {
+    color: #000;
+    opacity: 0.3; }
+  .jsxc_window input:-ms-input-placeholder {
+    color: #000;
+    opacity: 0.3; }
   .jsxc_window input::placeholder {
     color: #000;
     opacity: 0.3; }
@@ -939,8 +943,7 @@ ul.jsxc_vCard {
     height: 15px;
     z-index: 100;
     background: -webkit-linear-gradient(top, #999999 0, rgba(40, 35, 35, 0) 100%);
-    background: linear-gradient(to bottom, #999999 0, rgba(40, 35, 35, 0) 100%);
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='$window_gradient', endColorstr='#00282323', GradientType=0); }
+    background: linear-gradient(to bottom, #999999 0, rgba(40, 35, 35, 0) 100%); }
 
 .jsxc_chatmessage {
   margin: 3px;
@@ -1135,6 +1138,36 @@ img.jsxc_vCard {
   border: 5px solid #fff;
   border-radius: 2px; }
 
+.jsxc_alert {
+  padding: 15px;
+  margin-bottom: 20px;
+  border: 1px solid transparent;
+  border-radius: 4px; }
+  .jsxc_alert.jsxc_alert-warning {
+    color: #8a6d3b;
+    background-color: #fcf8e3;
+    border-color: #faebcc; }
+
+.jsxc_btn {
+  width: auto;
+  min-width: 25px;
+  padding: 5px;
+  background-color: rgba(240, 240, 240, 0.9);
+  font-weight: bold;
+  color: #555;
+  border: 1px solid rgba(190, 190, 190, 0.9);
+  cursor: pointer; }
+  .jsxc_btn.jsxc_btn-primary {
+    color: #fff;
+    background-color: #337ab7;
+    border-color: #2e6da4; }
+  .jsxc_btn[disabled], .jsxc_btn[disabled]:hover {
+    opacity: 0.65;
+    cursor: not-allowed;
+    color: #fff;
+    background-color: #337ab7;
+    border-color: #2e6da4; }
+
 .jsxc_remotevideo, .jsxc_noRemoteVideo {
   width: 100%;
   height: 100%;
@@ -1225,15 +1258,15 @@ div:full-screen {
   background-color: #000; }
   div:full-screen.jsxc_localvideo {
     border: 1px solid #fff; }
-div:-webkit-full-screen{
+div:-webkit-full-screen {
   width: 100%;
   height: 100%;
   background-color: #000; }
-div:-moz-full-screen{
+div:-moz-full-screen {
   width: 100%;
   height: 100%;
   background-color: #000; }
-div:-ms-fullscreen{
+div:-ms-fullscreen {
   width: 100%;
   height: 100%;
   background-color: #000; }
@@ -1241,12 +1274,12 @@ div:fullscreen {
   width: 100%;
   height: 100%;
   background-color: #000; }
-  div:-webkit-full-screen.jsxc_localvideo{
-  border: 1px solid #fff; }
-  div:-moz-full-screen.jsxc_localvideo{
-  border: 1px solid #fff; }
-  div:-ms-fullscreen.jsxc_localvideo{
-  border: 1px solid #fff; }
+  div:-webkit-full-screen.jsxc_localvideo {
+    border: 1px solid #fff; }
+  div:-moz-full-screen.jsxc_localvideo {
+    border: 1px solid #fff; }
+  div:-ms-fullscreen.jsxc_localvideo {
+    border: 1px solid #fff; }
   div:fullscreen.jsxc_localvideo {
     border: 1px solid #fff; }
 div.jsxc_video {
@@ -1334,14 +1367,15 @@ div.jsxc_video {
   -webkit-animation-delay: 0.78s;
           animation-delay: 0.78s; }
 
-@-webkit-keyframes bubblingG{
-  0%{
+@-webkit-keyframes bubblingG {
+  0% {
     width: 16px;
     height: 16px;
     background-color: #000;
     -webkit-transform: translateY(0);
             transform: translateY(0); }
-  100%{
+
+  100% {
     width: 39px;
     height: 39px;
     background-color: #fff;
@@ -1430,7 +1464,7 @@ div.jsxc_video {
   width: 500px; }
 
 #mainContainer, #odf-toolbar {
-  right: 205px;
+  right: 0px;
   left: 0px;
   width: auto !important;
   z-index: 70 !important; }

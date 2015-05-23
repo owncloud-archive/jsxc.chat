@@ -1,5 +1,5 @@
 /*!
- * ojsxc v2.0.0 - 2015-05-08
+ * ojsxc v2.0.1 - 2015-05-23
  * 
  * Copyright (c) 2015 Klaus Herberth <klaus@jsxc.org> <br>
  * Released under the MIT license
@@ -7,11 +7,12 @@
  * Please see http://www.jsxc.org/
  * 
  * @author Klaus Herberth <klaus@jsxc.org>
- * @version 2.0.0
+ * @version 2.0.1
  * @license MIT
  */
 
 /* global jsxc, oc_appswebroots, OC, $, oc_requesttoken, dijit */
+/* jshint latedef: nofunc */
 
 /**
  * Make room for the roster inside the owncloud template.
@@ -27,19 +28,20 @@ function onRosterToggle(event, state, duration) {
    var control = $('#controls');
 
    var roster_width = (state === 'shown') ? $('#jsxc_roster').outerWidth() : 0;
+   var toggle_width = $('#jsxc_toggleRoster').width();
    var navigation_width = $('#navigation').width();
 
    wrapper.animate({
-      paddingRight: (roster_width) + 'px'
+      paddingRight: (roster_width + toggle_width) + 'px'
    }, duration);
    control.animate({
-      paddingRight: (roster_width + navigation_width) + 'px'
+      paddingRight: (roster_width + navigation_width + toggle_width) + 'px'
    }, duration);
 
    // update webodf
    if (typeof dijit !== 'undefined') {
       $('#mainContainer, #odf-toolbar').animate({
-         right: (roster_width) + 'px'
+         right: (roster_width + toggle_width) + 'px'
       }, {
          progress: function() {
             dijit.byId("mainContainer").resize();
@@ -55,17 +57,37 @@ function onRosterToggle(event, state, duration) {
  */
 function onRosterReady() {
    "use strict";
-   var roster_width = $('#jsxc_roster').outerWidth();
-   var navigation_width = $('#navigation').width();
-   var roster_right = parseFloat($('#jsxc_roster').css('right'));
+   var roster_width, navigation_width, roster_right, toggle_width;
 
-   $('#content-wrapper').css('paddingRight', roster_width + roster_right);
-   $('#controls').css('paddingRight', roster_width + navigation_width + roster_right);
+   getValues();
+
+   $('#content-wrapper').css('paddingRight', roster_width + roster_right + toggle_width);
+   $('#controls').css('paddingRight', roster_width + navigation_width + roster_right + toggle_width);
 
    // update webodf
-   if (typeof dijit !== 'undefined') {
-      $('#mainContainer, #odf-toolbar').css('right', roster_width + roster_right);
-      dijit.byId("mainContainer").resize();
+   var contentbg = $('#content-wrapper').css('background-color');
+   $(window).on('hashchange', function() {
+      $('#content-wrapper').css('background-color', contentbg);
+
+      if (window.location.pathname.match(/\/documents\/$/)) {
+         var docNo = window.location.hash.replace(/^#/, '');
+
+         if (docNo.match(/[0-9]+/) && typeof dijit !== 'undefined') {
+            getValues();
+
+            $('#content-wrapper').css('background-color', $('#mainContainer').css('background-color'));
+
+            $('#mainContainer, #odf-toolbar').css('right', roster_width + roster_right + toggle_width);
+            dijit.byId("mainContainer").resize();
+         }
+      }
+   });
+
+   function getValues() {
+      roster_width = $('#jsxc_roster').outerWidth();
+      navigation_width = $('#navigation').width();
+      roster_right = parseFloat($('#jsxc_roster').css('right'));
+      toggle_width = $('#jsxc_toggleRoster').width();
    }
 }
 
@@ -77,7 +99,7 @@ $(function() {
       return;
    }
 
-   $(document).on('ready.roster.jsxc', onRosterReady);
+   $(document).one('ready.roster.jsxc', onRosterReady);
    $(document).on('toggle.roster.jsxc', onRosterToggle);
 
    $(document).on('connected.jsxc', function() {
