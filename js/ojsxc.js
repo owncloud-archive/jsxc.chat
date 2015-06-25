@@ -113,7 +113,8 @@ $(function() {
       loginForm: {
          form: '#body-login form',
          jid: '#user',
-         pass: '#password'
+         pass: '#password',
+         attachIfFound: false
       },
       logoutElement: $('#logout'),
       rosterAppend: 'body',
