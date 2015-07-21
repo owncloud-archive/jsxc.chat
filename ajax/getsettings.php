@@ -10,7 +10,7 @@ $password = $_POST ['password'];
 
 $ocUser = new OCP\User ();
 
-$auth = ($password != null) ? $ocUser->checkPassword ( $username, $password ) : OCP\User::isLoggedIn ();
+$auth = ($password !== null) ? $ocUser->checkPassword ( $username, $password ) : OCP\User::isLoggedIn ();
 
 if (!$auth) {
 	OCP\JSON::encodedPrint ( array (
@@ -35,7 +35,7 @@ if ($options !== null) {
 	foreach ( $options as $prop => $value ) {
 		if ($prop !== 'xmpp' || $data ['xmpp'] ['overwrite']) {
 			foreach ( $value as $key => $v ) {
-				if ($v != "")
+				if ($v !== "")
 					$data [$prop] [$key] = ($v === 'false' || $v === 'true') ? validateBoolean($v) : $v;
 			}
 		}
