@@ -19,7 +19,12 @@
 			</tr>
 			<tr>
 				<td><label for="xmppOverwrite">Allow user to overwrite XMPP settings</label></td>
-				<td><input type="checkbox" name="xmppOverwrite" id="xmppOverwrite" value="true" <?php if($_['xmppOverwrite'] == 'true') echo "checked"; ?> /></td>
+				<td><input type="checkbox" name="xmppOverwrite" id="xmppOverwrite" value="true" <?php if($_['xmppOverwrite'] === 'true' || $_['xmppOverwrite'] === true) echo "checked"; ?> /></td>
+				<td></td>
+			</tr>
+			<tr>
+				<td><label for="xmppStartMinimized">Hide roster after first login</label></td>
+				<td><input type="checkbox" name="xmppStartMinimized" id="xmppStartMinimized" value="true" <?php if($_['xmppStartMinimized'] === 'true' || $_['xmppStartMinimized'] === true) echo "checked"; ?> /></td>
 				<td></td>
 			</tr>
 			<tr>

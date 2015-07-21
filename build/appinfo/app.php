@@ -3,10 +3,10 @@
 /**
  * ownCloud - JavaScript XMPP Chat
  *
- * Copyright (c) 2014 Klaus Herberth <klaus@jsxc.org> <br>
+ * Copyright (c) 2014-2015 Klaus Herberth <klaus@jsxc.org> <br>
  * Released under the MIT license
  * 
- * @author Klaus Herberth
+ * @author Klaus Herberth <klaus@jsxc.org>
  */
 OCP\App::registerAdmin ( 'ojsxc', 'settings' );
 
@@ -24,7 +24,6 @@ OCP\Util::addScript ( 'ojsxc', 'ojsxc' );
 OCP\Util::addStyle ( 'ojsxc', 'jquery.mCustomScrollbar' );
 OCP\Util::addStyle ( 'ojsxc', 'jquery.colorbox' );
 OCP\Util::addStyle ( 'ojsxc', 'jsxc.oc' );
-//OCP\Util::addStyle ( 'ojsxc', 'muc' );
 
 $version = OCP\Util::getVersion();
 
