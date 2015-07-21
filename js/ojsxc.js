@@ -106,20 +106,20 @@ $(function() {
       }
    });
 
-   jsxc.log = "";
-   jsxc.tmp = null;
    jsxc.init({
       app_name: 'Owncloud',
       loginForm: {
          form: '#body-login form',
          jid: '#user',
-         pass: '#password'
+         pass: '#password',
+         attachIfFound: false
       },
       logoutElement: $('#logout'),
       rosterAppend: 'body',
       root: oc_appswebroots.ojsxc + '/js/jsxc',
-      // @TODO: don't include get turn credentials routine into jsxc
-      turnCredentialsPath: OC.filePath('ojsxc', 'ajax', 'getturncredentials.php'),
+      RTCPeerConfig: {
+         url: OC.filePath('ojsxc', 'ajax', 'getturncredentials.php')
+      },
       displayRosterMinimized: function() {
          return OC.currentUser != null;
       },
@@ -182,11 +182,8 @@ $(function() {
             }
          });
       },
-      loadSettings: function(username, password) {
-         var data = null;
-
+      loadSettings: function(username, password, cb) {
          $.ajax({
-            async: false,
             type: 'POST',
             url: OC.filePath('ojsxc', 'ajax', 'getsettings.php'),
             data: {
@@ -194,14 +191,18 @@ $(function() {
                password: password
             },
             success: function(d) {
-               data = d.data;
+               if (d.result === 'success') {
+                  cb(d.data);
+               } else {
+                  cb(false);
+               }
             },
             error: function() {
                jsxc.error('XHR error on getsettings.php');
+
+               cb(false);
             }
          });
-
-         return data;
       },
       saveSettinsPermanent: function(data) {
          var ret = 1;

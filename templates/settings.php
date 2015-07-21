@@ -23,6 +23,11 @@
 				<td></td>
 			</tr>
 			<tr>
+				<td><label for="xmppStartMinimized">Hide roster after first login</label></td>
+				<td><input type="checkbox" name="xmppStartMinimized" id="xmppStartMinimized" value="true" <?php if($_['xmppStartMinimized'] === 'true') echo "checked"; ?> /></td>
+				<td></td>
+			</tr>
+			<tr>
 				<td><label for="iceUrl">TURN Url</label></td>
 				<td><input type="text" name="iceUrl" id="iceUrl" value="<?php p($_['iceUrl']); ?>" /></td>
 				<td></td>

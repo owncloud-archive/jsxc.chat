@@ -12,6 +12,7 @@ OCP\Config::setAppValue ( 'ojsxc', 'boshUrl', $_POST ['boshUrl'] );
 OCP\Config::setAppValue ( 'ojsxc', 'xmppDomain', $_POST ['xmppDomain'] );
 OCP\Config::setAppValue ( 'ojsxc', 'xmppResource', $_POST ['xmppResource'] );
 OCP\Config::setAppValue ( 'ojsxc', 'xmppOverwrite', (isset($_POST ['xmppOverwrite']))? $_POST ['xmppOverwrite'] : 'false' );
+OCP\Config::setAppValue ( 'ojsxc', 'xmppStartMinimized', (isset($_POST ['xmppStartMinimized']))? $_POST ['xmppStartMinimized'] : 'false' );
 
 OCP\Config::setAppValue ( 'ojsxc', 'iceUrl', $_POST ['iceUrl'] );
 OCP\Config::setAppValue ( 'ojsxc', 'iceUsername', $_POST ['iceUsername'] );
