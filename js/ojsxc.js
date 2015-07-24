@@ -21,9 +21,13 @@ function onRosterToggle(event, state, duration) {
    wrapper.animate({
       paddingRight: (roster_width + toggle_width) + 'px'
    }, duration);
-   control.animate({
-      paddingRight: (roster_width + navigation_width + toggle_width) + 'px'
-   }, duration);
+
+   // only oc < 8
+   if (!oc_config || !oc_config.version || !oc_config.version.match(/^([8-9]|[0-9]{2,})\./)) {
+      control.animate({
+         paddingRight: (roster_width + navigation_width + toggle_width) + 'px'
+      }, duration);
+   }
 
    // update webodf
    if (typeof dijit !== 'undefined') {
@@ -49,7 +53,11 @@ function onRosterReady() {
    getValues();
 
    $('#content-wrapper').css('paddingRight', roster_width + roster_right + toggle_width);
-   $('#controls').css('paddingRight', roster_width + navigation_width + roster_right + toggle_width);
+
+   // only oc < 8
+   if (!oc_config || !oc_config.version || !oc_config.version.match(/^([8-9]|[0-9]{2,})\./)) {
+      $('#controls').css('paddingRight', roster_width + navigation_width + roster_right + toggle_width);
+   }
 
    // update webodf
    var contentbg = $('#content-wrapper').css('background-color');
