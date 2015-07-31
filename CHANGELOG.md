@@ -1,3 +1,9 @@
+v2.1.0 / 2015-07-31
+===
+- upgrade jsxc to v2.1.0
+- stop attachment on login screen
+- load settings async
+
 v2.0.1 / 2015-05-23
 ===
 - upgrade jsxc to v2.0.1

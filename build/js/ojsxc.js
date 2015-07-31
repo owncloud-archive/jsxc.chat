@@ -1,5 +1,5 @@
 /*!
- * ojsxc v2.1.0-beta1 - 2015-07-21
+ * ojsxc v2.1.0 - 2015-07-31
  * 
  * Copyright (c) 2015 Klaus Herberth <klaus@jsxc.org> <br>
  * Released under the MIT license
@@ -7,11 +7,11 @@
  * Please see http://www.jsxc.org/
  * 
  * @author Klaus Herberth <klaus@jsxc.org>
- * @version 2.1.0-beta1
+ * @version 2.1.0
  * @license MIT
  */
 
-/* global jsxc, oc_appswebroots, OC, $, oc_requesttoken, dijit */
+/* global jsxc, oc_appswebroots, OC, $, oc_requesttoken, dijit, oc_config */
 /* jshint latedef: nofunc */
 
 /**
@@ -34,9 +34,13 @@ function onRosterToggle(event, state, duration) {
    wrapper.animate({
       paddingRight: (roster_width + toggle_width) + 'px'
    }, duration);
-   control.animate({
-      paddingRight: (roster_width + navigation_width + toggle_width) + 'px'
-   }, duration);
+
+   // only oc < 8
+   if (!oc_config || !oc_config.version || !oc_config.version.match(/^([8-9]|[0-9]{2,})\./)) {
+      control.animate({
+         paddingRight: (roster_width + navigation_width + toggle_width) + 'px'
+      }, duration);
+   }
 
    // update webodf
    if (typeof dijit !== 'undefined') {
@@ -62,7 +66,11 @@ function onRosterReady() {
    getValues();
 
    $('#content-wrapper').css('paddingRight', roster_width + roster_right + toggle_width);
-   $('#controls').css('paddingRight', roster_width + navigation_width + roster_right + toggle_width);
+
+   // only oc < 8
+   if (!oc_config || !oc_config.version || !oc_config.version.match(/^([8-9]|[0-9]{2,})\./)) {
+      $('#controls').css('paddingRight', roster_width + navigation_width + roster_right + toggle_width);
+   }
 
    // update webodf
    var contentbg = $('#content-wrapper').css('background-color');
