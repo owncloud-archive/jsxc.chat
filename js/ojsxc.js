@@ -133,7 +133,7 @@ $(function() {
       },
       defaultAvatar: function(jid) {
          var cache = jsxc.storage.getUserItem('defaultAvatars') || {};
-         var user = jid.replace(/@.+/, '');
+         var user = Strophe.unescapeNode(jid.replace(/@[^@]+$/, ''));
          var ie8fix = true;
 
          $(this).each(function() {
@@ -164,7 +164,7 @@ $(function() {
 
                if (OC.generateUrl) {
                   // oc >= 7
-                  url = OC.generateUrl('/avatar/' + user + '/' + size + '?requesttoken={requesttoken}', {
+                  url = OC.generateUrl('/avatar/' + encodeURIComponent(user) + '/' + size + '?requesttoken={requesttoken}', {
                      user: user,
                      size: size,
                      requesttoken: oc_requesttoken
