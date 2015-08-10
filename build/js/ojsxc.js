@@ -1,5 +1,5 @@
 /*!
- * ojsxc v2.1.0 - 2015-07-31
+ * ojsxc v2.1.1 - 2015-08-10
  * 
  * Copyright (c) 2015 Klaus Herberth <klaus@jsxc.org> <br>
  * Released under the MIT license
@@ -7,7 +7,7 @@
  * Please see http://www.jsxc.org/
  * 
  * @author Klaus Herberth <klaus@jsxc.org>
- * @version 2.1.0
+ * @version 2.1.1
  * @license MIT
  */
 
@@ -146,7 +146,7 @@ $(function() {
       },
       defaultAvatar: function(jid) {
          var cache = jsxc.storage.getUserItem('defaultAvatars') || {};
-         var user = jid.replace(/@.+/, '');
+         var user = Strophe.unescapeNode(jid.replace(/@[^@]+$/, ''));
          var ie8fix = true;
 
          $(this).each(function() {
@@ -177,7 +177,7 @@ $(function() {
 
                if (OC.generateUrl) {
                   // oc >= 7
-                  url = OC.generateUrl('/avatar/' + user + '/' + size + '?requesttoken={requesttoken}', {
+                  url = OC.generateUrl('/avatar/' + encodeURIComponent(user) + '/' + size + '?requesttoken={requesttoken}', {
                      user: user,
                      size: size,
                      requesttoken: oc_requesttoken

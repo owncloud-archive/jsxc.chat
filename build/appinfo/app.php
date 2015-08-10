@@ -12,7 +12,6 @@ OCP\App::registerAdmin ( 'ojsxc', 'settings' );
 
 $jsxc_root = (defined('JSXC_ENV') && JSXC_ENV === 'dev')? 'jsxc/dev/' : 'jsxc/';
 
-OCP\Util::addScript ( 'ojsxc', $jsxc_root.'lib/jquery.colorbox-min' );
 OCP\Util::addScript ( 'ojsxc', $jsxc_root.'lib/jquery.slimscroll' );
 OCP\Util::addScript ( 'ojsxc', $jsxc_root.'lib/jquery.fullscreen' );
 OCP\Util::addScript ( 'ojsxc', $jsxc_root.'lib/jsxc.dep' );

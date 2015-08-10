@@ -1,3 +1,8 @@
+v2.1.1 / 2015-08-10
+===
+- handle escaped jids in loadAvatar
+- fix TURN-REST-API credential generation
+
 v2.1.0 / 2015-07-31
 ===
 - upgrade jsxc to v2.1.0
