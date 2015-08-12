@@ -66,6 +66,16 @@ module.exports = function(grunt) {
                from: /[\d.]+/,
                to: "<%= app.version %>"
             } ]
+         },
+         imageUrl: {
+            src: ['css/*.css'],
+            overwrite: true,
+            replacements: [
+               {
+                  from: /image-url\(["'](.+)["']\)/g,
+                  to: 'url(\'../js/jsxc/img/$1\')'
+               }
+            ]
          }
       },
       search: {
@@ -113,9 +123,6 @@ module.exports = function(grunt) {
          }
       },
       sass: {
-         options: {
-            imagePath: '../js/jsxc/img'
-         },
          dist: {
              files: {
                 'css/jsxc.oc.css': 'scss/jsxc.oc.scss',
@@ -156,9 +163,9 @@ module.exports = function(grunt) {
    grunt.loadNpmTasks('grunt-data-uri');
    grunt.loadNpmTasks('grunt-contrib-watch');
 
-   grunt.registerTask('default', [ 'copy:css', 'sass', 'autoprefixer', 'watch' ]);
+   grunt.registerTask('default', [ 'copy:css', 'sass', 'replace:imageUrl', 'autoprefixer', 'watch' ]);
 
-   grunt.registerTask('build:prerelease', [ 'jshint', 'search:console', 'clean', 'sass', 'autoprefixer', 'copy:css', 'copy:build', 'dataUri', 'usebanner', 'replace', 'compress' ]);
+   grunt.registerTask('build:prerelease', [ 'jshint', 'search:console', 'clean', 'sass', 'replace:imageUrl', 'autoprefixer', 'copy:css', 'copy:build', 'dataUri', 'usebanner', 'replace', 'compress' ]);
 
    grunt.registerTask('build:release', [ 'search:changelog', 'build:prerelease' ]);
 
