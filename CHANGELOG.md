@@ -1,3 +1,8 @@
+v2.1.2 / 2015-08-12
+===
+- upgrade jsxc to v2.1.0
+- update grunt-sass (fix invalid css)
+
 v2.1.1 / 2015-08-10
 ===
 - handle escaped jids in loadAvatar
