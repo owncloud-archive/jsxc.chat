@@ -17,6 +17,11 @@ function onRosterToggle(event, state, duration) {
    var roster_width = (state === 'shown') ? $('#jsxc_roster').outerWidth() : 0;
    var toggle_width = $('#jsxc_toggleRoster').width();
    var navigation_width = $('#navigation').width();
+   
+   if ($(window).width() < 768) {
+      // Do not resize elements on extra small devices (bootstrap definition)
+      return;
+   }
 
    wrapper.animate({
       paddingRight: (roster_width + toggle_width) + 'px'
@@ -49,6 +54,11 @@ function onRosterToggle(event, state, duration) {
 function onRosterReady() {
    "use strict";
    var roster_width, navigation_width, roster_right, toggle_width;
+
+   if ($(window).width() < 768) {
+      // Do not resize elements on extra small devices (bootstrap definition)
+      return;
+   }
 
    getValues();
 
@@ -241,6 +251,17 @@ $(function() {
                jsxc.error('XHR error on getUsers.php');
             }
          });
+      },
+      viewport: {
+         getSize: function() {
+            var w = $(window).width() - ($('#jsxc_roster').outerWidth(true) + parseFloat($('#jsxc_roster').css('right'))) - $('#jsxc_windowListSB').width();
+            var h = $(window).height() - $('#header').height() - 10;
+         
+            return {
+               width: w,
+               height: h
+            };
+         }
       }
    });
 
