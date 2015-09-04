@@ -8,3 +8,7 @@ node_modules/
 .settings/
 archives/
 css/
+
+# Composer
+composer.phar
+vendor/
