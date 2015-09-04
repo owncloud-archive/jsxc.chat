@@ -42,7 +42,6 @@ class HttpBindController extends Controller {
 	/**
 	 * @NoAdminRequired
 	 * @NoCSRFRequired
-	 * @UseSession
 	 */
 	public function index() {
 		$stanza = file_get_contents('php://input');
@@ -63,7 +62,6 @@ class HttpBindController extends Controller {
 		$cicles = 0;
 		do {
 			try {
-				echo "cycle " . $cicles;
 				$cicles++;
 				$q = \OCP\DB::prepare('SELECT stanza, id FROM *PREFIX*ojsx_stanzas WHERE `to`=?');
 				$q->execute(array($this->userId . '@' . $host));
@@ -86,7 +84,7 @@ class HttpBindController extends Controller {
 
 				return new XMLResponse($xmlWriter->outputMemory());
 			} Catch (DoesNotExistException $e) {
-				sleep(2);
+				sleep(1);
 				$recordFound = false;
 			}
 		} while ($recordFound === false && $cicles < 10 && $this->isLocked());
