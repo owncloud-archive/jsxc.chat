@@ -32,11 +32,12 @@ class HttpBindController extends Controller {
 	public function __construct($appName,
 	                            IRequest $request,
 								$userId,
-								ISession $session) {
+								ISession $session, $messageMapper) {
 		parent::__construct($appName, $request);
 		$this->userId = $userId;
 		$this->pollingId = time();
 		$this->session = $session;
+		$this->messageMapper = $messageMapper;
 	}
 
 	/**
@@ -50,7 +51,7 @@ class HttpBindController extends Controller {
 			$stanza = new \SimpleXMLElement($stanza);
 			$stanzaType = $this->getStanzaType($stanza);
 			if ($stanzaType === self::MESSAGE){
-				$messageStanza = new Message($stanza, $this->userId, $host);
+				$messageStanza = new Message($stanza, $this->userId, $host, $this->messageMapper);
 				$messageStanza->handle();
 			}
 		}

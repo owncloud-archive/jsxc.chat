@@ -2,6 +2,7 @@
 
 namespace OCA\OJSXC\StanzaHandlers;
 
+use OCA\OJSXC\Db\MessageMapper;
 use Sabre\Xml\Writer;
 
 class Message {
@@ -10,6 +11,8 @@ class Message {
 	 * @var \SimpleXMLElement
 	 */
 	private $stanza;
+
+	private $messageMapper;
 
 	private $type;
 
@@ -27,10 +30,11 @@ class Message {
 
 	private $host;
 
-	public function __construct(\SimpleXMLElement $stanza, $userId, $host) {
+	public function __construct(\SimpleXMLElement $stanza, $userId, $host, MessageMapper $messageMapper) {
 		$this->stanza = $stanza;
 		$this->userId = $userId;
 		$this->host = $host;
+		$this->messageMapper = $messageMapper;
 	}
 
 	public function handle() {
@@ -42,19 +46,11 @@ class Message {
 	}
 
 	private function createStanzaToSend() {
-		$message = new Writer();
-		$message->openMemory();
-		$message->write([
-			[
-				'name' => 'message',
-				'attributes' => [
-					'to' => $this->to,
-					'from' => $this->from,
-					'type' => $this->type,
-				],
-				'value' => ['body' => $this->msg]
-			]
-		]);
+		$message = new \OCA\OJSXC\Db\Message();
+		$message->setTo($this->to);
+		$message->setFrom($this->from);
+		$message->setMsg($this->msg);
+		$message->setType($this->type);
 		return $message;
 	}
 
@@ -80,10 +76,8 @@ class Message {
 		return isset($el[$attr]) ? (string) $el[$attr][0] : null;
 	}
 
-	private function send(Writer $stanza){
-		$q = \OCP\DB::prepare('INSERT INTO *PREFIX*ojsx_stanzas (`to`, `from`, `stanza`) VALUES(?,?,?)');
-		$q->execute(array($this->to, $this->from, $stanza->outputMemory()));
-
+	private function send($message){
+		$this->messageMapper->insert($message);
 	}
 	
 

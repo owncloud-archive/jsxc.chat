@@ -3,6 +3,8 @@
 namespace OCA\OJSXC\AppInfo;
 
 use OCA\OJSXC\Controller\HttpBindController;
+use OCA\OJSXC\Db\Message;
+use OCA\OJSXC\Db\MessageMapper;
 use \OCP\AppFramework\App;
 
 class Application extends App {
@@ -16,8 +18,16 @@ class Application extends App {
 				$c->query('AppName'),
 				$c->query('Request'),
 				$c->query('UserId'),
-				$c->query('OCP\ISession')
+				$c->query('OCP\ISession'),
+				$c->query('MessageMapper')
 			);
+		});
+
+		/**
+		 * Database Layer
+		 */
+		$container->registerService('MessageMapper', function($c) {
+			return new MessageMapper($c->query('ServerContainer')->getDb());
 		});
 
 	}

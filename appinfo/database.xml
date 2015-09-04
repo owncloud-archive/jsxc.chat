@@ -5,7 +5,7 @@
 	<overwrite>false</overwrite>
 	<charset>utf8</charset>
 	<table>
-		<name>*dbprefix*ojsx_stanzas</name>
+		<name>*dbprefix*ojsxc_stanzas</name>
 		<declaration>
 			<field>
 				<name>id</name>
