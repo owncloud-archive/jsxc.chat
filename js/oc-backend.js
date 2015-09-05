@@ -1,8 +1,6 @@
 /**
  * This function is a hack. Please FIXME!
  */
-jsxc.options.favicon.enable = false;
-jsxc.options.otr.enable = false;
 function ocInit(){
 	localStorage.clear();
 	jsxc.storage.setItem('debug', true);

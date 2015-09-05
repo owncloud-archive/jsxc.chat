@@ -2,16 +2,21 @@
 
 namespace OCA\OJSXC\Controller;
 
-
+use OCA\OJSXC\Db\StanzaMapper;
+use OCA\OJSXC\Db\MessageMapper;
 use OCA\OJSXC\Http\XMLResponse;
 use OCA\OJSXC\StanzaHandlers\Message;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\Http\JSONResponse;
+use OCP\IRequest;
+
 
 use OCP\ISession;
 use Sabre\Xml\Writer;
+use Sabre\Xml\Reader;
+use Sabre\Xml\LibXMLException;
 
 class HttpBindController extends Controller {
 
@@ -25,19 +30,32 @@ class HttpBindController extends Controller {
 	private $pollingId;
 
 	/**
-	 * @var $sesion \OCP\ISession
+	 * @var Session OCP\ISession
 	 */
 	private $session;
+
+	/**
+	 * @var MessageMapper OCA\OJSXC\Db\MessageMapper
+	 */
+	private $messageMapper;
+
+	/**
+	 * @var StanzaMapper OCA\OJSXC\Db\StanzaMapper
+	 */
+	private $stanzaMapper;
 
 	public function __construct($appName,
 	                            IRequest $request,
 								$userId,
-								ISession $session, $messageMapper) {
+								ISession $session,
+								MessageMapper $messageMapper,
+								StanzaMapper $stanzaMapper) {
 		parent::__construct($appName, $request);
 		$this->userId = $userId;
 		$this->pollingId = time();
 		$this->session = $session;
 		$this->messageMapper = $messageMapper;
+		$this->stanzaMapper = $stanzaMapper;
 	}
 
 	/**
@@ -48,7 +66,16 @@ class HttpBindController extends Controller {
 		$stanza = file_get_contents('php://input');
 		$host = '33.33';
 		if (!empty($stanza)){
-			$stanza = new \SimpleXMLElement($stanza);
+			$reader = new Reader();
+			$reader->xml($stanza);
+			$reader->elementMap = [
+				'{jabber:client}message' => 'Sabre\Xml\Element\KeyValue',
+			];
+			try {
+				$stanza = $reader->parse();
+			} catch (LibXMLException $e){
+
+			}
 			$stanzaType = $this->getStanzaType($stanza);
 			if ($stanzaType === self::MESSAGE){
 				$messageStanza = new Message($stanza, $this->userId, $host, $this->messageMapper);
@@ -64,20 +91,14 @@ class HttpBindController extends Controller {
 		do {
 			try {
 				$cicles++;
-				$q = \OCP\DB::prepare('SELECT stanza, id FROM *PREFIX*ojsx_stanzas WHERE `to`=?');
-				$q->execute(array($this->userId . '@' . $host));
-				$results = $q->fetchAll();
-				if (count($results) === 0 || $results === false) {
-					throw new DoesNotExistException();
-				}
+				$stanzas = $this->stanzaMapper->findByTo($this->userId . '@' . $host);
+
 				$xmlWriter = new Writer();
 				$xmlWriter->openMemory();
 				$xmlWriter->startElement('body');
 
-				foreach ($results as $result) {
-					$xmlWriter->writeRaw($result['stanza']);
-					$q = \OCP\DB::prepare('DELETE FROM *PREFIX*ojsx_stanzas WHERE `id`=?');
-					$q->execute(array($result['id']));
+				foreach ($stanzas as $stanz) {
+					$xmlWriter->write($stanz);
 				}
 
 				$xmlWriter->endElement();
@@ -111,14 +132,19 @@ class HttpBindController extends Controller {
 	}
 
 	private function getStanzaType($stanza){
-		if(isset($stanza->message)){
-			return self::MESSAGE;
-		} else if (isset($stanza->iq)){
-			return self::IQ;
-		} else if (isset($stanza->presence)){
-			return self::PRESENCE;
-		} else {
-			return self::BODY;
+		switch($stanza['value'][0]['name']){
+			case '{jabber:client}message':
+				return self::MESSAGE;
+				break;
+			case '{jabber:client}iq':
+				return self::IQ;
+				break;
+			case '{jabber:client}presence':
+				return self::PRESENCE;
+				break;
+			default:
+				return self::BODY;
+				break;
 		}
 	}
 

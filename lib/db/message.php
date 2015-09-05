@@ -8,14 +8,12 @@ use Sabre\Xml\Writer;
 use Sabre\Xml\XmlDeserializable;
 use Sabre\Xml\XmlSerializable;
 
-class Message extends Entity implements XmlSerializable{
+class Message extends Stanza implements XmlSerializable{
 
-	protected $to;
-	protected $from;
 	protected $type;
 	protected $msg;
 
-	function xmlSerialize(Writer $writer) {
+	public function xmlSerialize(Writer $writer) {
 		$writer->write([
 			[
 				'name' => 'message',
@@ -28,4 +26,5 @@ class Message extends Entity implements XmlSerializable{
 			]
 		]);
 	}
+
 }

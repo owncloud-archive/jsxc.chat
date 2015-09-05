@@ -3,6 +3,7 @@
 namespace OCA\OJSXC\StanzaHandlers;
 
 use OCA\OJSXC\Db\MessageMapper;
+use Sabre\Xml\Reader;
 use Sabre\Xml\Writer;
 
 class Message {
@@ -20,17 +21,13 @@ class Message {
 
 	private $msg;
 
-	private $rid;
-
-	private $sid;
-
 	private $msgId;
 
 	private $userId;
 
 	private $host;
 
-	public function __construct(\SimpleXMLElement $stanza, $userId, $host, MessageMapper $messageMapper) {
+	public function __construct(Array $stanza, $userId, $host, MessageMapper $messageMapper) {
 		$this->stanza = $stanza;
 		$this->userId = $userId;
 		$this->host = $host;
@@ -58,12 +55,10 @@ class Message {
 	 * @brief parses all attributes from the stanza and place it in the properties of this class
 	 */
 	private function parse() {
-		$this->rid = $this->getAttribute($this->stanza, 'rid');
-		$this->sid = $this->getAttribute($this->stanza, 'sid');
-		$this->msg = (string) $this->stanza->message->body[0];
-		$this->to = $this->getAttribute($this->stanza->message, 'to');
-		$this->type = $this->getAttribute($this->stanza->message, 'type');
-		$this->msgId = $this->getAttribute($this->stanza->message, 'id');
+		$this->msg = (string) $this->stanza['value'][0]['value']['{jabber:client}body'];
+		$this->to = $this->getAttribute($this->stanza, 'to');
+		$this->type = $this->getAttribute($this->stanza, 'type');
+		$this->msgId = $this->getAttribute($this->stanza, 'id');
 	}
 
 	/**
@@ -72,8 +67,8 @@ class Message {
 	 * @return null|string
 	 * @brief checks if an attributes is set inside an \SimpleXMLElement element and returns the "first" element of that attribute after casting it to a string
 	 */
-	private function getAttribute(\SimpleXMLElement $el, $attr){
-		return isset($el[$attr]) ? (string) $el[$attr][0] : null;
+	private function getAttribute($stanza, $attr){
+		return isset($stanza['value'][0]['attributes'][$attr]) ? (string) $stanza['value'][0]['attributes'][$attr] : null;
 	}
 
 	private function send($message){
