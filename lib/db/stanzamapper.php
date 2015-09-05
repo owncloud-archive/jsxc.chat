@@ -20,7 +20,6 @@ class StanzaMapper extends Mapper {
 		$writer->write($entity);
 		$xml = $writer->outputMemory();
 		$sql = "INSERT INTO `*PREFIX*ojsxc_stanzas` (`to`, `from`, `stanza`) VALUES(?,?,?)";
-
 		$q = $this->db->prepare($sql);
 		$q->execute([$entity->getTo(), $entity->getFrom(), $xml]);
 

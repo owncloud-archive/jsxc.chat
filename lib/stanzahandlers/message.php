@@ -32,14 +32,13 @@ class Message {
 		$this->userId = $userId;
 		$this->host = $host;
 		$this->messageMapper = $messageMapper;
+
 	}
 
 	public function handle() {
 		$this->from = $this->userId . '@' . $this->host;
 		$this->parse();
-		if (!is_null($this->to)){
-			$this->send($this->createStanzaToSend());
-		}
+		$this->messageMapper->insert($this->createStanzaToSend());
 	}
 
 	private function createStanzaToSend() {
@@ -55,7 +54,7 @@ class Message {
 	 * @brief parses all attributes from the stanza and place it in the properties of this class
 	 */
 	private function parse() {
-		$this->msg = (string) $this->stanza['value'][0]['value']['{jabber:client}body'];
+		$this->msg = (string) $this->stanza['value']['{jabber:client}body'];
 		$this->to = $this->getAttribute($this->stanza, 'to');
 		$this->type = $this->getAttribute($this->stanza, 'type');
 		$this->msgId = $this->getAttribute($this->stanza, 'id');
@@ -68,12 +67,7 @@ class Message {
 	 * @brief checks if an attributes is set inside an \SimpleXMLElement element and returns the "first" element of that attribute after casting it to a string
 	 */
 	private function getAttribute($stanza, $attr){
-		return isset($stanza['value'][0]['attributes'][$attr]) ? (string) $stanza['value'][0]['attributes'][$attr] : null;
+		return isset($stanza['attributes'][$attr]) ? (string) $stanza['attributes'][$attr] : null;
 	}
-
-	private function send($message){
-		$this->messageMapper->insert($message);
-	}
-	
 
 }

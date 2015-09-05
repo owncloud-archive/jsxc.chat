@@ -63,27 +63,30 @@ class HttpBindController extends Controller {
 	 * @NoCSRFRequired
 	 */
 	public function index() {
-		$stanza = file_get_contents('php://input');
+		$input = file_get_contents('php://input');
 		$host = '33.33';
-		if (!empty($stanza)){
+		if (!empty($input)){
 			$reader = new Reader();
-			$reader->xml($stanza);
+			$reader->xml($input);
 			$reader->elementMap = [
 				'{jabber:client}message' => 'Sabre\Xml\Element\KeyValue',
 			];
 			try {
-				$stanza = $reader->parse();
+				$stanzas = $reader->parse();
+				$stanzas = $stanzas['value'];
 			} catch (LibXMLException $e){
-
+//				echo $e;
 			}
-			$stanzaType = $this->getStanzaType($stanza);
-			if ($stanzaType === self::MESSAGE){
-				$messageStanza = new Message($stanza, $this->userId, $host, $this->messageMapper);
-				$messageStanza->handle();
+			foreach($stanzas as $stanza) {
+				$stanzaType = $this->getStanzaType($stanza);
+				if ($stanzaType === self::MESSAGE) {
+					$messageStanza = new Message($stanza, $this->userId, $host, $this->messageMapper);
+					$messageStanza->handle();
+				}
 			}
 		}
 
-		$this->setLock();
+//		$this->setLock();
 
 		// Start long polling
 		$recordFound = false;
@@ -109,7 +112,7 @@ class HttpBindController extends Controller {
 				sleep(1);
 				$recordFound = false;
 			}
-		} while ($recordFound === false && $cicles < 10 && $this->isLocked());
+		} while ($recordFound === false && $cicles < 10);
 		if (!$recordFound) {
 			return $this->returnEmpty();
 		}
@@ -132,7 +135,7 @@ class HttpBindController extends Controller {
 	}
 
 	private function getStanzaType($stanza){
-		switch($stanza['value'][0]['name']){
+		switch($stanza['name']){
 			case '{jabber:client}message':
 				return self::MESSAGE;
 				break;
