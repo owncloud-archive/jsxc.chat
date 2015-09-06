@@ -75,7 +75,6 @@ class HttpBindController extends Controller {
 				$stanzas = $reader->parse();
 				$stanzas = $stanzas['value'];
 			} catch (LibXMLException $e){
-//				echo $e;
 			}
 			foreach($stanzas as $stanza) {
 				$stanzaType = $this->getStanzaType($stanza);
@@ -85,8 +84,6 @@ class HttpBindController extends Controller {
 				}
 			}
 		}
-
-//		$this->setLock();
 
 		// Start long polling
 		$recordFound = false;
@@ -150,18 +147,5 @@ class HttpBindController extends Controller {
 				return self::BODY;
 				break;
 		}
-	}
-
-
-	private function isLocked(){
-		$sql = "SELECT `configvalue` FROM `*PREFIX*preferences` WHERE `userid` = ? AND `appid`='ojsxc' AND `configkey`='longpolling'";
-		$q = \OCP\DB::prepare($sql);
-		$r =$q->execute(array($this->userId));
-		$r = $r->fetchRow();
-		return (int) $r['configvalue'] === (int) $this->pollingId;
-	}
-
-	private function setLock(){
-		\OCP\Config::setUserValue($this->userId, 'ojsxc', 'longpolling', $this->pollingId);
 	}
 }
