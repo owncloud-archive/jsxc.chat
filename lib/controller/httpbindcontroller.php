@@ -99,6 +99,7 @@ class HttpBindController extends Controller {
 				$xmlWriter = new Writer();
 				$xmlWriter->openMemory();
 				$xmlWriter->startElement('body');
+				$xmlWriter->writeAttribute('xmlns', 'http://jabber.org/protocol/httpbind');
 
 				foreach ($stanzas as $stanz) {
 					$xmlWriter->write($stanz);

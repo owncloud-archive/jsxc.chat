@@ -21,6 +21,8 @@ class Message extends Stanza implements XmlSerializable{
 					'to' => $this->to,
 					'from' => $this->from,
 					'type' => $this->type,
+					'xmlns' => 'jabber:client',
+					'id' => uniqid() . '-msg'
 				],
 				'value' => ['body' => $this->msg]
 			]
