@@ -5,6 +5,7 @@ namespace OCA\OJSXC\Controller;
 use OCA\OJSXC\Db\StanzaMapper;
 use OCA\OJSXC\Db\MessageMapper;
 use OCA\OJSXC\Http\XMLResponse;
+use OCA\OJSXC\StanzaHandlers\IQ;
 use OCA\OJSXC\StanzaHandlers\Message;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Db\DoesNotExistException;
@@ -66,22 +67,43 @@ class HttpBindController extends Controller {
 		$input = file_get_contents('php://input');
 		$host = '33.33';
 		if (!empty($input)){
+			// replace invalid XML by valid XML one
+			$input = str_replace("<vCard xmlns='vcard-temp'/>", "<vCard xmlns='jabber:vcard-temp'/>", $input);
 			$reader = new Reader();
 			$reader->xml($input);
 			$reader->elementMap = [
 				'{jabber:client}message' => 'Sabre\Xml\Element\KeyValue',
 			];
+
 			try {
 				$stanzas = $reader->parse();
-				$stanzas = $stanzas['value'];
 			} catch (LibXMLException $e){
+				echo $e;
 			}
+			$stanzas = $stanzas['value'];
+			$results = [];
 			foreach($stanzas as $stanza) {
 				$stanzaType = $this->getStanzaType($stanza);
 				if ($stanzaType === self::MESSAGE) {
-					$messageStanza = new Message($stanza, $this->userId, $host, $this->messageMapper);
-					$messageStanza->handle();
+					$messageHandler = new Message($stanza, $this->userId, $host, $this->messageMapper);
+					$messageHandler->handle();
+				} else if ($stanzaType === self::IQ){
+					$iqHandler = new IQ($stanza, $this->userId, $host);
+					$results[] = $iqHandler->handle();
 				}
+			}
+			if(count($results) > 0){
+				$xmlWriter = new Writer();
+				$xmlWriter->openMemory();
+				$xmlWriter->startElement('body');
+				$xmlWriter->writeAttribute('xmlns', 'http://jabber.org/protocol/httpbind');
+				foreach ($results as $result) {
+					if (!is_null($result)){
+						$xmlWriter->write($result);
+					}
+				}
+				$xmlWriter->endElement();
+				return new XMLResponse($xmlWriter->outputMemory());
 			}
 		}
 
