@@ -11,7 +11,7 @@ use Sabre\Xml\XmlSerializable;
 class Message extends Stanza implements XmlSerializable{
 
 	protected $type;
-	protected $msg;
+	protected $values;
 
 	public function xmlSerialize(Writer $writer) {
 		$writer->write([
@@ -24,7 +24,7 @@ class Message extends Stanza implements XmlSerializable{
 					'xmlns' => 'jabber:client',
 					'id' => uniqid() . '-msg'
 				],
-				'value' => ['body' => $this->msg]
+				'value' => $this->values
 			]
 		]);
 	}

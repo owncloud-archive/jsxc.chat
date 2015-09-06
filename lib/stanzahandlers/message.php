@@ -19,7 +19,7 @@ class Message {
 
 	private $to;
 
-	private $msg;
+	private $values;
 
 	private $msgId;
 
@@ -45,7 +45,7 @@ class Message {
 		$message = new \OCA\OJSXC\Db\Message();
 		$message->setTo($this->to);
 		$message->setFrom($this->from);
-		$message->setMsg($this->msg);
+		$message->setValues($this->values);
 		$message->setType($this->type);
 		return $message;
 	}
@@ -54,7 +54,19 @@ class Message {
 	 * @brief parses all attributes from the stanza and place it in the properties of this class
 	 */
 	private function parse() {
-		$this->msg = (string) $this->stanza['value']['{jabber:client}body'];
+
+		foreach($this->stanza['value'] as $keyRaw=>$value) {
+			// remove namespace from key as it is unneeded and cause problems
+			$key = substr($keyRaw, strpos($keyRaw, '}') + 1, strlen($keyRaw));
+			// fetch namespace from key to readd it
+			$ns = substr($keyRaw, 1, strpos($keyRaw, '}')-1);
+
+			$this->values[] = [
+				"name" => $key,
+				"value" => (string)$value,
+				"attributes" => ["xmlns" => $ns]
+			];
+		}
 		$this->to = $this->getAttribute($this->stanza, 'to');
 		$this->type = $this->getAttribute($this->stanza, 'type');
 		$this->msgId = $this->getAttribute($this->stanza, 'id');
