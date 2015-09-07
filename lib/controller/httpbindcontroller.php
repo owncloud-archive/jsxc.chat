@@ -4,13 +4,11 @@ namespace OCA\OJSXC\Controller;
 
 use OCA\OJSXC\Db\StanzaMapper;
 use OCA\OJSXC\Db\MessageMapper;
-use OCA\OJSXC\Http\XMLResponse;
+use OCA\OJSXC\Http\XMPPResponse;
 use OCA\OJSXC\StanzaHandlers\IQ;
 use OCA\OJSXC\StanzaHandlers\Message;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Db\DoesNotExistException;
-use OCP\AppFramework\Http\DataResponse;
-use OCP\AppFramework\Http\JSONResponse;
 use OCP\IRequest;
 
 
@@ -30,6 +28,8 @@ class HttpBindController extends Controller {
 
 	private $pollingId;
 
+	private $host;
+
 	/**
 	 * @var Session OCP\ISession
 	 */
@@ -45,18 +45,26 @@ class HttpBindController extends Controller {
 	 */
 	private $stanzaMapper;
 
+	/**
+	 * @var XMPPResponse
+	 */
+	private $response;
+
 	public function __construct($appName,
 	                            IRequest $request,
 								$userId,
 								ISession $session,
 								MessageMapper $messageMapper,
-								StanzaMapper $stanzaMapper) {
+								StanzaMapper $stanzaMapper,
+								$host) {
 		parent::__construct($appName, $request);
 		$this->userId = $userId;
 		$this->pollingId = time();
 		$this->session = $session;
 		$this->messageMapper = $messageMapper;
 		$this->stanzaMapper = $stanzaMapper;
+		$this->host = $host;
+		$this->response =  new XMPPResponse();
 	}
 
 	/**
@@ -65,7 +73,6 @@ class HttpBindController extends Controller {
 	 */
 	public function index() {
 		$input = file_get_contents('php://input');
-		$host = '33.33';
 		if (!empty($input)){
 			// replace invalid XML by valid XML one
 			$input = str_replace("<vCard xmlns='vcard-temp'/>", "<vCard xmlns='jabber:vcard-temp'/>", $input);
@@ -81,29 +88,20 @@ class HttpBindController extends Controller {
 				echo $e;
 			}
 			$stanzas = $stanzas['value'];
-			$results = [];
+			$longpoll = true; // set to false when the response should directly be returned and no polling should be done
 			foreach($stanzas as $stanza) {
 				$stanzaType = $this->getStanzaType($stanza);
 				if ($stanzaType === self::MESSAGE) {
-					$messageHandler = new Message($stanza, $this->userId, $host, $this->messageMapper);
+					$messageHandler = new Message($stanza, $this->userId, $this->host, $this->messageMapper);
 					$messageHandler->handle();
 				} else if ($stanzaType === self::IQ){
-					$iqHandler = new IQ($stanza, $this->userId, $host);
-					$results[] = $iqHandler->handle();
-				}
-			}
-			if(count($results) > 0){
-				$xmlWriter = new Writer();
-				$xmlWriter->openMemory();
-				$xmlWriter->startElement('body');
-				$xmlWriter->writeAttribute('xmlns', 'http://jabber.org/protocol/httpbind');
-				foreach ($results as $result) {
+					$iqHandler = new IQ($stanza, $this->userId, $this->host);
+					$result = $iqHandler->handle();
 					if (!is_null($result)){
-						$xmlWriter->write($result);
+						$longpoll = false;
+						$this->response->write($result);
 					}
 				}
-				$xmlWriter->endElement();
-				return new XMLResponse($xmlWriter->outputMemory());
 			}
 		}
 
@@ -113,29 +111,17 @@ class HttpBindController extends Controller {
 		do {
 			try {
 				$cicles++;
-				$stanzas = $this->stanzaMapper->findByTo($this->userId . '@' . $host);
-
-				$xmlWriter = new Writer();
-				$xmlWriter->openMemory();
-				$xmlWriter->startElement('body');
-				$xmlWriter->writeAttribute('xmlns', 'http://jabber.org/protocol/httpbind');
-
+				$stanzas = $this->stanzaMapper->findByTo($this->userId . '@' . $this->host);
 				foreach ($stanzas as $stanz) {
-					$xmlWriter->write($stanz);
+					$this->response->write($stanz);
 				}
-
-				$xmlWriter->endElement();
 				$recordFound = true;
-
-				return new XMLResponse($xmlWriter->outputMemory());
 			} Catch (DoesNotExistException $e) {
 				sleep(1);
 				$recordFound = false;
 			}
-		} while ($recordFound === false && $cicles < 10);
-		if (!$recordFound) {
-			return $this->returnEmpty();
-		}
+		} while ($recordFound === false && $cicles < 10 && $longpoll);
+		return $this->response;
 	}
 
 	private function returnEmpty(){
@@ -151,7 +137,7 @@ class HttpBindController extends Controller {
 			]
 		]);
 
-		return new XMLResponse($xmlWriter->outputMemory());
+		return new XMPPResponse($xmlWriter->outputMemory());
 	}
 
 	private function getStanzaType($stanza){

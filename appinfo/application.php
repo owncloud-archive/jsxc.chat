@@ -20,7 +20,8 @@ class Application extends App {
 				$c->query('UserId'),
 				$c->query('OCP\ISession'),
 				$c->query('MessageMapper'),
-				$c->query('StanzaMapper')
+				$c->query('StanzaMapper'),
+				$c->query('Host')
 			);
 		});
 
@@ -33,6 +34,14 @@ class Application extends App {
 
 		$container->registerService('StanzaMapper', function($c) {
 			return new StanzaMapper($c->query('ServerContainer')->getDb());
+		});
+
+		/**
+		 * Config values
+		 */
+
+		$container->registerService('Host', function($c){
+			return $c->query('Request')->getServerHost();
 		});
 
 	}
