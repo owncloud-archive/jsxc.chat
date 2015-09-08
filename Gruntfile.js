@@ -52,7 +52,7 @@ module.exports = function(grunt) {
       },
       replace: {
          info: {
-            src: [ 'build/appinfo/info.xml' ],
+            src: [ 'build/appinfo/info.xml', 'appinfo/info.xml' ],
             overwrite: true,
             replacements: [ {
                from: /<version>[\d.]+<\/version>/,
@@ -60,7 +60,7 @@ module.exports = function(grunt) {
             } ]
          },
          version: {
-            src: [ 'build/appinfo/version' ],
+            src: [ 'build/appinfo/version', 'appinfo/version' ],
             overwrite: true,
             replacements: [ {
                from: /[\d.]+/,
@@ -98,7 +98,7 @@ module.exports = function(grunt) {
                logFormat: 'console',
                onComplete: function(m) {
                   if (m.numMatches === 0) {
-                     grunt.fail.fatal("No entry in README.md for current version found.");
+                     grunt.fail.fatal("No entry in CHANGELOG.md for current version found.");
                   }
                }
             }
