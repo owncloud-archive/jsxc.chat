@@ -7,25 +7,16 @@ use Sabre\Xml\Writer;
 
 class StanzaHandler {
 
-	/**
-	 * @var array $stanza
-	 */
-	protected $stanza;
-
 	protected $userId;
 
 	protected $host;
 
 	protected $to;
 
-	public function __construct(Array $stanza, $userId, $host, MessageMapper $messageMapper) {
-		$this->stanza = $stanza;
+	public function __construct($userId, $host) {
 		$this->userId = $userId;
 		$this->host = $host;
-		$this->to = $this->getAttribute($this->stanza, 'to');
 		$this->from = $this->userId . '@' . $this->host;
-
-
 	}
 
 	/**

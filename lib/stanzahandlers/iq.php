@@ -15,16 +15,12 @@ class IQ extends StanzaHandler {
 
 	private $query;
 
-	public function __construct(Array $stanza, $userId, $host, MessageMapper $messageMapper) {
-		parent::__construct($stanza, $userId, $host);
-		$this->from = $this->userId . '@' . $this->host;
+	public function handle($stanza) {
+		$this->to = $this->getAttribute($stanza, 'to');
 
-	}
-
-	public function handle() {
-		foreach($this->stanza['value'] as $value){
+		foreach($stanza['value'] as $value){
 			if ($value['name'] === '{jabber:iq:roster}query'){
-				$id = $this->stanza['attributes']['id'];
+				$id = $stanza['attributes']['id'];
 				$iqRoster = new \OCA\OJSXC\Db\IQRoster();
 				$iqRoster->setType('result');
 				$iqRoster->setTo($this->from);

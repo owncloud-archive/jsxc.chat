@@ -50,20 +50,32 @@ class HttpBindController extends Controller {
 	 */
 	private $response;
 
+	/**
+	 * @var IQ
+	 */
+	private $iqHandler;
+
+	/**
+	 * @var Message
+	 */
+	private $messageHandler;
+
 	public function __construct($appName,
 	                            IRequest $request,
 								$userId,
 								ISession $session,
-								MessageMapper $messageMapper,
 								StanzaMapper $stanzaMapper,
+								IQ $iqHandler,
+								Message $messageHandler,
 								$host) {
 		parent::__construct($appName, $request);
 		$this->userId = $userId;
 		$this->pollingId = time();
 		$this->session = $session;
-		$this->messageMapper = $messageMapper;
 		$this->stanzaMapper = $stanzaMapper;
 		$this->host = $host;
+		$this->iqHandler = $iqHandler;
+		$this->messageHandler = $messageHandler;
 		$this->response =  new XMPPResponse();
 	}
 
@@ -85,18 +97,15 @@ class HttpBindController extends Controller {
 			try {
 				$stanzas = $reader->parse();
 			} catch (LibXMLException $e){
-				echo $e;
 			}
 			$stanzas = $stanzas['value'];
 			$longpoll = true; // set to false when the response should directly be returned and no polling should be done
 			foreach($stanzas as $stanza) {
 				$stanzaType = $this->getStanzaType($stanza);
 				if ($stanzaType === self::MESSAGE) {
-					$messageHandler = new Message($stanza, $this->userId, $this->host, $this->messageMapper);
-					$messageHandler->handle();
+					$this->messageHandler->handle($stanza);
 				} else if ($stanzaType === self::IQ){
-					$iqHandler = new IQ($stanza, $this->userId, $this->host);
-					$result = $iqHandler->handle();
+					$result = $this->iqHandler->handle($stanza);
 					if (!is_null($result)){
 						$longpoll = false;
 						$this->response->write($result);
@@ -122,22 +131,6 @@ class HttpBindController extends Controller {
 			}
 		} while ($recordFound === false && $cicles < 10 && $longpoll);
 		return $this->response;
-	}
-
-	private function returnEmpty(){
-		$xmlWriter = new Writer();
-		$xmlWriter->openMemory();
-		$xmlWriter->write([
-			[
-				'name' => 'body',
-				'attributes' => [
-					'xmlns' => 'http://jabber.org/protocol/httpbind',
-				],
-				'value' => '',
-			]
-		]);
-
-		return new XMPPResponse($xmlWriter->outputMemory());
 	}
 
 	private function getStanzaType($stanza){
