@@ -1,5 +1,5 @@
 /*!
- * ojsxc v2.1.3 - 2015-09-08
+ * ojsxc v2.1.4 - 2015-09-10
  * 
  * Copyright (c) 2015 Klaus Herberth <klaus@jsxc.org> <br>
  * Released under the MIT license
@@ -7,7 +7,7 @@
  * Please see http://www.jsxc.org/
  * 
  * @author Klaus Herberth <klaus@jsxc.org>
- * @version 2.1.3
+ * @version 2.1.4
  * @license MIT
  */
 

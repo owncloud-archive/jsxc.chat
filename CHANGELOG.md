@@ -1,3 +1,8 @@
+v2.1.4 / 2015-09-10
+===
+- upgrade jsxc to v2.1.4
+- disable jsxc if core or dependencies threw an error
+
 v2.1.3 / 2015-09-08
 ===
 - upgrade jsxc to v2.1.3
