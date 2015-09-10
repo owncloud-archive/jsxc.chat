@@ -91,6 +91,12 @@ $(function() {
    "use strict";
 
    if (location.pathname.substring(location.pathname.lastIndexOf("/") + 1) === 'public.php') {
+      // abort on shares
+      return;
+   }
+
+   if (typeof jsxc === 'undefined') {
+      // abort if core or dependencies threw an error
       return;
    }
 
