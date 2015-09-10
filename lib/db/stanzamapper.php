@@ -5,6 +5,7 @@ namespace OCA\OJSXC\Db;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Db\Entity;
 use OCP\AppFramework\Db\Mapper;
+use OCP\IDb;
 
 use Sabre\Xml\Writer;
 

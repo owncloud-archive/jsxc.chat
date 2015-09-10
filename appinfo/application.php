@@ -46,7 +46,8 @@ class Application extends App {
 		$container->registerService('IQHandler', function($c) {
 			return new IQ(
 				$c->query('UserId'),
-				$c->query('Host')
+				$c->query('Host'),
+				$c->query('OCP\IUserManager')
 			);
 		});
 
