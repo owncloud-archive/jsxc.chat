@@ -1,5 +1,5 @@
 /*!
- * ojsxc v2.1.4 - 2015-09-10
+ * ojsxc v2.1.5 - 2015-11-17
  * 
  * Copyright (c) 2015 Klaus Herberth <klaus@jsxc.org> <br>
  * Released under the MIT license
@@ -7,7 +7,7 @@
  * Please see http://www.jsxc.org/
  * 
  * @author Klaus Herberth <klaus@jsxc.org>
- * @version 2.1.4
+ * @version 2.1.5
  * @license MIT
  */
 
@@ -52,6 +52,13 @@ function onRosterToggle(event, state, duration) {
          }
       });
    }
+
+   // update app sidebar
+   if ($('#app-sidebar').length > 0) {
+      $('#app-sidebar').animate({
+         right: (roster_width + toggle_width) + 'px'
+      });
+   }
 }
 
 /**
@@ -90,6 +97,13 @@ function onRosterReady() {
          }
       }
    });
+
+   setTimeout(function(){
+      // update app sidebar
+      if ($('#app-sidebar').length > 0) {
+         $('#app-sidebar').css('right', (roster_width + roster_right + toggle_width) + 'px');
+      }
+   }, 500);
 
    function getValues() {
       roster_width = $('#jsxc_roster').outerWidth();
