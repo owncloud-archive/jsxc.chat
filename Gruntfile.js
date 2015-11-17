@@ -138,13 +138,13 @@ module.exports = function(grunt) {
               target: ['img/*.*', 'js/jsxc/img/*.*', 'js/jsxc/img/**/*.*'],
               /*fixDirLevel: true,
               baseDir: './',*/
-              maxBytes: 2048
+              maxBytes: 1 //2048
             }
           }
         },
         watch: {
             css: {
-                files: ['js/jsxc/scss/*', 'scss/*'],
+                files: ['js/jsxc/scss/*', 'scss/*', 'replace:imageUrl'],
                 tasks: ['sass', 'autoprefixer']
             }
         }
