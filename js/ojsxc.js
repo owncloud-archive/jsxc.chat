@@ -150,7 +150,6 @@ $(function() {
       defaultAvatar: function(jid) {
          var cache = jsxc.storage.getUserItem('defaultAvatars') || {};
          var user = Strophe.unescapeNode(jid.replace(/@[^@]+$/, ''));
-         var ie8fix = true;
 
          $(this).each(function() {
 
@@ -166,12 +165,7 @@ $(function() {
                      $div.imageplaceholder(user);
                   }
                } else {
-                  $div.show();
-                  if (ie8fix === true) {
-                     $div.html('<img src="' + result + '#' + Math.floor(Math.random() * 1000) + '">');
-                  } else {
-                     $div.html('<img src="' + result + '">');
-                  }
+                  $div.css('backgroundImage', 'url('+result+')');
                }
             };
 
