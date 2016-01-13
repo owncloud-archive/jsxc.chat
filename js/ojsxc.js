@@ -39,6 +39,13 @@ function onRosterToggle(event, state, duration) {
          }
       });
    }
+
+   // update app sidebar
+   if ($('#app-sidebar').length > 0) {
+      $('#app-sidebar').animate({
+         right: (roster_width + toggle_width) + 'px'
+      });
+   }
 }
 
 /**
@@ -78,6 +85,13 @@ function onRosterReady() {
       }
    });
 
+   setTimeout(function(){
+      // update app sidebar
+      if ($('#app-sidebar').length > 0) {
+         $('#app-sidebar').css('right', (roster_width + roster_right + toggle_width) + 'px');
+      }
+   }, 500);
+
    function getValues() {
       roster_width = $('#jsxc_roster').outerWidth();
       navigation_width = $('#navigation').width();
@@ -91,6 +105,12 @@ $(function() {
    "use strict";
 
    if (location.pathname.substring(location.pathname.lastIndexOf("/") + 1) === 'public.php') {
+      // abort on shares
+      return;
+   }
+
+   if (typeof jsxc === 'undefined') {
+      // abort if core or dependencies threw an error
       return;
    }
 
