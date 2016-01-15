@@ -24,7 +24,10 @@ class Application extends App {
 				$c->query('StanzaMapper'),
 				$c->query('IQHandler'),
 				$c->query('MessageHandler'),
-				$c->query('Host')
+				$c->query('Host'),
+				file_get_contents("php://input"),
+				1, // TODO
+				10 // TODO
 			);
 		});
 

@@ -60,6 +60,21 @@ class HttpBindController extends Controller {
 	 */
 	private $messageHandler;
 
+	/**
+	 * @var Body request body
+	 */
+	private $body;
+
+	/**
+	 * @var SleepTime
+	 */
+	private $sleepTime;
+
+	/**
+	 * @var SleepTime
+	 */
+	private $maxCicles;
+
 	public function __construct($appName,
 	                            IRequest $request,
 								$userId,
@@ -67,7 +82,11 @@ class HttpBindController extends Controller {
 								StanzaMapper $stanzaMapper,
 								IQ $iqHandler,
 								Message $messageHandler,
-								$host) {
+								$host,
+								$body,
+								$sleepTime,
+								$maxCicles
+								) {
 		parent::__construct($appName, $request);
 		$this->userId = $userId;
 		$this->pollingId = time();
@@ -76,6 +95,9 @@ class HttpBindController extends Controller {
 		$this->host = $host;
 		$this->iqHandler = $iqHandler;
 		$this->messageHandler = $messageHandler;
+		$this->body = $body;
+		$this->sleepTime = $sleepTime;
+		$this->maxCicles = $maxCicles;
 		$this->response =  new XMPPResponse();
 	}
 
@@ -84,7 +106,8 @@ class HttpBindController extends Controller {
 	 * @NoCSRFRequired
 	 */
 	public function index() {
-		$input = file_get_contents('php://input');
+		$input = $this->body;
+		$longpoll = true; // set to false when the response should directly be returned and no polling should be done
 		if (!empty($input)){
 			// replace invalid XML by valid XML one
 			$input = str_replace("<vCard xmlns='vcard-temp'/>", "<vCard xmlns='jabber:vcard-temp'/>", $input);
@@ -99,14 +122,13 @@ class HttpBindController extends Controller {
 			} catch (LibXMLException $e){
 			}
 			$stanzas = $stanzas['value'];
-			$longpoll = true; // set to false when the response should directly be returned and no polling should be done
 			foreach($stanzas as $stanza) {
 				$stanzaType = $this->getStanzaType($stanza);
 				if ($stanzaType === self::MESSAGE) {
 					$this->messageHandler->handle($stanza);
 				} else if ($stanzaType === self::IQ){
 					$result = $this->iqHandler->handle($stanza);
-					if (!is_null($result)){
+					if (!is_null($result)) {
 						$longpoll = false;
 						$this->response->write($result);
 					}
@@ -126,10 +148,10 @@ class HttpBindController extends Controller {
 				}
 				$recordFound = true;
 			} Catch (DoesNotExistException $e) {
-				sleep(1);
+				sleep($this->sleepTime);
 				$recordFound = false;
 			}
-		} while ($recordFound === false && $cicles < 10 && $longpoll);
+		} while ($recordFound === false && $cicles < $this->maxCicles && $longpoll);
 		return $this->response;
 	}
 
@@ -149,6 +171,4 @@ class HttpBindController extends Controller {
 				break;
 		}
 	}
-
-
 }

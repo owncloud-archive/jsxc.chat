@@ -8,5 +8,5 @@ $(document).ready(function () {
 	jsxc.storage.setItem('sid', '7862');
 	jsxc.storage.setItem('rid', '897878733');
 	jsxc.storage.setItem('lastActivity', (new Date()).getTime());
-	jsxc.storage.setItem('jid', OC.currentUser + OC.getHost());
+	jsxc.storage.setItem('jid', OC.currentUser + '@' + OC.getHost());
 });
