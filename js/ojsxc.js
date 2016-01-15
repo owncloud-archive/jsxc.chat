@@ -55,6 +55,15 @@ function onRosterReady() {
    "use strict";
    var roster_width, navigation_width, roster_right, toggle_width;
 
+   var div = $('<div/>');
+
+   div.addClass('jsxc_chatIcon');
+   div.click(function(){
+      jsxc.gui.roster.toggle();
+   });
+
+   $('#settings').after(div);
+
    if ($(window).width() < 768) {
       // Do not resize elements on extra small devices (bootstrap definition)
       return;

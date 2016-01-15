@@ -72,3 +72,19 @@
    width: auto !important;
    z-index: 70 !important;
 }
+
+#header .jsxc_chatIcon {
+   width: 45px;
+   height: 45px;
+   float: right;
+   background-image: url('../img/chat-icon-white.svg');
+   background-size: 20px;
+   background-repeat: no-repeat;
+   background-position: center;
+   opacity: 0.7;
+   cursor: pointer;
+
+   &:hover {
+      opacity: 1;
+   }
+}
