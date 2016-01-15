@@ -218,7 +218,7 @@ $(function() {
                password: password
             },
             success: function(d) {
-               if (d.result === 'success') {
+               if (d.result === 'success' && d.data.xmpp.url !== '' && d.data.xmpp.url !== null) {
                   cb(d.data);
                } else {
                   cb(false);
