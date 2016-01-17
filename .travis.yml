@@ -38,7 +38,12 @@ install:
   - cd ..
   - ocdev setup core --dir owncloud --branch $BRANCH --no-history
   - mv jsxc.chat owncloud/apps/ojsxc
-  - phpenv config-add owncloud/apps/ojsxc/tests/travis/php.ini
+  - |
+    if [[ $TRAVIS_PHP_VERSION = "hhv"* ]]; then
+      cat owncloud/apps/ojsxc/tests/travis/php.ini >> /etc/hhvm/php.ini
+    else
+      phpenv config-add owncloud/apps/ojsxc/tests/travis/php.ini
+    fi
   - cd owncloud
   - ./occ maintenance:install --database-name oc_autotest --database-user oc_autotest --database-pass --admin-user admin --admin-pass admin --database $DB
   - ./occ app:enable ojsxc
