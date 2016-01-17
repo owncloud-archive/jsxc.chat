@@ -44,6 +44,8 @@ install:
 
 before_script:
   - cd apps/ojsxc
+  - composer install
+
 
 script:
   - phpunit -c phpunit.xml
