@@ -159,16 +159,10 @@ class HttpBindController extends Controller {
 		switch($stanza['name']){
 			case '{jabber:client}message':
 				return self::MESSAGE;
-				break;
 			case '{jabber:client}iq':
 				return self::IQ;
-				break;
 			case '{jabber:client}presence':
 				return self::PRESENCE;
-				break;
-			default:
-				return self::BODY;
-				break;
 		}
 	}
 }

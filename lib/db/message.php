@@ -10,8 +10,8 @@ use Sabre\Xml\XmlSerializable;
 
 class Message extends Stanza implements XmlSerializable{
 
-	protected $type;
-	protected $values;
+	public $type;
+	public $values;
 
 	public function xmlSerialize(Writer $writer) {
 		$writer->write([

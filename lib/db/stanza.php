@@ -16,11 +16,11 @@ use Sabre\Xml\XmlSerializable;
  */
 class Stanza extends Entity implements XmlSerializable{
 
-    protected $to;
-    protected $from;
-    protected $stanza;
+    public $to;
+    public $from;
+    public $stanza;
 
-    function xmlSerialize(Writer $writer) {
+    public function xmlSerialize(Writer $writer) {
         $writer->writeRaw($this->getStanza());
     }
 }

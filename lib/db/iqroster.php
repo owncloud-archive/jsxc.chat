@@ -2,7 +2,6 @@
 
 namespace OCA\OJSXC\Db;
 
-use \OCP\AppFramework\Db\Entity;
 use Sabre\Xml\Reader;
 use Sabre\Xml\Writer;
 use Sabre\Xml\XmlDeserializable;
@@ -10,9 +9,9 @@ use Sabre\Xml\XmlSerializable;
 
 class IQRoster extends Stanza implements XmlSerializable{
 
-	protected $type;
-	protected $qid;
-	protected $items;
+	public $type;
+	public $qid;
+	public $items;
 
 	public function xmlSerialize(Writer $writer) {
 		$writer->write([

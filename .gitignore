@@ -9,7 +9,7 @@ node_modules/
 archives/
 css/
 
-# Composer
 composer.phar
 vendor/
 .phpstorm_helpers
+coverage
