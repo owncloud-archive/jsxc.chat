@@ -7,6 +7,13 @@ use Sabre\Xml\Writer;
 use Sabre\Xml\XmlDeserializable;
 use Sabre\Xml\XmlSerializable;
 
+
+/**
+ * This is an entity used by the IqHandler, but not stored/mapped in the database.
+ * Class IQRoster
+ *
+ * @package OCA\OJSXC\Db
+ */
 class IQRoster extends Stanza implements XmlSerializable{
 
 	public $type;

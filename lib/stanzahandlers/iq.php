@@ -8,6 +8,7 @@ use OCP\IUserManager;
 use Sabre\Xml\Reader;
 use Sabre\Xml\Writer;
 
+
 class IQ extends StanzaHandler {
 
 	private $type;
@@ -28,7 +29,7 @@ class IQ extends StanzaHandler {
 		foreach($stanza['value'] as $value){
 			if ($value['name'] === '{jabber:iq:roster}query'){
 				$id = $stanza['attributes']['id'];
-				$iqRoster = new \OCA\OJSXC\Db\IQRoster();
+				$iqRoster = new IQRoster();
 				$iqRoster->setType('result');
 				$iqRoster->setTo($this->from);
 				$iqRoster->setQid($id);
