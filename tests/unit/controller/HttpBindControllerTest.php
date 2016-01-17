@@ -43,12 +43,12 @@ class HttpBindControllerTest extends PHPUnit_Framework_TestCase {
 	 * @param $requestBody
 	 */
 	private function setUpController($requestBody) {
-		$request = $this->getMockBuilder('OCP\IRequest')->getMock();
-		$session = $this->getMockBuilder('OCP\ISession')->getMock();
-		$this->stanzaMapper = $this->getMockBuilder('OCA\OJSXC\Db\StanzaMapper')->getMock();
+		$request = $this->getMockBuilder('OCP\IRequest')->disableOriginalConstructor()->getMock();
+		$session = $this->getMockBuilder('OCP\ISession')->disableOriginalConstructor()->getMock();
+		$this->stanzaMapper = $this->getMockBuilder('OCA\OJSXC\Db\StanzaMapper')->disableOriginalConstructor()->getMock();
 
-		$this->iqHandler = $this->getMockBuilder('OCA\OJSXC\StanzaHandlers\IQ')->getMock();
-		$this->messageHandler = $this->getMockBuilder('OCA\OJSXC\StanzaHandlers\Message')->getMock();
+		$this->iqHandler = $this->getMockBuilder('OCA\OJSXC\StanzaHandlers\IQ')->disableOriginalConstructor()->getMock();
+		$this->messageHandler = $this->getMockBuilder('OCA\OJSXC\StanzaHandlers\Message')->disableOriginalConstructor()->getMock();
 
 		$this->controller = new HttpBindController(
 			'ojsxc',
@@ -136,7 +136,7 @@ class HttpBindControllerTest extends PHPUnit_Framework_TestCase {
 			->method('handle')
 			->will($this->returnValue($result));
 
-		$r1 = $this->getMockBuilder('Sabre\XML\XmlSerializable')->getMock();
+		$r1 = $this->getMockBuilder('Sabre\XML\XmlSerializable')->disableOriginalConstructor()->getMock();
 		$r1->expects($this->once())
 			->method('xmlSerialize')
 			->will($this->returnCallback(function(Writer $writer){
@@ -184,7 +184,7 @@ class HttpBindControllerTest extends PHPUnit_Framework_TestCase {
 		$this->messageHandler->expects($this->any()) // FIXME
 		->method('handle');
 
-		$r1 = $this->getMockBuilder('Sabre\XML\XmlSerializable')->getMock();
+		$r1 = $this->getMockBuilder('Sabre\XML\XmlSerializable')->disableOriginalConstructor()->getMock();
 		$r1->expects($this->once())
 			->method('xmlSerialize')
 			->will($this->returnCallback(function(Writer $writer){
