@@ -7,7 +7,10 @@ use OCA\OJSXC\Db\MessageMapper;
 use OCA\OJSXC\Db\StanzaMapper;
 use OCA\OJSXC\StanzaHandlers\IQ;
 use OCA\OJSXC\StanzaHandlers\Message;
-use \OCP\AppFramework\App;
+use OCP\AppFramework\App;
+use OCA\OJSXC\ILock;
+use OCA\OJSXC\DbLock;
+use OCA\OJSXC\MemLock;
 
 class Application extends App {
 
@@ -25,6 +28,7 @@ class Application extends App {
 				$c->query('IQHandler'),
 				$c->query('MessageHandler'),
 				$c->query('Host'),
+				$this->getLock(),
 				file_get_contents("php://input"),
 				1, // TODO
 				10 // TODO
@@ -42,6 +46,20 @@ class Application extends App {
 			return new StanzaMapper($c->query('ServerContainer')->getDb());
 		});
 
+		$container->registerService('DbLock', function($c){
+			return new DbLock(
+				$c->query('UserId'),
+				$c->query('OCP\IDb'),
+				$c->query('OCP\IConfig')
+			);
+		});
+
+		$container->registerService('MemLock', function($c){
+			return new MemLock(
+				$c->query('UserId'),
+				$c->getServer()->getMemCacheFactory()
+			);
+		});
 
 		/**
 		 * XMPP Stanza Handlers
@@ -62,8 +80,6 @@ class Application extends App {
 			);
 		});
 
-
-
 		/**
 		 * Config values
 		 */
@@ -71,6 +87,14 @@ class Application extends App {
 			return $c->query('Request')->getServerHost();
 		});
 
+	}
+
+	/**
+	 * @return ILock
+	 */
+	private function getLock() {
+//		return $this->getContainer()->query('DbLock');
+		return $this->getContainer()->query('MemLock');
 	}
 	
 }

@@ -5,13 +5,12 @@ namespace OCA\OJSXC\Controller;
 use OCA\OJSXC\Db\StanzaMapper;
 use OCA\OJSXC\Db\MessageMapper;
 use OCA\OJSXC\Http\XMPPResponse;
+use OCA\OJSXC\ILock;
 use OCA\OJSXC\StanzaHandlers\IQ;
 use OCA\OJSXC\StanzaHandlers\Message;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\IRequest;
-
-
 use OCP\ISession;
 use Sabre\Xml\Writer;
 use Sabre\Xml\Reader;
@@ -75,6 +74,11 @@ class HttpBindController extends Controller {
 	 */
 	private $maxCicles;
 
+	/**
+	 * @var ILock
+	 */
+	private $lock;
+
 	public function __construct($appName,
 	                            IRequest $request,
 								$userId,
@@ -83,6 +87,7 @@ class HttpBindController extends Controller {
 								IQ $iqHandler,
 								Message $messageHandler,
 								$host,
+								ILock $lock,
 								$body,
 								$sleepTime,
 								$maxCicles
@@ -99,6 +104,7 @@ class HttpBindController extends Controller {
 		$this->sleepTime = $sleepTime;
 		$this->maxCicles = $maxCicles;
 		$this->response =  new XMPPResponse();
+		$this->lock = $lock;
 	}
 
 	/**
@@ -106,6 +112,7 @@ class HttpBindController extends Controller {
 	 * @NoCSRFRequired
 	 */
 	public function index() {
+		$this->lock->setLock();
 		$input = $this->body;
 		$longpoll = true; // set to false when the response should directly be returned and no polling should be done
 		if (!empty($input)){
@@ -151,7 +158,7 @@ class HttpBindController extends Controller {
 				sleep($this->sleepTime);
 				$recordFound = false;
 			}
-		} while ($recordFound === false && $cicles < $this->maxCicles && $longpoll);
+		} while ($recordFound === false && $cicles < $this->maxCicles && $longpoll && $this->lock->stillLocked());
 		return $this->response;
 	}
 
