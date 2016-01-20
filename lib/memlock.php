@@ -2,10 +2,7 @@
 
 namespace OCA\OJSXC;
 
-use OCP\Files\Cache\ICache;
-use OCP\ICacheFactory;
-use OCP\IMemcache;
-use OCP\IMemcacheTTL;
+use OCP\ICache;
 
 class MemLock implements ILock {
 
@@ -16,13 +13,9 @@ class MemLock implements ILock {
 
 	private $userId;
 
-	public function __construct($userId, ICacheFactory $cache) {
+	public function __construct($userId, ICache $cache) {
 		$this->userId = $userId;
-		if ($cache->isAvailable()) {
-			$this->memcache = $cache->create('ojsxc');
-		} else {
-			die('No memcache available'); // TODO
-		}
+		$this->memcache = $cache;
 		$this->pollingId = time();
 	}
 

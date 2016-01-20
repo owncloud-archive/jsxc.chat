@@ -11,6 +11,7 @@ use OCP\AppFramework\App;
 use OCA\OJSXC\ILock;
 use OCA\OJSXC\DbLock;
 use OCA\OJSXC\MemLock;
+use OCP\ICache;
 
 class Application extends App {
 
@@ -55,9 +56,15 @@ class Application extends App {
 		});
 
 		$container->registerService('MemLock', function($c){
+			$cache = $c->getServer()->getMemCacheFactory();
+			if ($cache->isAvailable()) {
+				$memcache = $cache->create('ojsxc');
+			} else {
+				die('No memcache available'); // TODO
+			}
 			return new MemLock(
 				$c->query('UserId'),
-				$c->getServer()->getMemCacheFactory()
+				$memcache
 			);
 		});
 

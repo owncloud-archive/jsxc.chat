@@ -6,8 +6,11 @@ use Test\TestCase;
 use OCA\OJSXC\AppInfo\Application;
 use OCA\OJSXC\DbLock;
 
+$time = 0;
+
 function time() {
-	return DbLockTest::$time;
+	global $time;
+	return $time;
 }
 
 /**
@@ -30,8 +33,6 @@ class DbLockTest extends TestCase {
 	 */
 	private $con;
 
-	public static $time;
-
 	public function setUp() {
 		parent::setUp();
 		$app = new Application();
@@ -45,7 +46,8 @@ class DbLockTest extends TestCase {
 	 * and then setting a new lock.
 	 */
 	public function testLock() {
-		self::$time = 4;
+		global $time;
+		$time = 4;
 		$this->dbLock = new DbLock(
 			'john',
 			$this->container->getServer()->getDb(),
@@ -61,7 +63,7 @@ class DbLockTest extends TestCase {
 		$this->assertTrue($this->dbLock->stillLocked());
 
 
-		self::$time = 5;
+		$time = 5;
 		$this->dbLock2 = new DbLock(
 			'john',
 			$this->container->getServer()->getDb(),

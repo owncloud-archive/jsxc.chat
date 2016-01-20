@@ -13,3 +13,7 @@ composer.phar
 vendor/
 .phpstorm_helpers
 coverage
+
+# vim
+.phpstorm_helpers
+.phpcomplete_extended

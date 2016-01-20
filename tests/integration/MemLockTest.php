@@ -30,6 +30,11 @@ class MemLockTest extends TestCase {
 	 */
 	private $container;
 
+	/**
+	 * @var \OCP\ICache
+	 */
+	private $memCache;
+
 	public static $time;
 
 	public function setUp() {
@@ -43,52 +48,44 @@ class MemLockTest extends TestCase {
 	 * and then setting a new lock.
 	 */
 	public function testLock() {
-		self::$time = 4;
+		global $time;
+		$time = 4;
+		$cache = $this->container->getServer()->getMemCacheFactory();
+		if ($cache->isAvailable()) {
+			$this->memCache = $cache->create('ojsxc');
+		} else {
+			die('No memcache available'); // TODO
+		}
+
 		$this->memLock = new MemLock(
 			'john',
-			$this->container->getServer()->getMemCacheFactory()
+			$this->memCache
 		);
 		$this->memLock->setLock();
-
-
-//		$result = $this->fetchLocks();
-//		$this->assertCount(1, $result);
-//		$this->assertEquals($result[0]['userid'], 'john');
-//		$this->assertEquals($result[0]['appid'], 'ojsxc');
-//		$this->assertEquals($result[0]['configkey'], 'longpolling');
-//		$this->assertEquals($result[0]['configvalue'], '4');
 		$this->assertTrue($this->memLock->stillLocked());
-//
-//
-//		self::$time = 5;
-//		$this->dbLock2 = new DbLock(
-//			'john',
-//			$this->container->getServer()->getDb(),
-//			$this->container->getServer()->getConfig()
-//		); // simulate new lock/request
-//		$this->dbLock2->setLock();
-//
-//		$this->assertFalse($this->dbLock->stillLocked());
-//		$this->assertTrue($this->dbLock2->stillLocked());
-//		$result = $this->fetchLocks();
-//		$this->assertCount(1, $result);
-//		$this->assertEquals($result[0]['userid'], 'john');
-//		$this->assertEquals($result[0]['appid'], 'ojsxc');
-//		$this->assertEquals($result[0]['configkey'], 'longpolling');
-//		$this->assertEquals($result[0]['configvalue'], '5');
-//		$this->assertTrue($this->dbLock2->stillLocked());
+
+
+		$result = $this->fetchLock();
+		$this->assertEquals('4', $result);
+
+
+		global $time;
+		$time = 5;
+		$this->memLock2 = new MemLock(
+			'john',
+			$this->memCache
+		); // simulate new lock/request
+		$this->memLock2->setLock();
+
+		$this->assertFalse($this->memLock->stillLocked());
+		$this->assertTrue($this->memLock2->stillLocked());
+		$result = $this->fetchLock();
+		$this->assertEquals('5', $result);
 
 	}
 
-	private function  fetchLocks() {
-//		$stmt = $this->con->executeQuery("SELECT * FROM `*PREFIX*preferences` WHERE `appid`='ojsxc' AND `configkey`='longpolling'");
-//
-//		$reuslt = [];
-//
-//		while($row = $stmt->fetch()){
-//			$result[] = $row;
-//		}
-//		return $result;
+	private function fetchLock() {
+		return $this->memCache->get('-john-ojxsc-lock');
 	}
 
 }
