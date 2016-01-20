@@ -43,19 +43,7 @@ class HttpBindControllerTest extends PHPUnit_Framework_TestCase {
 	public function setUp() {
 	}
 
-	/**
-	 * Helper function to set up the controller. This can't be done in the setUp,
-	 * since the requestBody is different for every test.
-	 * @param $requestBody
-	 */
-	private function setUpControllerWithoutLock($requestBody) {
-		$request = $this->getMockBuilder('OCP\IRequest')->disableOriginalConstructor()->getMock();
-		$session = $this->getMockBuilder('OCP\ISession')->disableOriginalConstructor()->getMock();
-		$this->stanzaMapper = $this->getMockBuilder('OCA\OJSXC\Db\StanzaMapper')->disableOriginalConstructor()->getMock();
-
-		$this->iqHandler = $this->getMockBuilder('OCA\OJSXC\StanzaHandlers\IQ')->disableOriginalConstructor()->getMock();
-		$this->messageHandler = $this->getMockBuilder('OCA\OJSXC\StanzaHandlers\Message')->disableOriginalConstructor()->getMock();
-		$this->lock = $this->getMockBuilder('OCA\OJSXC\ILock')->disableOriginalConstructor()->getMock();
+    private function mockLock() {
 		$this->lock->expects($this->any())
 			->method('setLock')
 			->will($this->returnValue(null));
@@ -63,6 +51,21 @@ class HttpBindControllerTest extends PHPUnit_Framework_TestCase {
 		$this->lock->expects($this->any())
 			->method('stillLocked')
 			->will($this->returnValue(true));
+    }
+
+	/**
+	 * Helper function to set up the controller. This can't be done in the setUp,
+	 * since the requestBody is different for every test.
+	 * @param $requestBody
+	 */
+	private function setUpController($requestBody) {
+		$request = $this->getMockBuilder('OCP\IRequest')->disableOriginalConstructor()->getMock();
+		$session = $this->getMockBuilder('OCP\ISession')->disableOriginalConstructor()->getMock();
+		$this->stanzaMapper = $this->getMockBuilder('OCA\OJSXC\Db\StanzaMapper')->disableOriginalConstructor()->getMock();
+
+		$this->iqHandler = $this->getMockBuilder('OCA\OJSXC\StanzaHandlers\IQ')->disableOriginalConstructor()->getMock();
+		$this->messageHandler = $this->getMockBuilder('OCA\OJSXC\StanzaHandlers\Message')->disableOriginalConstructor()->getMock();
+		$this->lock = $this->getMockBuilder('OCA\OJSXC\ILock')->disableOriginalConstructor()->getMock();
 
 		$this->controller = new HttpBindController(
 			'ojsxc',
@@ -87,7 +90,8 @@ class HttpBindControllerTest extends PHPUnit_Framework_TestCase {
 		$ex = new DoesNotExistException('');
 		$expResponse = new XMPPResponse();
 
-		$this->setUpControllerWithoutLock('<x>');
+		$this->setUpController('<x>');
+        $this->mockLock();
 		$this->stanzaMapper->expects($this->exactly(10))
 			->method('findByTo')
 			->with('john@localhost')
@@ -119,8 +123,8 @@ class HttpBindControllerTest extends PHPUnit_Framework_TestCase {
 	 */
 	public function testIQHandlerWhenNoDbResults($body, $result, $expected, $pollCount) {
 		$ex = new DoesNotExistException();
-		$this->setUpControllerWithoutLock($body);
-
+		$this->setUpController($body);
+        $this->mockLock();
 		$expResponse = new XMPPResponse();
 		$expResponse->write($expected);
 
@@ -142,7 +146,8 @@ class HttpBindControllerTest extends PHPUnit_Framework_TestCase {
 
 	public function testDbResults() {
 		$result = 'test';
-		$this->setUpControllerWithoutLock('<body rid=\'897878797\' xmlns=\'http://jabber.org/protocol/httpbind\' sid=\'7862\'/>');
+		$this->setUpController('<body rid=\'897878797\' xmlns=\'http://jabber.org/protocol/httpbind\' sid=\'7862\'/>');
+        $this->mockLock();
 
 		$expResponse = new XMPPResponse();
 		$expResponse->write($result);
@@ -172,7 +177,8 @@ class HttpBindControllerTest extends PHPUnit_Framework_TestCase {
 	public function testMessageNoDbHandler() {
 		$body = '<body rid=\'897878959\' xmlns=\'http://jabber.org/protocol/httpbind\' sid=\'7862\'><message to=\'derp@own.dev\' type=\'chat\' id=\'1452960296859-msg\' xmlns=\'jabber:client\'><body>abc</body><request xmlns=\'urn:xmpp:receipts\'/></message></body>';
 		$ex = new DoesNotExistException();
-		$this->setUpControllerWithoutLock($body);
+		$this->setUpController($body);
+        $this->mockLock();
 
 		$expResponse = new XMPPResponse();
 
@@ -191,7 +197,8 @@ class HttpBindControllerTest extends PHPUnit_Framework_TestCase {
 
 	public function testMessageDbHandler() {
 		$body = '<body rid=\'897878959\' xmlns=\'http://jabber.org/protocol/httpbind\' sid=\'7862\'><message to=\'derp@own.dev\' type=\'chat\' id=\'1452960296859-msg\' xmlns=\'jabber:client\'><body>abc</body><request xmlns=\'urn:xmpp:receipts\'/></message></body>';
-		$this->setUpControllerWithoutLock($body);
+		$this->setUpController($body);
+        $this->mockLock();
 
 		$expResponse = new XMPPResponse();
 		$expResponse->write('test');
@@ -218,16 +225,20 @@ class HttpBindControllerTest extends PHPUnit_Framework_TestCase {
 
 	public function testPresenceHandler() {
 		$body = '<body rid=\'897878985\' xmlns=\'http://jabber.org/protocol/httpbind\' sid=\'7862\'><presence xmlns=\'jabber:client\'><c xmlns=\'http://jabber.org/protocol/caps\' hash=\'sha-1\' node=\'http://jsxc.org/\' ver=\'u2kAg/CbVmVZhsu+lZrkuLLdO+0=\'/><show>chat</show></presence></body>';
-		$this->setUpControllerWithoutLock($body);
+		$this->setUpController($body);
+        $this->mockLock();
 
 		$this->controller->index();
 	}
 
 	public function testBodyHandler() {
 		$body = '<body rid=\'897878985\' xmlns=\'http://jabber.org/protocol/httpbind\' sid=\'7862\'/>';
-		$this->setUpControllerWithoutLock($body);
+		$this->setUpController($body);
+        $this->mockLock();
 
 		$this->controller->index();
 	}
+
+   
 	
 }
