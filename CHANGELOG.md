@@ -1,3 +1,9 @@
+v2.1.5 / 2015-11-17
+===
+- upgrade jsxc to v2.1.5
+- adaptions for oc 8.2
+- do not include images in stylesheet
+
 v2.1.4 / 2015-09-10
 ===
 - upgrade jsxc to v2.1.4

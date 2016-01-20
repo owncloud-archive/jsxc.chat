@@ -7,4 +7,4 @@ node_modules/
 *.zip.sig
 .settings/
 archives/
-css/
+/css/

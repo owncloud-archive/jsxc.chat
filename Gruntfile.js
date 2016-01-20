@@ -138,7 +138,7 @@ module.exports = function(grunt) {
               target: ['img/*.*', 'js/jsxc/img/*.*', 'js/jsxc/img/**/*.*'],
               /*fixDirLevel: true,
               baseDir: './',*/
-              maxBytes: 2048
+              maxBytes: 1 //2048
             }
           }
         },
