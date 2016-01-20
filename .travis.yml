@@ -55,11 +55,17 @@ install:
 before_script:
   - cd apps/ojsxc
   - composer install
+
+script:
   - cd ../../
   - ./occ config:import apps/ojsxc/tests/travis/config-redis.json
   - cd apps/ojsxc
-
-
-script:
+  - phpunit -c phpunit.xml
+  - phpunit -c phpunit.integration.xml
+  - cd ../../
+  - ./occ config:system:delete 'memcache.local'
+  - ./occ config:system:delete 'redis'
+  - ./occ config:import apps/ojsxc/tests/travis/config-apcu.json
+  - cd apps/ojsxc
   - phpunit -c phpunit.xml
   - phpunit -c phpunit.integration.xml
