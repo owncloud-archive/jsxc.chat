@@ -50,12 +50,14 @@ install:
   - cd owncloud
   - ./occ maintenance:install --database-name oc_autotest --database-user oc_autotest --database-pass --admin-user admin --admin-pass admin --database $DB
   - ./occ app:enable ojsxc
-  - ./occ config:import apps/ojsxc/tests/travis/config-redis.json
 
 
 before_script:
   - cd apps/ojsxc
   - composer install
+  - cd ../../
+  - ./occ config:import apps/ojsxc/tests/travis/config-redis.json
+  - cd apps/ojsxc
 
 
 script:
