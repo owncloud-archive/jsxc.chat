@@ -26,7 +26,7 @@
 //#############Start#of#Config####################
 
 /** The root of your owncloud installation. */
-$oc_root = '/var/www/wolke.herberth.eu/';
+$oc_root = '/var/www/owncloud/';
 
 /** Should we log the activity of this script? */
 $debugging = true;
