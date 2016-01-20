@@ -47,27 +47,6 @@ class Application extends App {
 			return new StanzaMapper($c->query('ServerContainer')->getDb());
 		});
 
-		$container->registerService('DbLock', function($c){
-			return new DbLock(
-				$c->query('UserId'),
-				$c->query('OCP\IDb'),
-				$c->query('OCP\IConfig')
-			);
-		});
-
-		$container->registerService('MemLock', function($c){
-			$cache = $c->getServer()->getMemCacheFactory();
-			if ($cache->isAvailable()) {
-				$memcache = $cache->create('ojsxc');
-			} else {
-				die('No memcache available'); // TODO
-			}
-			return new MemLock(
-				$c->query('UserId'),
-				$memcache
-			);
-		});
-
 		/**
 		 * XMPP Stanza Handlers
 		 */
@@ -100,8 +79,30 @@ class Application extends App {
 	 * @return ILock
 	 */
 	private function getLock() {
-//		return $this->getContainer()->query('DbLock');
-		return $this->getContainer()->query('MemLock');
+		$c = $this->getContainer();
+		$config = $c->getServer()->getConfig()->getSystemValue('ojsxc.use_memcache', ["locking" => false]);
+
+		if ($config['locking'] === true) {
+			$cache = $c->getServer()->getMemCacheFactory();
+
+			if ($cache->isAvailable()) {
+				$memcache = $cache->create('ojsxc');
+				return new MemLock(
+					$c->query('UserId'),
+					$memcache
+				);
+			} else {
+				$c->getServer()->getLogger()->warning('OJSXC is configured to use memcache as backend for locking, but no memcache is available.');
+			}
+		}
+
+		// default
+		return new DbLock(
+			$c->query('UserId'),
+			$c->query('OCP\IDb'),
+			$c->query('OCP\IConfig')
+		);
+
 	}
 	
 }
