@@ -1,0 +1,10 @@
+{
+	"system": {
+		"memcache.local": "\\OC\\Memcache\\Redis",
+		"redis": {
+			"host": "localhost",
+			"port": 6379,
+			"password": ""
+		}
+	}
+}

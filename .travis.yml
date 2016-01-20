@@ -6,6 +6,9 @@ php:
   - 7
   - hhvm
 
+services:
+  - redis-server
+
 env:
   global:
     - BRANCH=master
@@ -47,6 +50,8 @@ install:
   - cd owncloud
   - ./occ maintenance:install --database-name oc_autotest --database-user oc_autotest --database-pass --admin-user admin --admin-pass admin --database $DB
   - ./occ app:enable ojsxc
+  - ./occ config:import apps/ojsxc/tests/travis/config-redis.json
+
 
 before_script:
   - cd apps/ojsxc
