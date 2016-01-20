@@ -29,4 +29,6 @@ $version = OCP\Util::getVersion();
 if($version[0] <= 6)
 	OCP\Util::addStyle ( 'ojsxc', 'jsxc.oc.lte6' );
 
+require_once __DIR__ ."/../vendor/autoload.php";
+
 ?>
