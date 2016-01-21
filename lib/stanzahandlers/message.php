@@ -44,7 +44,7 @@ class Message extends StanzaHandler {
 		$message->setValues($this->values);
 		$message->setType($this->type);
 		$this->messageMapper->insert($message);
-
+		$this->values = [];
 	}
 
 }
