@@ -40,11 +40,17 @@ class Application extends App {
 		 * Database Layer
 		 */
 		$container->registerService('MessageMapper', function($c) {
-			return new MessageMapper($c->query('ServerContainer')->getDb());
+			return new MessageMapper(
+				$c->query('ServerContainer')->getDb(),
+				$c->query('Host')
+			);
 		});
 
 		$container->registerService('StanzaMapper', function($c) {
-			return new StanzaMapper($c->query('ServerContainer')->getDb());
+			return new StanzaMapper(
+				$c->query('ServerContainer')->getDb(),
+				$c->query('Host')
+			);
 		});
 
 		/**

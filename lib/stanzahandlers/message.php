@@ -22,7 +22,9 @@ class Message extends StanzaHandler {
 	}
 
 	public function handle($stanza) {
-		$this->to = $this->getAttribute($stanza, 'to');
+		$to = $this->getAttribute($stanza, 'to');
+		$pos = strpos($to, '@');
+		$this->to = substr($to, 0, $pos);
 		foreach($stanza['value'] as $keyRaw=>$value) {
 			// remove namespace from key as it is unneeded and cause problems
 			$key = substr($keyRaw, strpos($keyRaw, '}') + 1, strlen($keyRaw));

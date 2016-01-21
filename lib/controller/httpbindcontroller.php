@@ -149,7 +149,7 @@ class HttpBindController extends Controller {
 		do {
 			try {
 				$cicles++;
-				$stanzas = $this->stanzaMapper->findByTo($this->userId . '@' . $this->host);
+				$stanzas = $this->stanzaMapper->findByTo($this->userId);
 				foreach ($stanzas as $stanz) {
 					$this->response->write($stanz);
 				}

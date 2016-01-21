@@ -16,7 +16,7 @@ class StanzaHandler {
 	public function __construct($userId, $host) {
 		$this->userId = $userId;
 		$this->host = $host;
-		$this->from = $this->userId . '@' . $this->host;
+		$this->from = $this->userId;
 	}
 
 	/**

@@ -3,6 +3,7 @@ namespace OCA\OJSXC\Http;
 
 use OCP\AppFramework\Http\Response;
 use Sabre\Xml\Writer;
+use OCA\OJSXC\Db\Stanza;
 
 
 class XMPPResponse extends Response {
@@ -17,7 +18,7 @@ class XMPPResponse extends Response {
 		$this->writer->writeAttribute('xmlns', 'http://jabber.org/protocol/httpbind');
 	}
 
-	public function write($input) {
+	public function write(Stanza $input) {
 		$this->writer->write($input);
 	}
 
