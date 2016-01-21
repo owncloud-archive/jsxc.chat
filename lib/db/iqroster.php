@@ -45,7 +45,8 @@ class IQRoster extends Stanza implements XmlSerializable{
 			"name" => "item",
 			"attributes" => [
 				"jid" => $jid,
-				"name" => $name
+				"name" => $name,
+				"subscription" => "both"
 			],
 			"value" => ''
 		];
