@@ -15,9 +15,18 @@ use OCP\ICache;
 
 class Application extends App {
 
+	private static $config = [];
+
 	public function __construct(array $urlParams=array()){
 		parent::__construct('ojsxc', $urlParams);
 		$container = $this->getContainer();
+
+		/** @var $config \OCP\IConfig */
+		$configManager = $container->query('OCP\IConfig');
+		self::$config['polling'] = $configManager->getSystemValue('ojsxc.polling',
+			['sleep_time' => 1, 'max_cycles' => 10]);
+		self::$config['use_memcache'] = $configManager->getSystemValue('ojsxc.use_memcache',
+			['locking' => false]);
 
 		$container->registerService('HttpBindController', function($c){
 			return new HttpBindController(
@@ -31,8 +40,8 @@ class Application extends App {
 				$c->query('Host'),
 				$this->getLock(),
 				file_get_contents("php://input"),
-				1, // TODO
-				10 // TODO
+				self::$config['polling']['sleep_time'],
+				self::$config['polling']['max_cycles']
 			);
 		});
 
@@ -86,9 +95,7 @@ class Application extends App {
 	 */
 	private function getLock() {
 		$c = $this->getContainer();
-		$config = $c->getServer()->getConfig()->getSystemValue('ojsxc.use_memcache', ["locking" => false]);
-
-		if ($config['locking'] === true) {
+		if (self::$config['use_memcache']['locking'] === true) {
 			$cache = $c->getServer()->getMemCacheFactory();
 
 			if ($cache->isAvailable()) {
