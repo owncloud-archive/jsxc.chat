@@ -7,7 +7,7 @@ use Sabre\Xml\Writer;
 class IqRosterTest extends PHPUnit_Framework_TestCase {
 
 	public function testIqRoster() {
-		$expected = '<body xmlns="http://jabber.org/protocol/httpbind"><iq to="john@localhost" type="result" id="4434"><query xmlns="jabber:iq:roster"><item jid="test@test.be" name="Test Test"></item><item jid="test2@test.be" name="Test2 Test"></item></query></iq></body>';
+		$expected = '<body xmlns="http://jabber.org/protocol/httpbind"><iq to="john@localhost" type="result" id="4434"><query xmlns="jabber:iq:roster"><item jid="test@test.be" name="Test Test" subscription="both"></item><item jid="test2@test.be" name="Test2 Test" subscription="both"></item></query></iq></body>';
 
 		$writer =  new Writer();
 		$writer->openMemory();
@@ -29,7 +29,8 @@ class IqRosterTest extends PHPUnit_Framework_TestCase {
 				"name" => "item",
 				"attributes" => [
 					"jid" => "test@test.be",
-					"name" => "Test Test"
+					"name" => "Test Test",
+					"subscription" => "both"
 				],
 				"value" => ''
 			],
@@ -37,7 +38,8 @@ class IqRosterTest extends PHPUnit_Framework_TestCase {
 				"name" => "item",
 				"attributes" => [
 					"jid" => "test2@test.be",
-					"name" => "Test2 Test"
+					"name" => "Test2 Test",
+					"subscription" => "both"
 				],
 				"value" => ''
 			],

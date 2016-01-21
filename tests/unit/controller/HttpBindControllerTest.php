@@ -94,7 +94,7 @@ class HttpBindControllerTest extends PHPUnit_Framework_TestCase {
         $this->mockLock();
 		$this->stanzaMapper->expects($this->exactly(10))
 			->method('findByTo')
-			->with('john@localhost')
+			->with('john')
 			->will($this->throwException($ex));
 
 		$response = $this->controller->index();
@@ -134,7 +134,7 @@ class HttpBindControllerTest extends PHPUnit_Framework_TestCase {
 
 		$this->stanzaMapper->expects($pollCount)
 			->method('findByTo')
-			->with('john@localhost')
+			->with('john')
 			->will($this->throwException($ex));
 
 
@@ -165,7 +165,7 @@ class HttpBindControllerTest extends PHPUnit_Framework_TestCase {
 
 		$this->stanzaMapper->expects($this->once())
 			->method('findByTo')
-			->with('john@localhost')
+			->with('john')
 			->will($this->returnValue([$r1]));
 
 
@@ -187,7 +187,7 @@ class HttpBindControllerTest extends PHPUnit_Framework_TestCase {
 
 		$this->stanzaMapper->expects($this->exactly(10))
 			->method('findByTo')
-			->with('john@localhost')
+			->with('john')
 			->will($this->throwException($ex));
 
 		$response = $this->controller->index();
@@ -215,7 +215,7 @@ class HttpBindControllerTest extends PHPUnit_Framework_TestCase {
 
 		$this->stanzaMapper->expects($this->once())
 			->method('findByTo')
-			->with('john@localhost')
+			->with('john')
 			->will($this->returnValue([$r1]));
 
 		$response = $this->controller->index();
