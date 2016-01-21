@@ -144,8 +144,8 @@ module.exports = function(grunt) {
         },
         watch: {
             css: {
-                files: ['js/jsxc/scss/*', 'scss/*', 'replace:imageUrl'],
-                tasks: ['sass', 'autoprefixer']
+                files: ['js/jsxc/scss/*', 'scss/*'],
+                tasks: ['sass', 'autoprefixer', 'replace:imageUrl']
             }
         }
    });
@@ -163,9 +163,11 @@ module.exports = function(grunt) {
    grunt.loadNpmTasks('grunt-data-uri');
    grunt.loadNpmTasks('grunt-contrib-watch');
 
-   grunt.registerTask('default', [ 'copy:css', 'sass', 'replace:imageUrl', 'autoprefixer', 'watch' ]);
+   grunt.registerTask('default', [ 'build', 'watch' ]);
 
-   grunt.registerTask('build:prerelease', [ 'jshint', 'search:console', 'clean', 'sass', 'replace:imageUrl', 'autoprefixer', 'copy:css', 'copy:build', 'dataUri', 'usebanner', 'replace', 'compress' ]);
+   grunt.registerTask('build', ['copy:css', 'sass', 'replace:imageUrl', 'autoprefixer']);
+
+   grunt.registerTask('build:prerelease', [ 'jshint', 'search:console', 'clean', 'build', 'copy:build', 'dataUri', 'usebanner', 'replace', 'compress' ]);
 
    grunt.registerTask('build:release', [ 'search:changelog', 'build:prerelease' ]);
 

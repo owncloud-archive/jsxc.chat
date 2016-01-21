@@ -1,11 +1,10 @@
 #jsxc_roster {
    top: 45px;
-   z-index: 160;
-   background-color: #383C43;
+   z-index: 1500;
 }
 
 #jsxc_windowList, #jsxc_windowListSB {
-   z-index: 1050;
+   z-index: 1500;
 }
 
 #jsxc {
@@ -72,4 +71,20 @@
    left: 0px;
    width: auto !important;
    z-index: 70 !important;
+}
+
+#header .jsxc_chatIcon {
+   width: 45px;
+   height: 45px;
+   float: right;
+   background-image: url('../img/chat-icon-white.svg');
+   background-size: 20px;
+   background-repeat: no-repeat;
+   background-position: center;
+   opacity: 0.7;
+   cursor: pointer;
+
+   &:hover {
+      opacity: 1;
+   }
 }
