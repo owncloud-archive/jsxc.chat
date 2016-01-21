@@ -23,10 +23,14 @@ class IQ extends StanzaHandler {
 	}
 
 
+	/**
+	 * @param $stanza
+	 * @return IQRoster
+	 */
 	public function handle($stanza) {
 		$this->to = $this->getAttribute($stanza, 'to');
 
-		foreach($stanza['value'] as $value){
+		foreach($stanza['value'] as $value){ // TODO
 			if ($value['name'] === '{jabber:iq:roster}query'){
 				$id = $stanza['attributes']['id'];
 				$iqRoster = new IQRoster();

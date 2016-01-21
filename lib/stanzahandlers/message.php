@@ -5,6 +5,7 @@ namespace OCA\OJSXC\StanzaHandlers;
 use OCA\OJSXC\Db\MessageMapper;
 use Sabre\Xml\Reader;
 use Sabre\Xml\Writer;
+use OCA\OJSXC\Db\Stanza;
 
 class Message extends StanzaHandler {
 
@@ -21,7 +22,7 @@ class Message extends StanzaHandler {
 		$this->messageMapper = $messageMapper;
 	}
 
-	public function handle($stanza) {
+	public function handle(array $stanza) {
 		$to = $this->getAttribute($stanza, 'to');
 		$pos = strpos($to, '@');
 		$this->to = substr($to, 0, $pos);

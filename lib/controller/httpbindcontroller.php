@@ -110,6 +110,7 @@ class HttpBindController extends Controller {
 	/**
 	 * @NoAdminRequired
 	 * @NoCSRFRequired
+	 * @return XMPPResponse
 	 */
 	public function index() {
 		$this->lock->setLock();
@@ -129,15 +130,17 @@ class HttpBindController extends Controller {
 			} catch (LibXMLException $e){
 			}
 			$stanzas = $stanzas['value'];
-			foreach($stanzas as $stanza) {
-				$stanzaType = $this->getStanzaType($stanza);
-				if ($stanzaType === self::MESSAGE) {
-					$this->messageHandler->handle($stanza);
-				} else if ($stanzaType === self::IQ){
-					$result = $this->iqHandler->handle($stanza);
-					if (!is_null($result)) {
-						$longpoll = false;
-						$this->response->write($result);
+			if (is_array($stanzas)) {
+				foreach ($stanzas as $stanza) {
+					$stanzaType = $this->getStanzaType($stanza);
+					if ($stanzaType === self::MESSAGE) {
+						$this->messageHandler->handle($stanza);
+					} else if ($stanzaType === self::IQ) {
+						$result = $this->iqHandler->handle($stanza);
+						if (!is_null($result)) {
+							$longpoll = false;
+							$this->response->write($result);
+						}
 					}
 				}
 			}

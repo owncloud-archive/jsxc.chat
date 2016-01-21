@@ -54,7 +54,7 @@ class MemLockTest extends TestCase {
 		if ($cache->isAvailable()) {
 			$this->memCache = $cache->create('ojsxc');
 		} else {
-			die('No memcache available'); // TODO
+			die('No memcache available');
 		}
 
 		$this->memLock = new MemLock(
