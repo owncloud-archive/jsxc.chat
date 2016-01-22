@@ -71,7 +71,7 @@ class Message extends StanzaHandler {
 		$message = new MessageEntity();
 		$message->setTo($this->to);
 		$message->setFrom($this->from);
-		$message->setValues($this->values);
+		$message->setValue($this->values);
 		$message->setType($this->type);
 		$this->messageMapper->insert($message);
 		$this->values = [];
