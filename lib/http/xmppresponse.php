@@ -10,12 +10,15 @@ class XMPPResponse extends Response {
 
 	private $writer;
 
-	public function __construct() {
+	public function __construct(Stanza $stanza=null) {
 		$this->addHeader('Content-Type', 'text/xml');
 		$this->writer =  new Writer();
 		$this->writer->openMemory();
 		$this->writer->startElement('body');
 		$this->writer->writeAttribute('xmlns', 'http://jabber.org/protocol/httpbind');
+		if (!is_null($stanza)) {
+			$this->writer->write($stanza);
+		}
 	}
 
 	public function write(Stanza $input) {

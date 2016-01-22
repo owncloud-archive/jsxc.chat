@@ -157,12 +157,11 @@ class HttpBindControllerTest extends PHPUnit_Framework_TestCase {
 	}
 
 	public function testDbResults() {
-		$result = 'test';
+		$result = new Stanza('test');
 		$this->setUpController('<body rid=\'897878797\' xmlns=\'http://jabber.org/protocol/httpbind\' sid=\'7862\'/>');
         $this->mockLock();
 
-		$expResponse = new XMPPResponse();
-		$expResponse->write($result);
+		$expResponse = new XMPPResponse($result);
 
 		$this->iqHandler->expects($this->never())
 			->method('handle')
@@ -272,8 +271,7 @@ XML;
 		$this->setUpController($body);
         $this->mockLock();
 
-		$expResponse = new XMPPResponse();
-		$expResponse->write('test');
+		$expResponse = new XMPPResponse(new Stanza('test'));
 
 		$this->messageHandler->expects($this->once())
 			->method('handle');

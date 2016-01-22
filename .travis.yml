@@ -43,7 +43,6 @@ install:
   - mv jsxc.chat owncloud/apps/ojsxc
   - |
     if [[ $TRAVIS_PHP_VERSION = "hhv"* ]]; then
-      cat owncloud/apps/ojsxc/tests/travis/php.ini >> /etc/hhvm/php.ini
     else
       phpenv config-add owncloud/apps/ojsxc/tests/travis/php.ini
     fi
@@ -69,3 +68,4 @@ script:
   - cd apps/ojsxc
   - phpunit -c phpunit.xml
   - phpunit -c phpunit.integration.xml
+  - cat ../../data/owncloud.log

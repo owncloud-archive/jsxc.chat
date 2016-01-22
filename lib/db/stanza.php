@@ -22,6 +22,10 @@ use Sabre\Xml\XmlSerializable;
  */
 class Stanza extends Entity implements XmlSerializable{
 
+    public function __construct($stanza='') {
+        $this->setStanza($stanza);
+    }
+
     /**
      * @var string $to
      */

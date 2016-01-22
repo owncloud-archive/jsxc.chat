@@ -31,8 +31,8 @@ namespace OCA\OJSXC\Http {
 
 			return [
 				[
-					[null],
-					'<body xmlns="http://jabber.org/protocol/httpbind"/>'
+					[new Stanza('')],
+					'<body xmlns="http://jabber.org/protocol/httpbind"></body>'
 				],
 				[
 					[$stanza1],
@@ -43,7 +43,7 @@ namespace OCA\OJSXC\Http {
 					'<body xmlns="http://jabber.org/protocol/httpbind">abc<message to="test.be" from="test@test.be" type="testtype" xmlns="jabber:client" id="4-msg">abcvalue</message></body>'
 				],
 				[
-					[$stanza1, null, $stanza2],
+					[$stanza1, new Stanza(''), $stanza2],
 					'<body xmlns="http://jabber.org/protocol/httpbind">abc<message to="test.be" from="test@test.be" type="testtype" xmlns="jabber:client" id="4-msg">abcvalue</message></body>'
 				],
 			];
@@ -58,7 +58,7 @@ namespace OCA\OJSXC\Http {
 				$response->write($stanza);
 			}
 			$result = $response->render();
-			$this->assertEquals($result, $expected);
+			$this->assertEquals($expected, $result);
 		}
 
 	}
