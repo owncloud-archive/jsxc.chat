@@ -167,7 +167,7 @@ class HttpBindControllerTest extends PHPUnit_Framework_TestCase {
 			->method('handle')
 			->will($this->returnValue($result));
 
-		$r1 = $this->getMockBuilder('Sabre\XML\XmlSerializable')->disableOriginalConstructor()->getMock();
+		$r1 = $this->getMockBuilder('OCA\OJSXC\Db\Stanza')->disableOriginalConstructor()->getMock();
 		$r1->expects($this->once())
 			->method('xmlSerialize')
 			->will($this->returnCallback(function(Writer $writer){
@@ -276,7 +276,7 @@ XML;
 		$this->messageHandler->expects($this->once())
 			->method('handle');
 
-		$r1 = $this->getMockBuilder('Sabre\XML\XmlSerializable')->disableOriginalConstructor()->getMock();
+		$r1 = $this->getMockBuilder('OCA\OJSXC\Db\Stanza')->disableOriginalConstructor()->getMock();
 		$r1->expects($this->once())
 			->method('xmlSerialize')
 			->will($this->returnCallback(function(Writer $writer){

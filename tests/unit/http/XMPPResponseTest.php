@@ -14,7 +14,7 @@ namespace OCA\OJSXC\Http {
 	use PHPUnit_Framework_TestCase;
 
 
-	class IqRosterTest extends PHPUnit_Framework_TestCase {
+	class XMPPResponseTest extends PHPUnit_Framework_TestCase {
 
 		public function writingProvider() {
 			$stanza1 = new Stanza();
@@ -27,7 +27,7 @@ namespace OCA\OJSXC\Http {
 			$stanza2->setTo('test.be');
 			$stanza2->setStanza('abc');
 			$stanza2->setType('testtype');
-			$stanza2->setValues('abcvalue');
+			$stanza2->setValue('abcvalue');
 
 			return [
 				[

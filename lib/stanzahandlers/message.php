@@ -5,7 +5,7 @@ namespace OCA\OJSXC\StanzaHandlers;
 use OCA\OJSXC\Db\MessageMapper;
 use Sabre\Xml\Reader;
 use Sabre\Xml\Writer;
-use OCA\OJSXC\Db\Stanza;
+use OCA\OJSXC\Db\Message as MessageEntity;
 
 class Message extends StanzaHandler {
 
@@ -41,7 +41,7 @@ class Message extends StanzaHandler {
 		$this->type = $this->getAttribute($stanza, 'type');
 		$this->msgId = $this->getAttribute($stanza, 'id');
 
-		$message = new \OCA\OJSXC\Db\Message();
+		$message = new MessageEntity();
 		$message->setTo($this->to);
 		$message->setFrom($this->from);
 		$message->setValues($this->values);

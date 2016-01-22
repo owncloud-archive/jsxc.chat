@@ -65,8 +65,13 @@ script:
   - cd ../../
   - ./occ config:system:delete 'memcache.local'
   - ./occ config:system:delete 'redis'
-  - ./occ config:import apps/ojsxc/tests/travis/config-apcu.json
-  - cd apps/ojsxc
-  - phpunit -c phpunit.xml
-  - phpunit -c phpunit.integration.xml
-  - cat ../../data/owncloud.log
+  - |
+    if [[ $TRAVIS_PHP_VERSION = "hhv"* ]]; then
+      echo "PHP7"
+    else
+      ./occ config:import apps/ojsxc/tests/travis/config-apcu.json
+      cd apps/ojsxc
+      phpunit -c phpunit.xml
+      phpunit -c phpunit.integration.xml
+      cat ../../data/owncloud.log
+    fi
