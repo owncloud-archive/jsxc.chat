@@ -9,6 +9,8 @@ use OCA\OJSXC\StanzaHandlers\IQ;
 use OCP\AppFramework\Db\DoesNotExistException;
 use PHPUnit_Framework_TestCase;
 use Sabre\Xml\Writer;
+use PHPUnit_Framework_MockObject_MockObject;
+
 
 class HttpBindControllerTest extends PHPUnit_Framework_TestCase {
 
