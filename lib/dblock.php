@@ -5,22 +5,40 @@ namespace OCA\OJSXC;
 use OCP\IConfig;
 use OCP\IDb;
 
+/**
+ * Class DbLock
+ *
+ * @package OCA\OJSXC
+ */
 class DbLock implements ILock {
 
 	/**
-	 * @var IDb
+	 * @var IDb $con
 	 */
 	private $con;
 
 	/**
-	 * @var IConfig
+	 * @var IConfig $config
 	 */
 	private $config;
 
+	/**
+	 * @var string $userId
+	 */
 	private $userId;
 
+	/**
+	 * @var int $pollingId
+	 */
 	private $pollingId;
 
+	/**
+	 * DbLock constructor.
+	 *
+	 * @param string $userId
+	 * @param IDb $con
+	 * @param IConfig $config
+	 */
 	public function __construct($userId, IDb $con, IConfig $config) {
 		$this->con = $con;
 		$this->userId = $userId;
@@ -32,6 +50,9 @@ class DbLock implements ILock {
 		$this->config->setUserValue($this->userId, 'ojsxc', 'longpolling', $this->pollingId);
 	}
 
+	/**
+	 * @return bool
+	 */
 	public function stillLocked() {
 		$sql = "SELECT `configvalue` FROM `*PREFIX*preferences` WHERE `userid` = ? AND `appid`='ojsxc' AND `configkey`='longpolling'";
 		$q = $this->con->prepareQuery($sql);

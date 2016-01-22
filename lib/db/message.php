@@ -18,7 +18,14 @@ use Sabre\Xml\XmlSerializable;
  */
 class Message extends Stanza implements XmlSerializable{
 
+	/**
+	 * @var string $type
+	 */
 	public $type;
+
+	/**
+	 * @var array $value
+	 */
 	public $value;
 
 	public function xmlSerialize(Writer $writer) {

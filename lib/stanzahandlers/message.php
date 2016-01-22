@@ -7,21 +7,48 @@ use Sabre\Xml\Reader;
 use Sabre\Xml\Writer;
 use OCA\OJSXC\Db\Message as MessageEntity;
 
+/**
+ * Class Message
+ *
+ * @package OCA\OJSXC\StanzaHandlers
+ */
 class Message extends StanzaHandler {
 
+	/**
+	 * @var MessageMapper $messageMapper
+	 */
 	private $messageMapper;
 
+	/**
+	 * @var string $type
+	 */
 	private $type;
 
+	/**
+	 * @var  array $values
+	 */
 	private $values;
 
+	/**
+	 * @var string $msgId
+	 */
 	private $msgId;
 
+	/**
+	 * Message constructor.
+	 *
+	 * @param string $userId
+	 * @param string $host
+	 * @param MessageMapper $messageMapper
+	 */
 	public function __construct($userId, $host, MessageMapper $messageMapper) {
 		parent::__construct($userId, $host);
 		$this->messageMapper = $messageMapper;
 	}
 
+	/**
+	 * @param array $stanza
+	 */
 	public function handle(array $stanza) {
 		$to = $this->getAttribute($stanza, 'to');
 		$pos = strpos($to, '@');

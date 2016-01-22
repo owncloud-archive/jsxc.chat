@@ -3,20 +3,24 @@
 namespace OCA\OJSXC\StanzaHandlers;
 
 use OCA\OJSXC\Db\IQRoster;
-use OCA\OJSXC\Db\MessageMapper;
 use OCP\IUserManager;
 use Sabre\Xml\Reader;
 use Sabre\Xml\Writer;
 
-
+/**
+ * Class IQ
+ *
+ * @package OCA\OJSXC\StanzaHandlers
+ */
 class IQ extends StanzaHandler {
 
-	private $type;
-
-	private $id;
-
-	private $query;
-
+	/**
+	 * IQ constructor.
+	 *
+	 * @param string $userId
+	 * @param string $host
+	 * @param IUserManager $userManager
+	 */
 	public function __construct($userId, $host, IUserManager $userManager) {
 		parent::__construct($userId, $host);
 		$this->userManager = $userManager;

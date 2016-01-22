@@ -16,17 +16,32 @@ use Sabre\Xml\Writer;
 use Sabre\Xml\Reader;
 use Sabre\Xml\LibXMLException;
 
+/**
+ * Class HttpBindController
+ *
+ * @package OCA\OJSXC\Controller
+ */
 class HttpBindController extends Controller {
-
-	private $userId;
 
 	const MESSAGE=0;
 	const IQ=1;
 	const PRESENCE=2;
 	const BODY=2;
 
+
+	/**
+	 * @var string $userId
+	 */
+	private $userId;
+
+	/**
+	 * @var int $pollingId
+	 */
 	private $pollingId;
 
+	/**
+	 * @var string $host
+	 */
 	private $host;
 
 	/**
@@ -79,6 +94,22 @@ class HttpBindController extends Controller {
 	 */
 	private $lock;
 
+	/**
+	 * HttpBindController constructor.
+	 *
+	 * @param string $appName
+	 * @param IRequest $request
+	 * @param string $userId
+	 * @param ISession $session
+	 * @param StanzaMapper $stanzaMapper
+	 * @param IQ $iqHandler
+	 * @param Message $messageHandler
+	 * @param string $host
+	 * @param ILock $lock
+	 * @param string $body
+	 * @param int $sleepTime
+	 * @param int $maxCicles
+	 */
 	public function __construct($appName,
 	                            IRequest $request,
 								$userId,
@@ -165,6 +196,10 @@ class HttpBindController extends Controller {
 		return $this->response;
 	}
 
+	/**
+	 * @param $stanza
+	 * @return int
+	 */
 	private function getStanzaType($stanza){
 		switch($stanza['name']){
 			case '{jabber:client}message':
