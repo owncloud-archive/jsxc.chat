@@ -210,7 +210,6 @@ class HttpBindControllerTest extends PHPUnit_Framework_TestCase {
 
 
 	public function testMultipleMessageNoDbHandler() {
-		echo "================================================";
 		$body = <<<XML
 		<body rid='897878959' xmlns='http://jabber.org/protocol/httpbind' sid='7862'>
 			<message to='derp@own.dev' type='chat' id='1452960296859-msg' xmlns='jabber:client'><body>abc</body></message>

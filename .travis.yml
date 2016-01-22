@@ -50,6 +50,9 @@ install:
   - cd owncloud
   - ./occ maintenance:install --database-name oc_autotest --database-user oc_autotest --database-pass --admin-user admin --admin-pass admin --database $DB
   - ./occ app:enable ojsxc
+  - pear config-set preferred_state beta
+  - yes '' | pecl install apcu
+
 
 
 before_script:
