@@ -28,26 +28,24 @@ class IQ extends StanzaHandler {
 
 
 	/**
-	 * @param $stanza
+	 * @param array $stanza
 	 * @return IQRoster
 	 */
-	public function handle($stanza) {
+	public function handle(array $stanza) {
 		$this->to = $this->getAttribute($stanza, 'to');
 
-		foreach($stanza['value'] as $value){ // TODO
-			if ($value['name'] === '{jabber:iq:roster}query'){
-				$id = $stanza['attributes']['id'];
-				$iqRoster = new IQRoster();
-				$iqRoster->setType('result');
-				$iqRoster->setTo($this->from);
-				$iqRoster->setQid($id);
-				foreach($this->userManager->search('') as $user){
-					if($user->getUID() !== $this->userId) {
-						$iqRoster->addItem($user->getUID() . '@' . $this->host, $user->getDisplayName());
-					}
+		if ($stanza['value'][0]['name'] === '{jabber:iq:roster}query'){
+			$id = $stanza['attributes']['id'];
+			$iqRoster = new IQRoster();
+			$iqRoster->setType('result');
+			$iqRoster->setTo($this->from);
+			$iqRoster->setQid($id);
+			foreach($this->userManager->search('') as $user){
+				if($user->getUID() !== $this->userId) {
+					$iqRoster->addItem($user->getUID() . '@' . $this->host, $user->getDisplayName());
 				}
-				return $iqRoster;
 			}
+			return $iqRoster;
 		}
 
 	}

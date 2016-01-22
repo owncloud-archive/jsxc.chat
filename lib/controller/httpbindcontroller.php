@@ -199,6 +199,7 @@ class HttpBindController extends Controller {
 	/**
 	 * @param $stanza
 	 * @return int
+	 * @codeCoverageIgnore
 	 */
 	private function getStanzaType($stanza){
 		switch($stanza['name']){
