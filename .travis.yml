@@ -43,6 +43,7 @@ install:
   - mv jsxc.chat owncloud/apps/ojsxc
   - |
     if [[ $TRAVIS_PHP_VERSION = "hhv"* ]]; then
+      echo "PHP7"
     else
       phpenv config-add owncloud/apps/ojsxc/tests/travis/php.ini
     fi
