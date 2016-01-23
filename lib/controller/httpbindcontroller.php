@@ -2,19 +2,23 @@
 
 namespace OCA\OJSXC\Controller;
 
+use OCA\OJSXC\Db\Presence;
 use OCA\OJSXC\Db\StanzaMapper;
 use OCA\OJSXC\Db\MessageMapper;
 use OCA\OJSXC\Http\XMPPResponse;
 use OCA\OJSXC\ILock;
 use OCA\OJSXC\StanzaHandlers\IQ;
 use OCA\OJSXC\StanzaHandlers\Message;
+use OCA\OJSXC\StanzaHandlers\Presence as PresenceHandler;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Db\DoesNotExistException;
+use OCP\ILogger;
 use OCP\IRequest;
 use OCP\ISession;
 use Sabre\Xml\Writer;
 use Sabre\Xml\Reader;
 use Sabre\Xml\LibXMLException;
+
 
 /**
  * Class HttpBindController
@@ -95,6 +99,21 @@ class HttpBindController extends Controller {
 	private $lock;
 
 	/**
+	 * @var bool
+	 */
+	private $debug;
+
+	/**
+	 * @var ILogger $logger
+	 */
+	private $logger;
+
+	/**
+	 * @var PresenceHandler $presenceHandler
+	 */
+	private $presenceHandler;
+
+	/**
 	 * HttpBindController constructor.
 	 *
 	 * @param string $appName
@@ -106,6 +125,8 @@ class HttpBindController extends Controller {
 	 * @param Message $messageHandler
 	 * @param string $host
 	 * @param ILock $lock
+	 * @param ILogger $logger
+	 * @param PresenceHandler $presenceHandler
 	 * @param string $body
 	 * @param int $sleepTime
 	 * @param int $maxCicles
@@ -119,6 +140,8 @@ class HttpBindController extends Controller {
 								Message $messageHandler,
 								$host,
 								ILock $lock,
+								ILogger $logger,
+								PresenceHandler $presenceHandler,
 								$body,
 								$sleepTime,
 								$maxCicles
@@ -136,6 +159,9 @@ class HttpBindController extends Controller {
 		$this->maxCicles = $maxCicles;
 		$this->response =  new XMPPResponse();
 		$this->lock = $lock;
+		$this->debug = defined('JSXC_ENV') && JSXC_ENV === 'dev';
+		$this->logger = $logger;
+		$this->presenceHandler = $presenceHandler;
 	}
 
 	/**
@@ -154,6 +180,9 @@ class HttpBindController extends Controller {
 			$reader->xml($input);
 			$reader->elementMap = [
 				'{jabber:client}message' => 'Sabre\Xml\Element\KeyValue',
+				'{jabber:client}presence' => function(Reader $reader) {
+					return Presence::createFromXml($reader,$this->userId);
+				}
 			];
 
 			try {
@@ -164,6 +193,9 @@ class HttpBindController extends Controller {
 			if (is_array($stanzas)) {
 				foreach ($stanzas as $stanza) {
 					$stanzaType = $this->getStanzaType($stanza);
+					if ($this->debug) {
+						$this->logger->debug('Handling stanza of type ' . $stanzaType . ' : ' . json_encode($stanza));
+					}
 					if ($stanzaType === self::MESSAGE) {
 						$this->messageHandler->handle($stanza);
 					} else if ($stanzaType === self::IQ) {
@@ -172,6 +204,8 @@ class HttpBindController extends Controller {
 							$longpoll = false;
 							$this->response->write($result);
 						}
+					} else if ($stanza['value'] instanceof Presence) {
+						$this->presenceHandler->handle($stanza['value']);
 					}
 				}
 			}

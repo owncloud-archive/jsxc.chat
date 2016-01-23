@@ -39,6 +39,11 @@ class HttpBindControllerTest extends PHPUnit_Framework_TestCase {
 	 */
 	private $lock;
 
+	/**
+	 * @var PHPUnit_Framework_MockObject_MockObject
+	 */
+	private $presenceHandler;
+
 	private $userId = 'john';
 
 
@@ -67,7 +72,10 @@ class HttpBindControllerTest extends PHPUnit_Framework_TestCase {
 
 		$this->iqHandler = $this->getMockBuilder('OCA\OJSXC\StanzaHandlers\IQ')->disableOriginalConstructor()->getMock();
 		$this->messageHandler = $this->getMockBuilder('OCA\OJSXC\StanzaHandlers\Message')->disableOriginalConstructor()->getMock();
+		$this->presenceHandler = $this->getMockBuilder('OCA\OJSXC\StanzaHandlers\Presence')->disableOriginalConstructor()->getMock();
 		$this->lock = $this->getMockBuilder('OCA\OJSXC\ILock')->disableOriginalConstructor()->getMock();
+
+		$logger = \OC::$server->getLogger();
 
 		$this->controller = new HttpBindController(
 			'ojsxc',
@@ -79,6 +87,8 @@ class HttpBindControllerTest extends PHPUnit_Framework_TestCase {
 			$this->messageHandler,
 			'localhost',
 			$this->lock,
+			$logger,
+			$this->presenceHandler,
 			$requestBody,
 			0,
 			10

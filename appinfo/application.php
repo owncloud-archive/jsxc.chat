@@ -4,9 +4,11 @@ namespace OCA\OJSXC\AppInfo;
 
 use OCA\OJSXC\Controller\HttpBindController;
 use OCA\OJSXC\Db\MessageMapper;
+use OCA\OJSXC\Db\PresenceMapper;
 use OCA\OJSXC\Db\StanzaMapper;
 use OCA\OJSXC\StanzaHandlers\IQ;
 use OCA\OJSXC\StanzaHandlers\Message;
+use OCA\OJSXC\StanzaHandlers\Presence;
 use OCP\AppFramework\App;
 use OCA\OJSXC\ILock;
 use OCA\OJSXC\DbLock;
@@ -39,6 +41,8 @@ class Application extends App {
 				$c->query('MessageHandler'),
 				$c->query('Host'),
 				$this->getLock(),
+				$c->query('OCP\ILogger'),
+				$c->query('PresenceHandler'),
 				file_get_contents("php://input"),
 				self::$config['polling']['sleep_time'],
 				self::$config['polling']['max_cycles']
@@ -62,6 +66,13 @@ class Application extends App {
 			);
 		});
 
+		$container->registerService('PresenceMapper', function($c) {
+			return new PresenceMapper(
+				$c->query('ServerContainer')->getDb()
+			);
+		});
+
+
 		/**
 		 * XMPP Stanza Handlers
 		 */
@@ -70,6 +81,14 @@ class Application extends App {
 				$c->query('UserId'),
 				$c->query('Host'),
 				$c->query('OCP\IUserManager')
+			);
+		});
+
+		$container->registerService('PresenceHandler', function($c) {
+			return new Presence(
+				$c->query('UserId'),
+				$c->query('Host'),
+				$c->query('PresenceMapper')
 			);
 		});
 
