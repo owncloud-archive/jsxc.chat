@@ -236,9 +236,20 @@ $(function() {
                username: username,
                password: password
             },
-            success: function(d) {
-               if (d.result === 'success' && d.data.xmpp.url !== '' && d.data.xmpp.url !== null) {
+            success: function(d) { console.log('success', d);
+               if (d.result === 'success' && d.data.serverType !== 'internal' && d.data.xmpp.url !== '' && d.data.xmpp.url !== null) {
                   cb(d.data);
+               } else if (d.data.serverType === 'internal') {
+                  // fake successful connection
+                  jsxc.storage.setItem('jid', username + '@' + window.location.host + '/internal');
+                  jsxc.storage.setItem('sid', 'internal');
+                  jsxc.storage.setItem('rid', '123456');
+                  jsxc.bid = username + '@' + window.location.host;
+                  jsxc.options.set('xmpp', {
+                     url: OC.generateUrl('apps/ojsxc/http-bind')
+                  });
+
+                  cb(false);
                } else {
                   cb(false);
                }

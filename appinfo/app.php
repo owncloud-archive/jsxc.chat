@@ -11,14 +11,12 @@ OCP\App::registerAdmin ( 'ojsxc', 'settings' );
 
 $jsxc_root = (defined('JSXC_ENV') && JSXC_ENV === 'dev')? 'jsxc/dev/' : 'jsxc/';
 
-if(\OCP\User::isLoggedIn()) {
-	OCP\Util::addScript ( 'ojsxc', $jsxc_root.'lib/jquery.slimscroll' );
-	OCP\Util::addScript ( 'ojsxc', $jsxc_root.'lib/jquery.fullscreen' );
-	OCP\Util::addScript ( 'ojsxc', $jsxc_root.'lib/jsxc.dep' );
-	OCP\Util::addScript ( 'ojsxc', $jsxc_root.'jsxc' );
-	OCP\Util::addScript('ojsxc', 'ojsxc');
-	OCP\Util::addScript('ojsxc', 'oc-backend');
-}
+OCP\Util::addScript ( 'ojsxc', $jsxc_root.'lib/jquery.slimscroll' );
+OCP\Util::addScript ( 'ojsxc', $jsxc_root.'lib/jquery.fullscreen' );
+OCP\Util::addScript ( 'ojsxc', $jsxc_root.'lib/jsxc.dep' );
+OCP\Util::addScript ( 'ojsxc', $jsxc_root.'jsxc' );
+OCP\Util::addScript('ojsxc', 'ojsxc');
+
 // ############# CSS #############
 OCP\Util::addStyle ( 'ojsxc', 'jquery.mCustomScrollbar' );
 OCP\Util::addStyle ( 'ojsxc', 'jquery.colorbox' );

@@ -20,6 +20,17 @@ if (!$auth) {
 }
 
 $data = array ();
+$data ['serverType'] = OCP\Config::getAppValue ( 'ojsxc', 'serverType' );
+
+if ($data ['serverType'] === 'internal') {
+	OCP\JSON::encodedPrint ( array (
+			'result' => 'success',
+			'data' => $data
+	) );
+
+	exit;
+}
+
 $data ['xmpp'] = array ();
 $data ['xmpp'] ['url'] = OCP\Config::getAppValue ( 'ojsxc', 'boshUrl' );
 $data ['xmpp'] ['domain'] = OCP\Config::getAppValue ( 'ojsxc', 'xmppDomain' );

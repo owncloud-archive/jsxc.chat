@@ -1,62 +1,77 @@
 <div class="section">
-	<h2>Owncloud JavaScript Xmpp Client</h2>
+	<h2>JavaScript Xmpp Client</h2>
 	<form id="ojsxc">
-		<table style="width: auto">
-			<tr>
-				<td><label for="boshUrl">* BOSH url</label></td>
-				<td><input type="text" name="boshUrl" id="boshUrl" value="<?php p($_['boshUrl']); ?>" /></td>
-				<td></td>
-			</tr>
-			<tr>
-				<td><label for="xmppDomain">* XMPP domain</label></td>
-				<td><input type="text" name="xmppDomain" id="xmppDomain" value="<?php p($_['xmppDomain']); ?>" /></td>
-				<td></td>
-			</tr>
-			<tr>
-				<td><label for="xmppResource">XMPP resource</label></td>
-				<td><input type="text" name="xmppResource" id="xmppResource" value="<?php p($_['xmppResource']); ?>" /></td>
-				<td></td>
-			</tr>
-			<tr>
-				<td><label for="xmppOverwrite">Allow user to overwrite XMPP settings</label></td>
-				<td><input type="checkbox" name="xmppOverwrite" id="xmppOverwrite" value="true" <?php if($_['xmppOverwrite'] === 'true' || $_['xmppOverwrite'] === true) echo "checked"; ?> /></td>
-				<td></td>
-			</tr>
-			<tr>
-				<td><label for="xmppStartMinimized">Hide roster after first login</label></td>
-				<td><input type="checkbox" name="xmppStartMinimized" id="xmppStartMinimized" value="true" <?php if($_['xmppStartMinimized'] === 'true' || $_['xmppStartMinimized'] === true) echo "checked"; ?> /></td>
-				<td></td>
-			</tr>
-			<tr>
-				<td><label for="iceUrl">TURN Url</label></td>
-				<td><input type="text" name="iceUrl" id="iceUrl" value="<?php p($_['iceUrl']); ?>" /></td>
-				<td></td>
-			</tr>
-			<tr>
-				<td><label for="iceUsername">TURN Username</label></td>
-				<td><input type="text" name="iceUsername" id="iceUrl" value="<?php p($_['iceUsername']); ?>" /></td>
-				<td><em>If no username is set, TURN-REST-API credentials are used.</em></td>
-			</tr>
-			<tr>
-				<td><label for="iceCredential">TURN Credential</label></td>
-				<td><input type="text" name="iceCredential" id="iceCredential" value="<?php p($_['iceCredential']); ?>" /></td>
-				<td><em>If no password is set, TURN-REST-API credentials are used.</em></td>
-			</tr>
-			<tr>
-				<td><label for="iceSecret">TURN Secret</label></td>
-				<td><input type="text" name="iceSecret" id="iceSecret" value="<?php p($_['iceSecret']); ?>" /></td>
-				<td><em>Secret for TURN-REST-API credentials as described <a href="http://tools.ietf.org/html/draft-uberti-behave-turn-rest-00" target="_blank">here</a>.
-				</em></td>
-			</tr>
-			<tr>
-				<td><label for="iceTtl">TURN TTL</label></td>
-				<td><input type="text" name="iceTtl" id="iceTtl" value="<?php p($_['iceTtl']); ?>" /></td>
-				<td><em>Lifetime for TURN-REST-API credentials in seconds.</em></td>
-			</tr>
-		</table>
+		<div class="form-group">
+			<input type="radio" name="serverType" id="serverTypeInternal" value="internal" <?php if($_['serverType'] === 'internal')echo 'checked'; ?> />
+			<label for="serverTypeInternal">Internal (Experimental)</label>
+			<em>Internal server is not ready for production and contains not all features of an external server. To be precise only one-to-one messages are possible.</em>
+		</div>
+		<div class="form-group">
+			<input type="radio" name="serverType" id="serverTypeExternal" value="external" <?php if($_['serverType'] === 'external')echo 'checked'; ?> />
+			<label for="serverTypeExternal">External</label>
+			<em>Choose this option to use your own XMPP server.</em>
+		</div>
+		
+		<div class="ojsxc-internal hidden">
+			<div>
+				<div class="msg"></div>
+				
+				<input type="submit" value="Save settings" />
+			</div>
+		</div>
+		
+		<div class="ojsxc-external hidden">
+			<div class="form-group">
+				<label for="xmppDomain">* XMPP domain</label>
+				<input type="text" name="xmppDomain" id="xmppDomain" required="required" value="<?php p($_['xmppDomain']); ?>" />
+			</div>
+			<div class="form-group">
+				<label for="boshUrl">* BOSH url</label>
+				<input type="text" name="boshUrl" id="boshUrl" required="required" value="<?php p($_['boshUrl']); ?>" />
+				<div class="boshUrl-msg"></div>
+			</div>
+			<div class="form-group">
+				<label for="xmppResource">XMPP resource</label>
+				<input type="text" name="xmppResource" id="xmppResource" value="<?php p($_['xmppResource']); ?>" />
+			</div>
+			<div class="form-group">
+				<label for="xmppOverwrite">Allow user to overwrite XMPP settings</label>
+				<input type="checkbox" name="xmppOverwrite" id="xmppOverwrite" value="true" <?php if($_['xmppOverwrite'] === 'true' || $_['xmppOverwrite'] === true) echo "checked"; ?> />
+			</div>
+			<div class="form-group">
+				<label for="xmppStartMinimized">Hide roster after first login</label>
+				<input type="checkbox" name="xmppStartMinimized" id="xmppStartMinimized" value="true" <?php if($_['xmppStartMinimized'] === 'true' || $_['xmppStartMinimized'] === true) echo "checked"; ?> />
+			</div>
+			<div class="form-group">
+				<label for="iceUrl">TURN Url</label>
+				<input type="text" name="iceUrl" id="iceUrl" value="<?php p($_['iceUrl']); ?>" />
+			</div>
+			<div class="form-group">
+				<label for="iceUsername">TURN Username</label>
+				<input type="text" name="iceUsername" id="iceUrl" value="<?php p($_['iceUsername']); ?>" />
+				<em>If no username is set, TURN-REST-API credentials are used.</em>
+			</div>
+			<div class="form-group">
+				<label for="iceCredential">TURN Credential</label>
+				<input type="text" name="iceCredential" id="iceCredential" value="<?php p($_['iceCredential']); ?>" />
+				<em>If no password is set, TURN-REST-API credentials are used.</em>
+			</div>
+			<div class="form-group">
+				<label for="iceSecret">TURN Secret</label>
+				<input type="text" name="iceSecret" id="iceSecret" value="<?php p($_['iceSecret']); ?>" />
+				<em>Secret for TURN-REST-API credentials as described <a href="http://tools.ietf.org/html/draft-uberti-behave-turn-rest-00" target="_blank">here</a>.</em>
+			</div>
+			<div class="form-group">
+				<label for="iceTtl">TURN TTL</label>
+				<input type="text" name="iceTtl" id="iceTtl" value="<?php p($_['iceTtl']); ?>" />
+				<em>Lifetime for TURN-REST-API credentials in seconds.</em>
+			</div>
 
-		<div class="msg"></div>
-
-		<input type="submit" value="Save settings" />
+			<div class="form-offset-label">
+				<div class="msg"></div>
+				
+				<input type="submit" value="Save settings" />
+			</div>
+		</div>
 	</form>
 </div>
