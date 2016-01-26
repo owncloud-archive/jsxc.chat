@@ -9,6 +9,8 @@ use OCA\OJSXC\StanzaHandlers\IQ;
 use OCP\AppFramework\Db\DoesNotExistException;
 use PHPUnit_Framework_TestCase;
 use Sabre\Xml\Writer;
+use PHPUnit_Framework_MockObject_MockObject;
+
 
 class HttpBindControllerTest extends PHPUnit_Framework_TestCase {
 
@@ -94,7 +96,7 @@ class HttpBindControllerTest extends PHPUnit_Framework_TestCase {
         $this->mockLock();
 		$this->stanzaMapper->expects($this->exactly(10))
 			->method('findByTo')
-			->with('john@localhost')
+			->with('john')
 			->will($this->throwException($ex));
 
 		$response = $this->controller->index();
@@ -102,18 +104,30 @@ class HttpBindControllerTest extends PHPUnit_Framework_TestCase {
 	}
 
 	public function IQProvider() {
+		$expStanza1 = new Stanza();
+		$expStanza1->setStanza('<iq to="admin@localhost" type="result" id="2:sendIQ"><query xmlns="jabber:iq:roster"><item jid="derp@localhost" name="derp"></item></query></iq><iq to="admin@localhost" type="result" id="2:sendIQ"><query xmlns="jabber:iq:roster"><item jid="derp@localhost" name="derp"></item></query></iq><iq to="admin@localhost" type="result" id="2:sendIQ"><query xmlns="jabber:iq:roster"><item jid="derp@localhost" name="derp"></item></query></iq>');
+
+		$result1 = new Stanza();
+		$result1->setStanza('<iq to="admin@localhost" type="result" id="2:sendIQ"><query xmlns="jabber:iq:roster"><item jid="derp@localhost" name="derp"></item></query></iq>');
+
+		$result2 = new Stanza();
+		$result2->setStanza(null);
+		$expStanza2 = new Stanza();
+		$expStanza2->setStanza(null);
 		return [
 			[
 				'<body rid=\'897878733\' xmlns=\'http://jabber.org/protocol/httpbind\' sid=\'7862\'><iq from=\'admin@localhost\' to=\'localhost\' type=\'get\' xmlns=\'jabber:client\' id=\'1:sendIQ\'><query xmlns=\'http://jabber.org/protocol/disco#info\' node=\'undefined#undefined\'/></iq><iq type=\'get\' xmlns=\'jabber:client\' id=\'2:sendIQ\'><query xmlns=\'jabber:iq:roster\'/></iq><iq type=\'get\' to=\'admin@localhost\' xmlns=\'jabber:client\' id=\'3:sendIQ\'><vCard xmlns=\'vcard-temp\'/></iq></body>',
-				'<iq to="admin@localhost" type="result" id="2:sendIQ"><query xmlns="jabber:iq:roster"><item jid="derp@localhost" name="derp"></item></query></iq>',
-				'<iq to="admin@localhost" type="result" id="2:sendIQ"><query xmlns="jabber:iq:roster"><item jid="derp@localhost" name="derp"></item></query></iq><iq to="admin@localhost" type="result" id="2:sendIQ"><query xmlns="jabber:iq:roster"><item jid="derp@localhost" name="derp"></item></query></iq><iq to="admin@localhost" type="result" id="2:sendIQ"><query xmlns="jabber:iq:roster"><item jid="derp@localhost" name="derp"></item></query></iq>', // we ask for 3 IQ's thus return 3 values
-				$this->once()
+				$result1,
+				$expStanza1, // we ask for 3 IQ's thus return 3 values
+				$this->once(),
+				$this->exactly(3)
 			],
 			[
 				'<body rid=\'897878734\' xmlns=\'http://jabber.org/protocol/httpbind\' sid=\'7862\'><iq from=\'admin@localhost\' to=\'localhost\' type=\'get\' xmlns=\'jabber:client\' id=\'1:sendIQ\'><query xmlns=\'http://jabber.org/protocol/disco#info\' node=\'undefined#undefined\'/></iq><iq type=\'get\' xmlns=\'jabber:client\' id=\'2:sendIQ\'><query xmlns=\'jabber:iq:roster\'/></iq><iq type=\'get\' to=\'admin@localhost\' xmlns=\'jabber:client\' id=\'3:sendIQ\'><vCard xmlns=\'vcard-temp\'/></iq></body>',
-				null,
-				null,
-				$this->exactly(10)
+				$result2,
+				$expStanza2,
+				$this->once(),
+				$this->exactly(3)
 			]
 		];
 	}
@@ -121,20 +135,20 @@ class HttpBindControllerTest extends PHPUnit_Framework_TestCase {
 	/**
 	 * @dataProvider IQProvider
 	 */
-	public function testIQHandlerWhenNoDbResults($body, $result, $expected, $pollCount) {
+	public function testIQHandlerWhenNoDbResults($body, $result, $expected, $pollCount, $handlerCount) {
 		$ex = new DoesNotExistException();
 		$this->setUpController($body);
         $this->mockLock();
 		$expResponse = new XMPPResponse();
 		$expResponse->write($expected);
 
-		$this->iqHandler->expects($this->any()) // FIXME
+		$this->iqHandler->expects($handlerCount)
 			->method('handle')
 			->will($this->returnValue($result));
 
 		$this->stanzaMapper->expects($pollCount)
 			->method('findByTo')
-			->with('john@localhost')
+			->with('john')
 			->will($this->throwException($ex));
 
 
@@ -145,18 +159,17 @@ class HttpBindControllerTest extends PHPUnit_Framework_TestCase {
 	}
 
 	public function testDbResults() {
-		$result = 'test';
+		$result = new Stanza('test');
 		$this->setUpController('<body rid=\'897878797\' xmlns=\'http://jabber.org/protocol/httpbind\' sid=\'7862\'/>');
         $this->mockLock();
 
-		$expResponse = new XMPPResponse();
-		$expResponse->write($result);
+		$expResponse = new XMPPResponse($result);
 
-		$this->iqHandler->expects($this->any()) // FIXME
+		$this->iqHandler->expects($this->never())
 			->method('handle')
 			->will($this->returnValue($result));
 
-		$r1 = $this->getMockBuilder('Sabre\XML\XmlSerializable')->disableOriginalConstructor()->getMock();
+		$r1 = $this->getMockBuilder('OCA\OJSXC\Db\Stanza')->disableOriginalConstructor()->getMock();
 		$r1->expects($this->once())
 			->method('xmlSerialize')
 			->will($this->returnCallback(function(Writer $writer){
@@ -165,7 +178,7 @@ class HttpBindControllerTest extends PHPUnit_Framework_TestCase {
 
 		$this->stanzaMapper->expects($this->once())
 			->method('findByTo')
-			->with('john@localhost')
+			->with('john')
 			->will($this->returnValue([$r1]));
 
 
@@ -182,12 +195,71 @@ class HttpBindControllerTest extends PHPUnit_Framework_TestCase {
 
 		$expResponse = new XMPPResponse();
 
-		$this->messageHandler->expects($this->any()) // FIXME
+		$this->messageHandler->expects($this->once())
 			->method('handle');
 
 		$this->stanzaMapper->expects($this->exactly(10))
 			->method('findByTo')
-			->with('john@localhost')
+			->with('john')
+			->will($this->throwException($ex));
+
+		$response = $this->controller->index();
+		$this->assertEquals($expResponse, $response);
+		$this->assertEquals($expResponse->render(), $response->render());
+	}
+
+
+	public function testMultipleMessageNoDbHandler() {
+		$body = <<<XML
+		<body rid='897878959' xmlns='http://jabber.org/protocol/httpbind' sid='7862'>
+			<message to='derp@own.dev' type='chat' id='1452960296859-msg' xmlns='jabber:client'><body>abc</body></message>
+			<message to='derp@own.dev' type='chat' id='1452960296860-msg' xmlns='jabber:client'><body>abc2</body></message>
+			<message to='derp@own.dev' type='chat' id='1452960296861-msg' xmlns='jabber:client'><body>abc3</body></message>
+		</body>
+XML;
+		$ex = new DoesNotExistException();
+		$this->setUpController($body);
+		$this->mockLock();
+
+		$expResponse = new XMPPResponse();
+		$this->messageHandler->expects($this->any())
+			->method('handle');
+
+		$this->messageHandler->expects($this->exactly(3))
+			->method('handle')
+			->withConsecutive(
+				$this->equalTo(
+				[	'name' => '{jabber:client}message',
+				'	value' => [
+					'{jabber:client}body' => 'abc',
+				],
+				'attributes' => [
+					'to' => 'derp@own.dev',
+					'type' => 'chat',
+					'id' => '1452960296859-msg',
+				]]),
+				$this->equalTo([	'name' => '{jabber:client}message',
+					'value' => [
+					'{jabber:client}body' => 'abc2',
+				],	'attributes' => [
+					'to' => 'derp@own.dev',
+					'type' => 'chat',
+					'id' => '1452960296860-msg',
+				]]),
+				$this->equalTo([	'name' => '{jabber:client}message',
+					'value' => [
+						'{jabber:client}body' => 'abc3',
+					],	'attributes' => [
+					'to' => 'derp@own.dev',
+					'type' => 'chat',
+					'id' => '1452960296861-msg',
+				]])
+
+			);
+
+		$this->stanzaMapper->expects($this->exactly(10))
+			->method('findByTo')
+			->with('john')
 			->will($this->throwException($ex));
 
 		$response = $this->controller->index();
@@ -200,13 +272,12 @@ class HttpBindControllerTest extends PHPUnit_Framework_TestCase {
 		$this->setUpController($body);
         $this->mockLock();
 
-		$expResponse = new XMPPResponse();
-		$expResponse->write('test');
+		$expResponse = new XMPPResponse(new Stanza('test'));
 
-		$this->messageHandler->expects($this->any()) // FIXME
-		->method('handle');
+		$this->messageHandler->expects($this->once())
+			->method('handle');
 
-		$r1 = $this->getMockBuilder('Sabre\XML\XmlSerializable')->disableOriginalConstructor()->getMock();
+		$r1 = $this->getMockBuilder('OCA\OJSXC\Db\Stanza')->disableOriginalConstructor()->getMock();
 		$r1->expects($this->once())
 			->method('xmlSerialize')
 			->will($this->returnCallback(function(Writer $writer){
@@ -215,7 +286,7 @@ class HttpBindControllerTest extends PHPUnit_Framework_TestCase {
 
 		$this->stanzaMapper->expects($this->once())
 			->method('findByTo')
-			->with('john@localhost')
+			->with('john')
 			->will($this->returnValue([$r1]));
 
 		$response = $this->controller->index();
@@ -239,6 +310,4 @@ class HttpBindControllerTest extends PHPUnit_Framework_TestCase {
 		$this->controller->index();
 	}
 
-   
-	
 }

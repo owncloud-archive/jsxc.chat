@@ -43,13 +43,16 @@ install:
   - mv jsxc.chat owncloud/apps/ojsxc
   - |
     if [[ $TRAVIS_PHP_VERSION = "hhv"* ]]; then
-      cat owncloud/apps/ojsxc/tests/travis/php.ini >> /etc/hhvm/php.ini
+      echo "PHP7"
     else
       phpenv config-add owncloud/apps/ojsxc/tests/travis/php.ini
     fi
   - cd owncloud
   - ./occ maintenance:install --database-name oc_autotest --database-user oc_autotest --database-pass --admin-user admin --admin-pass admin --database $DB
   - ./occ app:enable ojsxc
+  - pear config-set preferred_state beta
+  - yes '' | pecl install apcu-4.0.10
+
 
 
 before_script:
@@ -65,7 +68,13 @@ script:
   - cd ../../
   - ./occ config:system:delete 'memcache.local'
   - ./occ config:system:delete 'redis'
-  - ./occ config:import apps/ojsxc/tests/travis/config-apcu.json
-  - cd apps/ojsxc
-  - phpunit -c phpunit.xml
-  - phpunit -c phpunit.integration.xml
+  - |
+    if [[ $TRAVIS_PHP_VERSION = "hhv"* ]]; then
+      echo "PHP7"
+    else
+      ./occ config:import apps/ojsxc/tests/travis/config-apcu.json
+      cd apps/ojsxc
+      phpunit -c phpunit.xml
+      phpunit -c phpunit.integration.xml
+      cat ../../data/owncloud.log
+    fi

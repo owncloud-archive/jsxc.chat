@@ -13,11 +13,28 @@ use Sabre\Xml\XmlSerializable;
  * Class IQRoster
  *
  * @package OCA\OJSXC\Db
+ * @method void setType(sting $type)
+ * @method void setQid(sting $qid)
+ * @method void setItems(array $items)
+ * @method string getType()
+ * @method string getQid()
+ * @method array getItems()
  */
 class IQRoster extends Stanza implements XmlSerializable{
 
+	/**
+	 * @var string $type
+	 */
 	public $type;
+
+	/**
+	 * @var string $qid
+	 */
 	public $qid;
+
+	/**
+	 * @var array $items
+	 */
 	public $items;
 
 	public function xmlSerialize(Writer $writer) {
@@ -40,6 +57,10 @@ class IQRoster extends Stanza implements XmlSerializable{
 		]);
 	}
 
+	/**
+	 * @param string $jid
+	 * @param string $name
+	 */
 	public function addItem($jid, $name){
 		$this->items[] = [
 			"name" => "item",

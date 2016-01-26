@@ -48,7 +48,7 @@ class MessageMapperTest extends MapperTestUtility {
 		$stanza->setTo($to);
 		$stanza->setStanza($data);
 		$stanza->setType($type);
-		$stanza->setValues($msg);
+		$stanza->setValue($msg);
 
 		$this->assertEquals($stanza->getFrom(), $from);
 		$this->assertEquals($stanza->getTo(), $to);
@@ -82,7 +82,7 @@ class MessageMapperTest extends MapperTestUtility {
 		$stanza->setTo('john@localhost');
 		$stanza->setStanza('abcd');
 		$stanza->setType('test');
-		$stanza->setValues('message abc');
+		$stanza->setValue('message abc');
 		$this->mapper->insert($stanza);
 
 		$this->mapper->findByTo('test');
@@ -94,7 +94,7 @@ class MessageMapperTest extends MapperTestUtility {
 		$stanza1->setTo('john@localhost');
 		$stanza1->setStanza('abcd1');
 		$stanza1->setType('test');
-		$stanza1->setValues('Messageabc');
+		$stanza1->setValue('Messageabc');
 		$this->mapper->insert($stanza1);
 
 		$stanza2 = new Message();
@@ -102,7 +102,7 @@ class MessageMapperTest extends MapperTestUtility {
 		$stanza2->setTo('jan@localhost');
 		$stanza2->setStanza('abcd2');
 		$stanza2->setType('test2');
-		$stanza2->setValues('Message');
+		$stanza2->setValue('Message');
 		$this->mapper->insert($stanza2);
 
 

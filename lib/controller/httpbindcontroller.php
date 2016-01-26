@@ -16,17 +16,32 @@ use Sabre\Xml\Writer;
 use Sabre\Xml\Reader;
 use Sabre\Xml\LibXMLException;
 
+/**
+ * Class HttpBindController
+ *
+ * @package OCA\OJSXC\Controller
+ */
 class HttpBindController extends Controller {
-
-	private $userId;
 
 	const MESSAGE=0;
 	const IQ=1;
 	const PRESENCE=2;
 	const BODY=2;
 
+
+	/**
+	 * @var string $userId
+	 */
+	private $userId;
+
+	/**
+	 * @var int $pollingId
+	 */
 	private $pollingId;
 
+	/**
+	 * @var string $host
+	 */
 	private $host;
 
 	/**
@@ -79,6 +94,22 @@ class HttpBindController extends Controller {
 	 */
 	private $lock;
 
+	/**
+	 * HttpBindController constructor.
+	 *
+	 * @param string $appName
+	 * @param IRequest $request
+	 * @param string $userId
+	 * @param ISession $session
+	 * @param StanzaMapper $stanzaMapper
+	 * @param IQ $iqHandler
+	 * @param Message $messageHandler
+	 * @param string $host
+	 * @param ILock $lock
+	 * @param string $body
+	 * @param int $sleepTime
+	 * @param int $maxCicles
+	 */
 	public function __construct($appName,
 	                            IRequest $request,
 								$userId,
@@ -110,6 +141,7 @@ class HttpBindController extends Controller {
 	/**
 	 * @NoAdminRequired
 	 * @NoCSRFRequired
+	 * @return XMPPResponse
 	 */
 	public function index() {
 		$this->lock->setLock();
@@ -129,15 +161,17 @@ class HttpBindController extends Controller {
 			} catch (LibXMLException $e){
 			}
 			$stanzas = $stanzas['value'];
-			foreach($stanzas as $stanza) {
-				$stanzaType = $this->getStanzaType($stanza);
-				if ($stanzaType === self::MESSAGE) {
-					$this->messageHandler->handle($stanza);
-				} else if ($stanzaType === self::IQ){
-					$result = $this->iqHandler->handle($stanza);
-					if (!is_null($result)) {
-						$longpoll = false;
-						$this->response->write($result);
+			if (is_array($stanzas)) {
+				foreach ($stanzas as $stanza) {
+					$stanzaType = $this->getStanzaType($stanza);
+					if ($stanzaType === self::MESSAGE) {
+						$this->messageHandler->handle($stanza);
+					} else if ($stanzaType === self::IQ) {
+						$result = $this->iqHandler->handle($stanza);
+						if (!is_null($result)) {
+							$longpoll = false;
+							$this->response->write($result);
+						}
 					}
 				}
 			}
@@ -162,6 +196,11 @@ class HttpBindController extends Controller {
 		return $this->response;
 	}
 
+	/**
+	 * @param $stanza
+	 * @return int
+	 * @codeCoverageIgnore
+	 */
 	private function getStanzaType($stanza){
 		switch($stanza['name']){
 			case '{jabber:client}message':

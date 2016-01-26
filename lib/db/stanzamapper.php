@@ -8,15 +8,30 @@ use OCP\AppFramework\Db\Mapper;
 use OCP\IDb;
 use Sabre\Xml\Writer;
 
+/**
+ * Class StanzaMapper
+ *
+ * @package OCA\OJSXC\Db
+ */
 class StanzaMapper extends Mapper {
 
 	private $host;
 
+	/**
+	 * StanzaMapper constructor.
+	 *
+	 * @param IDb $db
+	 * @param string $host
+	 */
 	public function __construct(IDb $db, $host) {
 		parent::__construct($db, 'ojsxc_stanzas');
 		$this->host = $host;
 	}
 
+	/**
+	 * @param Entity $entity
+	 * @return void
+	 */
 	public function insert(Entity $entity) {
 		$writer = new Writer();
 		$writer->openMemory();
@@ -28,6 +43,11 @@ class StanzaMapper extends Mapper {
 	}
 
 
+	/**
+	 * @param string $to
+	 * @return Stanza[]
+	 * @throws DoesNotExistException
+	 */
 	public function findByTo($to){
 		$stmt = $this->execute("SELECT stanza, id FROM *PREFIX*ojsxc_stanzas WHERE `to`=?", [$to]);
 		$results = [];
@@ -48,7 +68,4 @@ class StanzaMapper extends Mapper {
 		return $results;
 	}
 
-	private function replaceHostname($input) {
-		return str_replace('@{hostPlaceholder}', '@' . $this->host, $input);
-	}
 }

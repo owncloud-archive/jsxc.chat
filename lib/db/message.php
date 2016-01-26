@@ -2,16 +2,31 @@
 
 namespace OCA\OJSXC\Db;
 
-use \OCP\AppFramework\Db\Entity;
 use Sabre\Xml\Reader;
 use Sabre\Xml\Writer;
 use Sabre\Xml\XmlDeserializable;
 use Sabre\Xml\XmlSerializable;
 
+/**
+ * Class Message
+ *
+ * @package OCA\OJSXC\Db
+ * @method void setType(string $type)
+ * @method void setValue(array $value)
+ * @method string getType()
+ * @method array getValue()
+ */
 class Message extends Stanza implements XmlSerializable{
 
+	/**
+	 * @var string $type
+	 */
 	public $type;
-	public $values;
+
+	/**
+	 * @var array $value
+	 */
+	public $value;
 
 	public function xmlSerialize(Writer $writer) {
 		$writer->write([
@@ -24,7 +39,7 @@ class Message extends Stanza implements XmlSerializable{
 					'xmlns' => 'jabber:client',
 					'id' => uniqid() . '-msg'
 				],
-				'value' => $this->values
+				'value' => $this->value
 			]
 		]);
 	}

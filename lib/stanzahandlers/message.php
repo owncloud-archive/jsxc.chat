@@ -5,23 +5,51 @@ namespace OCA\OJSXC\StanzaHandlers;
 use OCA\OJSXC\Db\MessageMapper;
 use Sabre\Xml\Reader;
 use Sabre\Xml\Writer;
+use OCA\OJSXC\Db\Message as MessageEntity;
 
+/**
+ * Class Message
+ *
+ * @package OCA\OJSXC\StanzaHandlers
+ */
 class Message extends StanzaHandler {
 
+	/**
+	 * @var MessageMapper $messageMapper
+	 */
 	private $messageMapper;
 
+	/**
+	 * @var string $type
+	 */
 	private $type;
 
+	/**
+	 * @var  array $values
+	 */
 	private $values;
 
+	/**
+	 * @var string $msgId
+	 */
 	private $msgId;
 
+	/**
+	 * Message constructor.
+	 *
+	 * @param string $userId
+	 * @param string $host
+	 * @param MessageMapper $messageMapper
+	 */
 	public function __construct($userId, $host, MessageMapper $messageMapper) {
 		parent::__construct($userId, $host);
 		$this->messageMapper = $messageMapper;
 	}
 
-	public function handle($stanza) {
+	/**
+	 * @param array $stanza
+	 */
+	public function handle(array $stanza) {
 		$to = $this->getAttribute($stanza, 'to');
 		$pos = strpos($to, '@');
 		$this->to = substr($to, 0, $pos);
@@ -40,10 +68,10 @@ class Message extends StanzaHandler {
 		$this->type = $this->getAttribute($stanza, 'type');
 		$this->msgId = $this->getAttribute($stanza, 'id');
 
-		$message = new \OCA\OJSXC\Db\Message();
+		$message = new MessageEntity();
 		$message->setTo($this->to);
 		$message->setFrom($this->from);
-		$message->setValues($this->values);
+		$message->setValue($this->values);
 		$message->setType($this->type);
 		$this->messageMapper->insert($message);
 		$this->values = [];
