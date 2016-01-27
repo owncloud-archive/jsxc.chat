@@ -236,18 +236,26 @@ $(function() {
                username: username,
                password: password
             },
-            success: function(d) { console.log('success', d);
-               if (d.result === 'success' && d.data.serverType !== 'internal' && d.data.xmpp.url !== '' && d.data.xmpp.url !== null) {
+            success: function(d) {
+               if (d.result === 'success' && d.data && d.data.serverType !== 'internal' && d.data.xmpp.url !== '' && d.data.xmpp.url !== null) {
                   cb(d.data);
-               } else if (d.data.serverType === 'internal') {
+               } else if (d.data && d.data.serverType === 'internal' && d.data.xmpp) {
                   // fake successful connection
-                  jsxc.storage.setItem('jid', username + '@' + window.location.host + '/internal');
+                  jsxc.bid = username + '@' + (d.data.xmpp.domain || window.location.host);
+
+                  jsxc.storage.setItem('jid', jsxc.bid + '/internal');
                   jsxc.storage.setItem('sid', 'internal');
                   jsxc.storage.setItem('rid', '123456');
-                  jsxc.bid = username + '@' + window.location.host;
+
                   jsxc.options.set('xmpp', {
-                     url: OC.generateUrl('apps/ojsxc/http-bind')
+                     url: OC.generateUrl('apps/ojsxc/http-bind'),
+                     domain: d.data.xmpp.domain
                   });
+                  if (d.data.loginForm) {
+                     jsxc.options.set('loginForm', {
+                        startMinimized: d.data.loginForm.startMinimized
+                     });
+                  }
 
                   cb(false);
                } else {

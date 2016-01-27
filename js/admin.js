@@ -92,7 +92,9 @@ $(document).ready(function() {
 
    $('#ojsxc [name=serverType]').change(function(){
       $('#ojsxc .ojsxc-external, #ojsxc .ojsxc-internal').hide();
+      $('#ojsxc .ojsxc-external, #ojsxc .ojsxc-internal').find('.required').removeAttr('required');
       $('#ojsxc .ojsxc-' + $(this).val()).show();
+      $('#ojsxc .ojsxc-' + $(this).val()).find('.required').attr('required', 'true');
    });
    $('#ojsxc [name=serverType]:checked').change();
 
@@ -138,7 +140,7 @@ $(document).ready(function() {
 
       $.post(OC.filePath('ojsxc', 'ajax', 'setsettings.php'), post, function(data) {
          if (data) {
-            status.addClass('jsxc_success').text('Settings saved.');
+            status.addClass('jsxc_success').text('Settings saved. Please log out and in again.');
          } else {
             status.addClass('jsxc_fail').text('Error!');
          }
