@@ -5,7 +5,6 @@
  *
  * Copyright (c) 2014-2015 Klaus Herberth <klaus@jsxc.org> <br>
  * Released under the MIT license
- * 
  * @author Klaus Herberth <klaus@jsxc.org>
  */
 OCP\App::registerAdmin ( 'ojsxc', 'settings' );
@@ -16,8 +15,7 @@ OCP\Util::addScript ( 'ojsxc', $jsxc_root.'lib/jquery.slimscroll' );
 OCP\Util::addScript ( 'ojsxc', $jsxc_root.'lib/jquery.fullscreen' );
 OCP\Util::addScript ( 'ojsxc', $jsxc_root.'lib/jsxc.dep' );
 OCP\Util::addScript ( 'ojsxc', $jsxc_root.'jsxc' );
-
-OCP\Util::addScript ( 'ojsxc', 'ojsxc' );
+OCP\Util::addScript('ojsxc', 'ojsxc');
 
 // ############# CSS #############
 OCP\Util::addStyle ( 'ojsxc', 'jquery.mCustomScrollbar' );
@@ -28,5 +26,7 @@ $version = OCP\Util::getVersion();
 
 if($version[0] <= 6)
 	OCP\Util::addStyle ( 'ojsxc', 'jsxc.oc.lte6' );
+
+require_once __DIR__ ."/../vendor/autoload.php";
 
 ?>

@@ -6624,7 +6624,7 @@ jsxc.options = {
 
    /** Options for info in favicon */
    favicon: {
-      enable: true,
+      enable: false,
 
       /** Favicon info background color */
       bgColor: '#E59400',

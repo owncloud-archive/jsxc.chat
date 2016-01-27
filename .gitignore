@@ -7,4 +7,13 @@ node_modules/
 *.zip.sig
 .settings/
 archives/
-/css/
+css/
+
+composer.phar
+vendor/
+.phpstorm_helpers
+coverage
+
+# vim
+.phpstorm_helpers
+.phpcomplete_extended
