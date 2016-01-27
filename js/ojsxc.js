@@ -168,10 +168,6 @@ $(function() {
       RTCPeerConfig: {
          url: OC.filePath('ojsxc', 'ajax', 'getturncredentials.php')
       },
-      otr :{
-        enable: false,
-         SEND_WHITESPACE_TAG: false
-      },
       displayRosterMinimized: function() {
          return OC.currentUser != null;
       },
