@@ -13,10 +13,7 @@
 		</div>
 		
 		<div class="ojsxc-internal hidden">
-			<div class="form-group">
-				<label for="ojsxcDomain">* Domain</label>
-				<input type="text" name="domain" id="ojsxcDomain" class="required" required="required" value="<?php p($_['domain']); ?>" />
-			</div>
+
 		</div>
 		
 		<div class="ojsxc-external hidden">

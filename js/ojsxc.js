@@ -239,17 +239,16 @@ $(function() {
             success: function(d) {
                if (d.result === 'success' && d.data && d.data.serverType !== 'internal' && d.data.xmpp.url !== '' && d.data.xmpp.url !== null) {
                   cb(d.data);
-               } else if (d.data && d.data.serverType === 'internal' && d.data.xmpp) {
+               } else if (d.data && d.data.serverType === 'internal') {
                   // fake successful connection
-                  jsxc.bid = username + '@' + (d.data.xmpp.domain || window.location.host);
+                  jsxc.bid = username + '@' + window.location.host;
 
                   jsxc.storage.setItem('jid', jsxc.bid + '/internal');
                   jsxc.storage.setItem('sid', 'internal');
                   jsxc.storage.setItem('rid', '123456');
 
                   jsxc.options.set('xmpp', {
-                     url: OC.generateUrl('apps/ojsxc/http-bind'),
-                     domain: d.data.xmpp.domain
+                     url: OC.generateUrl('apps/ojsxc/http-bind')
                   });
                   if (d.data.loginForm) {
                      jsxc.options.set('loginForm', {

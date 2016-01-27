@@ -25,8 +25,6 @@ $data ['serverType'] = OCP\Config::getAppValue ( 'ojsxc', 'serverType' );
 $data ['loginForm'] ['startMinimized'] = validateBoolean(OCP\Config::getAppValue ( 'ojsxc', 'xmppStartMinimized' ));
 
 if ($data ['serverType'] === 'internal') {
-	$data ['xmpp'] ['domain'] = OCP\Config::getAppValue ( 'ojsxc', 'domain' );
-
 	OCP\JSON::encodedPrint ( array (
 			'result' => 'success',
 			'data' => $data
