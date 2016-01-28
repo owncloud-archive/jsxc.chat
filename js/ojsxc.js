@@ -62,6 +62,11 @@ function onRosterReady() {
    "use strict";
    var roster_width, navigation_width, roster_right, toggle_width;
 
+   if (typeof $('#jsxc_roster').outerWidth() !== 'number') {
+      setTimeout(onRosterReady, 200);
+      return;
+   }
+
    var div = $('<div/>');
 
    div.addClass('jsxc_chatIcon');
