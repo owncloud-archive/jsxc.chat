@@ -10,7 +10,7 @@ archives/
 css/
 
 composer.phar
-vendor/
+/vendor/
 .phpstorm_helpers
 coverage
 

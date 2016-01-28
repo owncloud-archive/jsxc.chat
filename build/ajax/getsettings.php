@@ -21,6 +21,18 @@ if (!$auth) {
 
 $data = array ();
 $data ['xmpp'] = array ();
+$data ['serverType'] = OCP\Config::getAppValue ( 'ojsxc', 'serverType' );
+$data ['loginForm'] ['startMinimized'] = validateBoolean(OCP\Config::getAppValue ( 'ojsxc', 'xmppStartMinimized' ));
+
+if ($data ['serverType'] === 'internal') {
+	OCP\JSON::encodedPrint ( array (
+			'result' => 'success',
+			'data' => $data
+	) );
+
+	exit;
+}
+
 $data ['xmpp'] ['url'] = OCP\Config::getAppValue ( 'ojsxc', 'boshUrl' );
 $data ['xmpp'] ['domain'] = OCP\Config::getAppValue ( 'ojsxc', 'xmppDomain' );
 $data ['xmpp'] ['resource'] = OCP\Config::getAppValue ( 'ojsxc', 'xmppResource' );
@@ -41,8 +53,6 @@ if ($options !== null) {
 		}
 	}
 }
-
-$data ['loginForm'] ['startMinimized'] = validateBoolean(OCP\Config::getAppValue ( 'ojsxc', 'xmppStartMinimized' ));
 
 OCP\JSON::encodedPrint ( array (
 		'result' => 'success',

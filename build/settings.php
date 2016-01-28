@@ -5,7 +5,8 @@ OCP\Util::addScript ( "ojsxc", "admin" );
 
 $tmpl = new OCP\Template ( 'ojsxc', 'settings' );
 
-$tmpl->assign ( 'boshUrl', OCP\Config::getAppValue ( 'ojsxc', 'boshUrl' ) );
+$tmpl->assign ( 'serverType', OCP\Config::getAppValue ( 'ojsxc', 'serverType' ));
+$tmpl->assign ( 'boshUrl', OCP\Config::getAppValue ( 'ojsxc', 'boshUrl' ));
 $tmpl->assign ( 'xmppDomain', OCP\Config::getAppValue ( 'ojsxc', 'xmppDomain' ) );
 $tmpl->assign ( 'xmppResource', OCP\Config::getAppValue ( 'ojsxc', 'xmppResource' ) );
 $tmpl->assign ( 'xmppOverwrite', OCP\Config::getAppValue ( 'ojsxc', 'xmppOverwrite' ) );

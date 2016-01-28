@@ -8,6 +8,7 @@
 OCP\User::checkAdminUser ();
 OCP\JSON::callCheck ();
 
+OCP\Config::setAppValue ( 'ojsxc', 'serverType', $_POST ['serverType'] );
 OCP\Config::setAppValue ( 'ojsxc', 'boshUrl', $_POST ['boshUrl'] );
 OCP\Config::setAppValue ( 'ojsxc', 'xmppDomain', $_POST ['xmppDomain'] );
 OCP\Config::setAppValue ( 'ojsxc', 'xmppResource', $_POST ['xmppResource'] );
