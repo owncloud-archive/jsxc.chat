@@ -25,6 +25,15 @@ $version = OCP\Util::getVersion();
 if($version[0] <= 6)
 	OCP\Util::addStyle ( 'ojsxc', 'jsxc.oc.lte6' );
 
+if(class_exists('\\OCP\\AppFramework\\Http\\EmptyContentSecurityPolicy')) {
+	$manager = \OC::$server->getContentSecurityPolicyManager();
+	$policy = new \OCP\AppFramework\Http\EmptyContentSecurityPolicy();
+	$policy->addAllowedChildSrcDomain('\'self\'');
+	$policy->addAllowedMediaDomain('blob:');
+
+	$manager->addDefaultPolicy($policy);
+}
+
 require_once __DIR__ ."/../vendor/autoload.php";
 
 ?>
