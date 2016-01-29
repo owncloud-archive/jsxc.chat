@@ -33,7 +33,6 @@ class Application extends App {
 				$c->query('AppName'),
 				$c->query('Request'),
 				$c->query('UserId'),
-				$c->query('OCP\ISession'),
 				$c->query('StanzaMapper'),
 				$c->query('IQHandler'),
 				$c->query('MessageHandler'),
@@ -85,7 +84,12 @@ class Application extends App {
 		 * Config values
 		 */
 		$container->registerService('Host', function($c){
-			return $c->query('Request')->getServerHost();
+			$request = $c->query('Request');
+			if (method_exists($request, 'getServerHost')) {
+				return $c->query('Request')->getServerHost();
+			} else {
+				return $this->getServerHost();
+			}
 		});
 
 	}
@@ -97,8 +101,10 @@ class Application extends App {
 		$c = $this->getContainer();
 		if (self::$config['use_memcache']['locking'] === true) {
 			$cache = $c->getServer()->getMemCacheFactory();
-
-			if ($cache->isAvailable()) {
+			$version = \OC::$server->getSession()->get('OC_Version');
+			if ($version[0] === 8 && $version[1] == 0){
+				$c->getServer()->getLogger()->warning('OJSXC is configured to use memcache as backend for locking, but ownCloud version 8  doesn\'t suppor this.');
+			} else if ($cache->isAvailable()) {
 				$memcache = $cache->create('ojsxc');
 				return new MemLock(
 					$c->query('UserId'),
@@ -116,6 +122,48 @@ class Application extends App {
 			$c->query('OCP\IConfig')
 		);
 
+	}
+
+	/**
+	 * Helper function
+	 * https://github.com/owncloud/core/blob/a977465af5834a76b1e98854a2c9bfbe413c218c/lib/private/appframework/http/request.php#L518
+	 * @return string
+	 */
+	private function getServerHost() {
+		$host = 'localhost';
+		if (isset($this->server['HTTP_X_FORWARDED_HOST'])) {
+			if (strpos($this->server['HTTP_X_FORWARDED_HOST'], ',') !== false) {
+				$parts = explode(',', $this->server['HTTP_X_FORWARDED_HOST']);
+				$host = trim(current($parts));
+			} else {
+				$host = $this->server['HTTP_X_FORWARDED_HOST'];
+			}
+		} else {
+			if (isset($this->server['HTTP_HOST'])) {
+				$host = $this->server['HTTP_HOST'];
+			} else if (isset($this->server['SERVER_NAME'])) {
+				$host = $this->server['SERVER_NAME'];
+			}
+		}
+		if ($host !== null) {
+			return $host;
+		}
+		// get the host from the headers
+		$host = $this->getInsecureServerHost();
+		// Verify that the host is a trusted domain if the trusted domains
+		// are defined
+		// If no trusted domain is provided the first trusted domain is returned
+		$trustedDomainHelper = new TrustedDomainHelper($this->config);
+		if ($trustedDomainHelper->isTrustedDomain($host)) {
+			return $host;
+		} else {
+			$trustedList = $this->config->getSystemValue('trusted_domains', []);
+			if(!empty($trustedList)) {
+				return $trustedList[0];
+			} else {
+				return '';
+			}
+		}
 	}
 	
 }

@@ -113,7 +113,6 @@ class HttpBindController extends Controller {
 	public function __construct($appName,
 	                            IRequest $request,
 								$userId,
-								ISession $session,
 								StanzaMapper $stanzaMapper,
 								IQ $iqHandler,
 								Message $messageHandler,
@@ -126,7 +125,6 @@ class HttpBindController extends Controller {
 		parent::__construct($appName, $request);
 		$this->userId = $userId;
 		$this->pollingId = time();
-		$this->session = $session;
 		$this->stanzaMapper = $stanzaMapper;
 		$this->host = $host;
 		$this->iqHandler = $iqHandler;
@@ -147,7 +145,7 @@ class HttpBindController extends Controller {
 		$this->lock->setLock();
 		$input = $this->body;
 		$longpoll = true; // set to false when the response should directly be returned and no polling should be done
-		if (!empty($input)){
+		if (!empty($input)) {
 			// replace invalid XML by valid XML one
 			$input = str_replace("<vCard xmlns='vcard-temp'/>", "<vCard xmlns='jabber:vcard-temp'/>", $input);
 			$reader = new Reader();
@@ -155,22 +153,24 @@ class HttpBindController extends Controller {
 			$reader->elementMap = [
 				'{jabber:client}message' => 'Sabre\Xml\Element\KeyValue',
 			];
-
+			$stanzas = null;
 			try {
 				$stanzas = $reader->parse();
-			} catch (LibXMLException $e){
+			} catch (LibXMLException $e) {
 			}
-			$stanzas = $stanzas['value'];
-			if (is_array($stanzas)) {
-				foreach ($stanzas as $stanza) {
-					$stanzaType = $this->getStanzaType($stanza);
-					if ($stanzaType === self::MESSAGE) {
-						$this->messageHandler->handle($stanza);
-					} else if ($stanzaType === self::IQ) {
-						$result = $this->iqHandler->handle($stanza);
-						if (!is_null($result)) {
-							$longpoll = false;
-							$this->response->write($result);
+			if (!is_null($stanzas)) {
+				$stanzas = $stanzas['value'];
+				if (is_array($stanzas)) {
+					foreach ($stanzas as $stanza) {
+						$stanzaType = $this->getStanzaType($stanza);
+						if ($stanzaType === self::MESSAGE) {
+							$this->messageHandler->handle($stanza);
+						} else if ($stanzaType === self::IQ) {
+							$result = $this->iqHandler->handle($stanza);
+							if (!is_null($result)) {
+								$longpoll = false;
+								$this->response->write($result);
+							}
 						}
 					}
 				}
