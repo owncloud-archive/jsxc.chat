@@ -18,8 +18,6 @@ OCP\Util::addScript ( 'ojsxc', $jsxc_root.'jsxc' );
 OCP\Util::addScript('ojsxc', 'ojsxc');
 
 // ############# CSS #############
-OCP\Util::addStyle ( 'ojsxc', 'jquery.mCustomScrollbar' );
-OCP\Util::addStyle ( 'ojsxc', 'jquery.colorbox' );
 OCP\Util::addStyle ( 'ojsxc', 'jsxc.oc' );
 
 $version = OCP\Util::getVersion();
