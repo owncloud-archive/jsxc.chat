@@ -28,7 +28,7 @@ $this->create('ojsxc_ajax_getUsers', 'ajax/getUsers.php')
 $application = new Application();
 $application->registerRoutes($this, array(
 	'routes' => array(
-		array('name' => 'http_bind#index', 'url' => '/http-bind', 'verb' => array('GET', 'POST')),
+		array('name' => 'http_bind#index', 'url' => '/http-bind', 'verb' => 'POST'),
 	)
 ));
 ?>
