@@ -7,10 +7,10 @@ node_modules/
 *.zip.sig
 .settings/
 archives/
-css/
+/css/
 
 composer.phar
-vendor/
+/vendor/
 .phpstorm_helpers
 coverage
 

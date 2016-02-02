@@ -37,7 +37,7 @@ class DbLockTest extends TestCase {
 		parent::setUp();
 		$app = new Application();
 		$this->container = $app->getContainer();
-		$this->con = $this->container->getServer()->getDb();
+		$this->con = $this->container->getServer()->getDatabaseConnection();
 		$this->con->executeQuery("DELETE FROM `*PREFIX*preferences` WHERE `appid`='ojsxc' AND `configkey`='longpolling'");
 	}
 

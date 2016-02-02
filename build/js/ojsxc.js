@@ -1,13 +1,13 @@
 /*!
- * ojsxc v2.1.5 - 2015-11-17
+ * ojsxc v3.0.0-beta1b - 2016-01-29
  * 
- * Copyright (c) 2015 Klaus Herberth <klaus@jsxc.org> <br>
+ * Copyright (c) 2016 Klaus Herberth <klaus@jsxc.org> <br>
  * Released under the MIT license
  * 
  * Please see http://www.jsxc.org/
  * 
  * @author Klaus Herberth <klaus@jsxc.org>
- * @version 2.1.5
+ * @version 3.0.0-beta1b
  * @license MIT
  */
 
@@ -30,6 +30,11 @@ function onRosterToggle(event, state, duration) {
    var roster_width = (state === 'shown') ? $('#jsxc_roster').outerWidth() : 0;
    var toggle_width = $('#jsxc_toggleRoster').width();
    var navigation_width = $('#navigation').width();
+   
+   if ($(window).width() < 768) {
+      // Do not resize elements on extra small devices (bootstrap definition)
+      return;
+   }
 
    wrapper.animate({
       paddingRight: (roster_width + toggle_width) + 'px'
@@ -69,6 +74,25 @@ function onRosterToggle(event, state, duration) {
 function onRosterReady() {
    "use strict";
    var roster_width, navigation_width, roster_right, toggle_width;
+
+   if (typeof $('#jsxc_roster').outerWidth() !== 'number') {
+      setTimeout(onRosterReady, 200);
+      return;
+   }
+
+   var div = $('<div/>');
+
+   div.addClass('jsxc_chatIcon');
+   div.click(function(){
+      jsxc.gui.roster.toggle();
+   });
+
+   $('#settings').after(div);
+
+   if ($(window).width() < 768) {
+      // Do not resize elements on extra small devices (bootstrap definition)
+      return;
+   }
 
    getValues();
 
@@ -153,7 +177,8 @@ $(function() {
          form: '#body-login form',
          jid: '#user',
          pass: '#password',
-         attachIfFound: false
+         attachIfFound: false,
+         onConnecting: (oc_config.version.match(/^([8-9]|[0-9]{2,})+\./))? 'quiet' : 'dialog'
       },
       logoutElement: $('#logout'),
       rosterAppend: 'body',
@@ -167,7 +192,6 @@ $(function() {
       defaultAvatar: function(jid) {
          var cache = jsxc.storage.getUserItem('defaultAvatars') || {};
          var user = Strophe.unescapeNode(jid.replace(/@[^@]+$/, ''));
-         var ie8fix = true;
 
          $(this).each(function() {
 
@@ -183,12 +207,7 @@ $(function() {
                      $div.imageplaceholder(user);
                   }
                } else {
-                  $div.show();
-                  if (ie8fix === true) {
-                     $div.html('<img src="' + result + '#' + Math.floor(Math.random() * 1000) + '">');
-                  } else {
-                     $div.html('<img src="' + result + '">');
-                  }
+                  $div.css('backgroundImage', 'url('+result+')');
                }
             };
 
@@ -232,8 +251,26 @@ $(function() {
                password: password
             },
             success: function(d) {
-               if (d.result === 'success') {
+               if (d.result === 'success' && d.data && d.data.serverType !== 'internal' && d.data.xmpp.url !== '' && d.data.xmpp.url !== null) {
                   cb(d.data);
+               } else if (d.data && d.data.serverType === 'internal') {
+                  // fake successful connection
+                  jsxc.bid = username + '@' + window.location.host;
+
+                  jsxc.storage.setItem('jid', jsxc.bid + '/internal');
+                  jsxc.storage.setItem('sid', 'internal');
+                  jsxc.storage.setItem('rid', '123456');
+
+                  jsxc.options.set('xmpp', {
+                     url: OC.generateUrl('apps/ojsxc/http-bind')
+                  });
+                  if (d.data.loginForm) {
+                     jsxc.options.set('loginForm', {
+                        startMinimized: d.data.loginForm.startMinimized
+                     });
+                  }
+
+                  cb(false);
                } else {
                   cb(false);
                }
@@ -274,6 +311,21 @@ $(function() {
                jsxc.error('XHR error on getUsers.php');
             }
          });
+      },
+      viewport: {
+         getSize: function() {
+            var w = $(window).width() - $('#jsxc_windowListSB').width();
+            var h = $(window).height() - $('#header').height() - 10;
+
+            if (jsxc.storage.getUserItem('roster') === 'shown') {
+               w -= $('#jsxc_roster').outerWidth(true);
+            }
+
+            return {
+               width: w,
+               height: h
+            };
+         }
       }
    });
 

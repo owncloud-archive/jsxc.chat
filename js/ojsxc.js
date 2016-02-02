@@ -62,6 +62,11 @@ function onRosterReady() {
    "use strict";
    var roster_width, navigation_width, roster_right, toggle_width;
 
+   if (typeof $('#jsxc_roster').outerWidth() !== 'number') {
+      setTimeout(onRosterReady, 200);
+      return;
+   }
+
    var div = $('<div/>');
 
    div.addClass('jsxc_chatIcon');
@@ -168,10 +173,6 @@ $(function() {
       RTCPeerConfig: {
          url: OC.filePath('ojsxc', 'ajax', 'getturncredentials.php')
       },
-      otr :{
-        enable: false,
-         SEND_WHITESPACE_TAG: false
-      },
       displayRosterMinimized: function() {
          return OC.currentUser != null;
       },
@@ -237,8 +238,26 @@ $(function() {
                password: password
             },
             success: function(d) {
-               if (d.result === 'success' && d.data.xmpp.url !== '' && d.data.xmpp.url !== null) {
+               if (d.result === 'success' && d.data && d.data.serverType !== 'internal' && d.data.xmpp.url !== '' && d.data.xmpp.url !== null) {
                   cb(d.data);
+               } else if (d.data && d.data.serverType === 'internal') {
+                  // fake successful connection
+                  jsxc.bid = username + '@' + window.location.host;
+
+                  jsxc.storage.setItem('jid', jsxc.bid + '/internal');
+                  jsxc.storage.setItem('sid', 'internal');
+                  jsxc.storage.setItem('rid', '123456');
+
+                  jsxc.options.set('xmpp', {
+                     url: OC.generateUrl('apps/ojsxc/http-bind')
+                  });
+                  if (d.data.loginForm) {
+                     jsxc.options.set('loginForm', {
+                        startMinimized: d.data.loginForm.startMinimized
+                     });
+                  }
+
+                  cb(false);
                } else {
                   cb(false);
                }

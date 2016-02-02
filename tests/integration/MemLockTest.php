@@ -41,6 +41,12 @@ class MemLockTest extends TestCase {
 		parent::setUp();
 		$app = new Application();
 		$this->container = $app->getContainer();
+
+		$version = \OC::$server->getSession()->get('OC_Version');
+		if ($version[0] === 8 && $version[1] == 0) {
+			$this->markTestSkipped();
+		}
+
 	}
 
 	/**
