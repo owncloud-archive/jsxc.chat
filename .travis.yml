@@ -1,10 +1,10 @@
+sudo: required
 language: php
 php:
   - 5.4
   - 5.5
   - 5.6
   - 7
-  - hhvm
 
 services:
   - redis-server
@@ -16,65 +16,24 @@ env:
     - DB=mysql
 
 matrix:
-  allow_failures:
-    - php: hhvm
   include:
     - php: 5.4
       env: DB=sqlite
     - php: 5.4
       env: DB=pgsql
+    - php: 5.6
+      env: DB=mysql BRANCH=stable8
+    - php: 5.6
+      env: DB=mysql BRANCH=stable8.1
+    - php: 5.6
+      env: DB=mysql BRANCH=stable8.2
 
 
-install:
-  # install ocdev
-  - sudo apt-get update
-  - sudo apt-get -y install python3-jinja2 python3-setuptools
-  - sudo easy_install3 requests
-  - sudo easy_install3 ocdev
-  # set up postgresql
-  - createuser -U travis -s oc_autotest
-  # set up mysql
-  - mysql -e 'create database oc_autotest;'
-  - mysql -u root -e "CREATE USER 'oc_autotest'@'localhost' IDENTIFIED BY '';"
-  - mysql -u root -e "grant all on oc_autotest.* to 'oc_autotest'@'localhost';"
-  # install owncloud
-  - cd ..
-  - ocdev setup core --dir owncloud --branch $BRANCH --no-history
-  - mv jsxc.chat owncloud/apps/ojsxc
-  - |
-    if [[ $TRAVIS_PHP_VERSION = "hhv"* ]]; then
-      echo "PHP7"
-    else
-      phpenv config-add owncloud/apps/ojsxc/tests/travis/php.ini
-    fi
-  - cd owncloud
-  - ./occ maintenance:install --database-name oc_autotest --database-user oc_autotest --database-pass --admin-user admin --admin-pass admin --database $DB
-  - ./occ app:enable ojsxc
-  - pear config-set preferred_state beta
-  - yes '' | pecl install apcu-4.0.10
+install: ./tests/travis/install-$BRANCH.sh
 
-
-
-before_script:
-  - cd apps/ojsxc
-  - composer install
-
+# Note the install script should make sure we are in the apps/ojsxc directory
 script:
-  - cd ../../
-  - ./occ config:import apps/ojsxc/tests/travis/config-redis.json
-  - cd apps/ojsxc
+  - composer install
   - phpunit -c phpunit.xml
   - phpunit -c phpunit.integration.xml
-  - cd ../../
-  - ./occ config:system:delete 'memcache.local'
-  - ./occ config:system:delete 'redis'
-  - |
-    if [[ $TRAVIS_PHP_VERSION = "hhv"* ]]; then
-      echo "PHP7"
-    else
-      ./occ config:import apps/ojsxc/tests/travis/config-apcu.json
-      cd apps/ojsxc
-      phpunit -c phpunit.xml
-      phpunit -c phpunit.integration.xml
-      cat ../../data/owncloud.log
-    fi
+  - cat ../../data/owncloud.log

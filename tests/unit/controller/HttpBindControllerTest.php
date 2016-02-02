@@ -62,7 +62,6 @@ class HttpBindControllerTest extends PHPUnit_Framework_TestCase {
 	 */
 	private function setUpController($requestBody) {
 		$request = $this->getMockBuilder('OCP\IRequest')->disableOriginalConstructor()->getMock();
-		$session = $this->getMockBuilder('OCP\ISession')->disableOriginalConstructor()->getMock();
 		$this->stanzaMapper = $this->getMockBuilder('OCA\OJSXC\Db\StanzaMapper')->disableOriginalConstructor()->getMock();
 
 		$this->iqHandler = $this->getMockBuilder('OCA\OJSXC\StanzaHandlers\IQ')->disableOriginalConstructor()->getMock();
@@ -73,7 +72,6 @@ class HttpBindControllerTest extends PHPUnit_Framework_TestCase {
 			'ojsxc',
 			$request,
 			$this->userId,
-			$session,
 			$this->stanzaMapper,
 			$this->iqHandler,
 			$this->messageHandler,
@@ -87,6 +85,9 @@ class HttpBindControllerTest extends PHPUnit_Framework_TestCase {
 
 	/**
 	 * When invalid XML, just start long polling.
+	 * Note: this test will cause some errors in the owncloud.log:
+	 * {"reqId":"HmbEV6qTWF68ii1G\/kz1","remoteAddr":"","app":"PHP","message":"XMLReader::read(): An Error Occured while reading at \/var\/www\/owncloud\/apps\/ojsxc\/vendor\/sabre\/xml\/lib\/Reader.php#66","level":0,"time":"2016-01-30T14:52:44+00:00","method":"--","url":"--"}
+	 * {"reqId":"HmbEV6qTWF68ii1G\/kz1","remoteAddr":"","app":"PHP","message":"XMLReader::read(): An Error Occured while reading at \/var\/www\/owncloud\/apps\/ojsxc\/vendor\/sabre\/xml\/lib\/Reader.php#145","level":0,"time":"2016-01-30T14:52:44+00:00","method":"--","url":"--"}
 	 */
 	public function testInvalidXML() {
 		$ex = new DoesNotExistException('');
@@ -136,7 +137,7 @@ class HttpBindControllerTest extends PHPUnit_Framework_TestCase {
 	 * @dataProvider IQProvider
 	 */
 	public function testIQHandlerWhenNoDbResults($body, $result, $expected, $pollCount, $handlerCount) {
-		$ex = new DoesNotExistException();
+		$ex = new DoesNotExistException('');
 		$this->setUpController($body);
         $this->mockLock();
 		$expResponse = new XMPPResponse();
@@ -189,7 +190,7 @@ class HttpBindControllerTest extends PHPUnit_Framework_TestCase {
 
 	public function testMessageNoDbHandler() {
 		$body = '<body rid=\'897878959\' xmlns=\'http://jabber.org/protocol/httpbind\' sid=\'7862\'><message to=\'derp@own.dev\' type=\'chat\' id=\'1452960296859-msg\' xmlns=\'jabber:client\'><body>abc</body><request xmlns=\'urn:xmpp:receipts\'/></message></body>';
-		$ex = new DoesNotExistException();
+		$ex = new DoesNotExistException('');
 		$this->setUpController($body);
         $this->mockLock();
 
@@ -217,7 +218,7 @@ class HttpBindControllerTest extends PHPUnit_Framework_TestCase {
 			<message to='derp@own.dev' type='chat' id='1452960296861-msg' xmlns='jabber:client'><body>abc3</body></message>
 		</body>
 XML;
-		$ex = new DoesNotExistException();
+		$ex = new DoesNotExistException('');
 		$this->setUpController($body);
 		$this->mockLock();
 
@@ -294,7 +295,12 @@ XML;
 		$this->assertEquals($expResponse->render(), $response->render());
 	}
 
+	/**
+	 * @TODO implement tests
+	 */
 	public function testPresenceHandler() {
+		$this->markTestSkipped();
+		$this->markTestIncomplete();
 		$body = '<body rid=\'897878985\' xmlns=\'http://jabber.org/protocol/httpbind\' sid=\'7862\'><presence xmlns=\'jabber:client\'><c xmlns=\'http://jabber.org/protocol/caps\' hash=\'sha-1\' node=\'http://jsxc.org/\' ver=\'u2kAg/CbVmVZhsu+lZrkuLLdO+0=\'/><show>chat</show></presence></body>';
 		$this->setUpController($body);
         $this->mockLock();
@@ -303,11 +309,20 @@ XML;
 	}
 
 	public function testBodyHandler() {
+		$ex = new DoesNotExistException('');
 		$body = '<body rid=\'897878985\' xmlns=\'http://jabber.org/protocol/httpbind\' sid=\'7862\'/>';
 		$this->setUpController($body);
         $this->mockLock();
+		$expResponse = new XMPPResponse();
 
-		$this->controller->index();
+		$this->stanzaMapper->expects($this->exactly(10))
+			->method('findByTo')
+			->with('john')
+			->will($this->throwException($ex));
+
+		$response = $this->controller->index();
+		$this->assertEquals($expResponse, $response);
+		$this->assertEquals($expResponse->render(), $response->render());
 	}
 
 }
