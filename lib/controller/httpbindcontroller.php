@@ -187,22 +187,6 @@ class HttpBindController extends Controller {
 				$stanzas = $reader->parse();
 			} catch (LibXMLException $e) {
 			}
-<<<<<<< HEAD
-			$stanzas = $stanzas['value'];
-			if (is_array($stanzas)) {
-				foreach ($stanzas as $stanza) {
-					$stanzaType = $this->getStanzaType($stanza);
-					if ($this->debug) {
-						$this->logger->debug('Handling stanza of type ' . $stanzaType . ' : ' . json_encode($stanza));
-					}
-					if ($stanzaType === self::MESSAGE) {
-						$this->messageHandler->handle($stanza);
-					} else if ($stanzaType === self::IQ) {
-						$result = $this->iqHandler->handle($stanza);
-						if (!is_null($result)) {
-							$longpoll = false;
-							$this->response->write($result);
-=======
 			if (!is_null($stanzas)) {
 				$stanzas = $stanzas['value'];
 				if (is_array($stanzas)) {
@@ -216,10 +200,9 @@ class HttpBindController extends Controller {
 								$longpoll = false;
 								$this->response->write($result);
 							}
->>>>>>> master
+						} else if ($stanza['value'] instanceof Presence) {
+							$this->presenceHandler->handle($stanza['value']);
 						}
-					} else if ($stanza['value'] instanceof Presence) {
-						$this->presenceHandler->handle($stanza['value']);
 					}
 				}
 			}
