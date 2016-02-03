@@ -14,6 +14,13 @@ use OCP\IDb;
  */
 class PresenceMapper extends Mapper {
 
+	/**
+	 * PresenceMapper constructor.
+	 *
+	 * @param IDb $db
+	 * @param string $host
+	 * @param null|string $userId
+	 */
 	public function __construct(IDb $db, $host, $userId) {
 		parent::__construct($db, 'ojsxc_presence');
 		$this->host = $host;
@@ -21,6 +28,7 @@ class PresenceMapper extends Mapper {
 	}
 
 	/**
+	 * @brief This function sets or update the presence of a user.
 	 * @param PresenceEntity $stanza
 	 */
 	public function setPresence(PresenceEntity $stanza) {
@@ -35,6 +43,11 @@ class PresenceMapper extends Mapper {
 		}
 	}
 
+	/**
+	 * @brief this function will fetch all the presences of users except
+	 * the current user.
+	 * @return array
+	 */
 	public function getPresences() {
 		$stmt = $this->execute("SELECT * FROM `*PREFIX*ojsxc_presence` WHERE `userid` != '?'", [$this->userId]);
 		$results = [];
@@ -55,6 +68,7 @@ class PresenceMapper extends Mapper {
 	 *  - away
 	 *  - extended away
 	 *  - do not disturb
+	 * and return it as an array of the userids.
 	 * @return array
 	 */
 	public function getConnectedUsers() {

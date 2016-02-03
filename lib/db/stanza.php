@@ -16,9 +16,9 @@ use Sabre\Xml\XmlSerializable;
  * @method string getTo()
  * @method string getFrom()
  * @method string getStanza()
- * @method void setTo(string $to)
- * @method void setFrom(string $from)
- * @method void setStanza(string $stanza)
+ * @method void setTo($to)
+ * @method void setFrom($from)
+ * @method void setStanza($stanza)
  */
 class Stanza extends Entity implements XmlSerializable{
 

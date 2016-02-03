@@ -10,7 +10,7 @@ use Sabre\Xml\XmlSerializable;
  * Class Message
  *
  * @package OCA\OJSXC\Db
- * @method void setType(string $type)
+ * @method void setType($type)
  * @method void setValue(array $value)
  * @method string getType()
  * @method array getValue()

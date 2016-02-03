@@ -25,6 +25,14 @@ class Presence extends StanzaHandler {
 	 */
 	private $messageMapper;
 
+	/**
+	 * Presence constructor.
+	 *
+	 * @param $userId
+	 * @param string $host
+	 * @param PresenceMapper $presenceMapper
+	 * @param MessageMapper $messageMapper
+	 */
 	public function __construct($userId, $host, PresenceMapper $presenceMapper, MessageMapper $messageMapper) {
 		parent::__construct($userId, $host);
 		$this->presenceMapper = $presenceMapper;
@@ -36,7 +44,7 @@ class Presence extends StanzaHandler {
 	 * This function should:
 	 *  - update the presence in the database
 	 *  - broadcast the presence
-	 *  - return the active presence if the type isn't unavailable
+	 *  - return the active presence if the type isn't equal to unavailable
 	 * @param PresenceEntity $presence
 	 * @return PresenceEntity[]
 	 */

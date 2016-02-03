@@ -16,9 +16,9 @@ use Sabre\Xml\Element\keyValue;
  * and the ojsxc_stanza table. Use the presenceMapper and Stanzamapper respective.
  *
  * @package OCA\OJSXC\Db
- * @method void setUserid(string $userid)
- * @method void setPresence(string $presence)
- * @method void setLastActive(int $lastActive)
+ * @method void setUserid($userid)
+ * @method void setPresence($presence)
+ * @method void setLastActive($lastActive)
  * @method string getUserid()
  * @method string getPresence()
  * @method int getLastActive()
@@ -40,6 +40,9 @@ class Presence extends Stanza implements XmlSerializable, XmlDeserializable{
 	 */
 	public $lastActive;
 
+	/**
+	 * @param Writer $writer
+	 */
 	public function xmlSerialize(Writer $writer) {
 		if ($this->presence === 'online' || $this->presence === '') {
 			$writer->write([
@@ -86,16 +89,22 @@ class Presence extends Stanza implements XmlSerializable, XmlDeserializable{
 	}
 
 	/**
+	 * @brief Factory function to create an instance of this Entity from a xml string
+	 * which was given to a Reader object.
 	 * @param Reader $reader
 	 * @param string $userId
 	 * @return Presence
 	 */
-	static function createFromXml(Reader $reader, $userId){
+	public static function createFromXml(Reader $reader, $userId){
 		$newElement = self::xmlDeserialize($reader);
 		$newElement->setUserid($userId);
 		return $newElement;
 	}
 
+	/**
+	 * @param Reader $reader
+	 * @return Presence
+	 */
 	static function xmlDeserialize(Reader $reader) {
 		$newElement = new self();
 		$attributes = $reader->parseAttributes();
