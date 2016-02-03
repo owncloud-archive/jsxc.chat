@@ -16,19 +16,19 @@ use Sabre\Xml\Element\keyValue;
  * and the ojsxc_stanza table. Use the presenceMapper and Stanzamapper respective.
  *
  * @package OCA\OJSXC\Db
- * @method void setUser(string $user)
+ * @method void setUserid(string $userid)
  * @method void setPresence(string $presence)
  * @method void setLastActive(int $lastActive)
- * @method string getUser()
+ * @method string getUserid()
  * @method string getPresence()
  * @method int getLastActive()
  */
 class Presence extends Stanza implements XmlSerializable, XmlDeserializable{
 
 	/**
-	 * @var string $user
+	 * @var string $userid
 	 */
-	public $user;
+	public $userid;
 
 	/**
 	 * @var string $presence
@@ -43,12 +43,45 @@ class Presence extends Stanza implements XmlSerializable, XmlDeserializable{
 	public function xmlSerialize(Writer $writer) {
 		if ($this->presence === 'online' || $this->presence === '') {
 			$writer->write([
-				'name' => 'presence',
-				'attributes' => [],
-				'value' => ''
+				[
+					'name' => 'presence',
+					'attributes' => [
+						'xmlns' => 'jabber:client',
+						'from' => $this->from,
+						'to' => $this->to,
+					],
+					'value' => null
+				]
+			]);
+		} else if ($this->presence === 'unavailable') {
+			$writer->write([
+				[
+					'name' => 'presence',
+					'attributes' => [
+						'type' => 'unavailable',
+						'from' => $this->from,
+						'to' => $this->to,
+						'xmlns' => 'jabber:client',
+					],
+					'value' => null
+				]
 			]);
 		} else {
-
+			$writer->write([
+				[
+					'name' => 'presence',
+					'attributes' => [
+							'from' => $this->from,
+							'to' => $this->to,
+							'xmlns' => 'jabber:client',
+					],
+					'value' => [ [
+						'name' => 'show',
+						'attributes' => [],
+						'value' => $this->presence
+					]]
+				]
+			]);
 		}
 	}
 
@@ -59,7 +92,7 @@ class Presence extends Stanza implements XmlSerializable, XmlDeserializable{
 	 */
 	static function createFromXml(Reader $reader, $userId){
 		$newElement = self::xmlDeserialize($reader);
-		$newElement->setUser($userId);
+		$newElement->setUserid($userId);
 		return $newElement;
 	}
 

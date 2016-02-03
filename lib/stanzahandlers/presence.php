@@ -2,6 +2,7 @@
 
 namespace OCA\OJSXC\StanzaHandlers;
 
+use OCA\OJSXC\Db\MessageMapper;
 use OCA\OJSXC\Db\PresenceMapper;
 use Sabre\Xml\Reader;
 use Sabre\Xml\Writer;
@@ -19,9 +20,15 @@ class Presence extends StanzaHandler {
 	 */
 	private $presenceMapper;
 
-	public function __construct($userId, $host, PresenceMapper $presenceMapper) {
+	/**
+	 * @var MessageMapper $messageMapper
+	 */
+	private $messageMapper;
+
+	public function __construct($userId, $host, PresenceMapper $presenceMapper, MessageMapper $messageMapper) {
 		parent::__construct($userId, $host);
 		$this->presenceMapper = $presenceMapper;
+		$this->messageMapper = $messageMapper;
 	}
 
 	/**
@@ -29,10 +36,28 @@ class Presence extends StanzaHandler {
 	 * This function should:
 	 *  - update the presence in the database
 	 *  - broadcast the presence
-	 * @param PresenceEntity $stanza
+	 *  - return the active presence if the type isn't unavailable
+	 * @param PresenceEntity $presence
+	 * @return PresenceEntity[]
 	 */
-	public function handle(PresenceEntity $stanza) {
-		$this->presenceMapper->setPresence($stanza);
+	public function handle(PresenceEntity $presence) {
+		// update the presence
+		$this->presenceMapper->setPresence($presence);
+
+		// broadcast the presence
+		$connectedUsers = $this->presenceMapper->getConnectedUsers(); // fetch connected users
+
+		// build stanza to send to the users
+		$presenceToSend = new PresenceEntity();
+		$presenceToSend->setPresence($presence->getPresence());
+		$presenceToSend->setFrom($this->userId);
+		foreach ($connectedUsers as $user) {
+			$presenceToSend->setTo($user);
+			$this->messageMapper->insert($presenceToSend);
+		}
+
+		// return other users presence
+		return $this->presenceMapper->getPresences();
 	}
 
 }

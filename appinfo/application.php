@@ -67,7 +67,9 @@ class Application extends App {
 
 		$container->registerService('PresenceMapper', function($c) {
 			return new PresenceMapper(
-				$c->query('ServerContainer')->getDb()
+				$c->query('ServerContainer')->getDb(),
+				$c->query('Host'),
+				$c->query('UserId')
 			);
 		});
 
@@ -87,7 +89,8 @@ class Application extends App {
 			return new Presence(
 				$c->query('UserId'),
 				$c->query('Host'),
-				$c->query('PresenceMapper')
+				$c->query('PresenceMapper'),
+				$c->query('MessageMapper')
 			);
 		});
 

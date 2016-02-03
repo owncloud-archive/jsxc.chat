@@ -171,6 +171,7 @@ class HttpBindController extends Controller {
 		$this->lock->setLock();
 		$input = $this->body;
 		$longpoll = true; // set to false when the response should directly be returned and no polling should be done
+		$longpollStart = true; // start the first long poll cycle
 		if (!empty($input)) {
 			// replace invalid XML by valid XML one
 			$input = str_replace("<vCard xmlns='vcard-temp'/>", "<vCard xmlns='jabber:vcard-temp'/>", $input);
@@ -201,7 +202,14 @@ class HttpBindController extends Controller {
 								$this->response->write($result);
 							}
 						} else if ($stanza['value'] instanceof Presence) {
-							$this->presenceHandler->handle($stanza['value']);
+							$results = $this->presenceHandler->handle($stanza['value']);
+							if (!is_null($results) && is_array($results)) {
+								$longpoll = false;
+								$longpollStart = false;
+								foreach ($results as $r) {
+									$this->response->write($r);
+								}
+							}
 						}
 					}
 				}
@@ -211,19 +219,21 @@ class HttpBindController extends Controller {
 		// Start long polling
 		$recordFound = false;
 		$cicles = 0;
-		do {
-			try {
-				$cicles++;
-				$stanzas = $this->stanzaMapper->findByTo($this->userId);
-				foreach ($stanzas as $stanz) {
-					$this->response->write($stanz);
+		if ($longpollStart) {
+			do {
+				try {
+					$cicles++;
+					$stanzas = $this->stanzaMapper->findByTo($this->userId);
+					foreach ($stanzas as $stanz) {
+						$this->response->write($stanz);
+					}
+					$recordFound = true;
+				} Catch (DoesNotExistException $e) {
+					sleep($this->sleepTime);
+					$recordFound = false;
 				}
-				$recordFound = true;
-			} Catch (DoesNotExistException $e) {
-				sleep($this->sleepTime);
-				$recordFound = false;
-			}
-		} while ($recordFound === false && $cicles < $this->maxCicles && $longpoll && $this->lock->stillLocked());
+			} while ($recordFound === false && $cicles < $this->maxCicles && $longpoll && $this->lock->stillLocked());
+		}
 		return $this->response;
 	}
 
