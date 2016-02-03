@@ -1,6 +1,10 @@
 <?php
 
 namespace OCA\OJSXC\Db;
+require_once __DIR__ . '/../../../../../tests/bootstrap.php';
+
+//require_once __DIR__ . '/../../../../../lib/base.php';
+require_once __DIR__ . '/../../../vendor/autoload.php';
 
 use PHPUnit_Framework_TestCase;
 use Sabre\Xml\Reader;
@@ -14,9 +18,9 @@ class PresenceTest extends PHPUnit_Framework_TestCase{
 		$reader = new Reader();
 		$reader->xml($xml);
 		$reader->elementMap = [
-				'{jabber:client}presence' => function(Reader $reader) use ($userId) {
-					return Presence::createFromXml($reader, $userId);
-				}
+			'{jabber:client}presence' => function(Reader $reader) use ($userId) {
+				return Presence::createFromXml($reader, $userId);
+			}
 		];
 
 
@@ -31,6 +35,7 @@ class PresenceTest extends PHPUnit_Framework_TestCase{
 			$userId,
 			$expected
 		];
+
 	}
 
 	public function factoryProvider() {
@@ -92,7 +97,7 @@ class PresenceTest extends PHPUnit_Framework_TestCase{
 
 		];
 	}
-	
+
 	/**
 	 * @dataProvider serializeProvider
 	 */
