@@ -1,18 +1,14 @@
 <?php
 
 namespace OCA\OJSXC\Db;
-require_once __DIR__ . '/../../../../../tests/bootstrap.php';
 
-//require_once __DIR__ . '/../../../../../lib/base.php';
-require_once __DIR__ . '/../../../vendor/autoload.php';
-
-use PHPUnit_Framework_TestCase;
 use Sabre\Xml\Reader;
 use Sabre\Xml\Writer;
 use Sabre\Xml\LibXMLException;
 use Sabre\Xml\ParseException;
+use OCA\OJSXC\Utility\TestCase;
 
-class PresenceTest extends PHPUnit_Framework_TestCase{
+class PresenceTest extends TestCase{
 
 	private function generateFactoryData($xml, $from, $to, $presence, $userId) {
 		$reader = new Reader();
@@ -22,7 +18,6 @@ class PresenceTest extends PHPUnit_Framework_TestCase{
 				return Presence::createFromXml($reader, $userId);
 			}
 		];
-
 
 		$expected = new Presence();
 		$expected->setFrom($from);
@@ -109,6 +104,6 @@ class PresenceTest extends PHPUnit_Framework_TestCase{
 		$this->assertEquals($to, $presenceEntity->getTo());
 		$this->assertEquals($from, $presenceEntity->getFrom());
 		$this->assertEquals($presence, $presenceEntity->getPresence());
-		$this->assertXmlStringEqualsXmlString($expected, $result);
+		$this->assertSabreXmlEqualsXml($expected, $result);
 	}
 }

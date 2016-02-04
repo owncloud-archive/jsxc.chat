@@ -2,7 +2,6 @@
 
 namespace OCA\OJSXC\Utility;
 
-use Test\TestCase;
 use OCA\OJSXC\AppInfo\Application;
 
 
