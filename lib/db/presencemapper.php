@@ -49,7 +49,7 @@ class PresenceMapper extends Mapper {
 	 * @return array
 	 */
 	public function getPresences() {
-		$stmt = $this->execute("SELECT * FROM `*PREFIX*ojsxc_presence` WHERE `userid` != '?'", [$this->userId]);
+		$stmt = $this->execute("SELECT * FROM `*PREFIX*ojsxc_presence` WHERE `userid` != ?", [$this->userId]);
 		$results = [];
 		while($row = $stmt->fetch()){
 			$row['from'] = $row['userid'] . '@' . $this->host;
@@ -72,7 +72,7 @@ class PresenceMapper extends Mapper {
 	 * @return array
 	 */
 	public function getConnectedUsers() {
-		$stmt = $this->execute("SELECT `userid` FROM `*PREFIX*ojsxc_presence` WHERE `presence` != 'unavailable' AND `userid` != '?'", [$this->userId]);
+		$stmt = $this->execute("SELECT `userid` FROM `*PREFIX*ojsxc_presence` WHERE `presence` != 'unavailable' AND `userid` != ?", [$this->userId]);
 		$results = [];
 		while($row = $stmt->fetch()){
 			$results[] = $row['userid'];
@@ -81,5 +81,6 @@ class PresenceMapper extends Mapper {
 
 		return $results;
 	}
+
 
 }

@@ -22,8 +22,11 @@ class MapperTestUtility extends TestCase {
 	protected function setUp() {
 		parent::setUp();
 		$app = new Application();
+		$this->overwriteApplicationService($app, 'Host','localhost');
+		$this->overwriteApplicationService($app, 'UserId', 'admin');
 		$this->container = $app->getContainer();
 		$this->mapper = $this->container[$this->mapperName];
+
 
 		$con = $this->container->getServer()->getDatabaseConnection();
 		$con->executeQuery('DELETE FROM ' . $this->mapper->getTableName());
@@ -41,5 +44,23 @@ class MapperTestUtility extends TestCase {
 		$stmt->closeCursor();
 
 		return $entities;
+	}
+
+	protected function fetchAllAsArray(){
+		$con = $this->container->getServer()->getDatabaseConnection();
+		$stmt = $con->executeQuery('SELECT * FROM ' . $this->mapper->getTableName());
+
+		$result = [];
+		while($row = $stmt->fetch()){
+			$result[] = $row;
+		}
+		$stmt->closeCursor();
+
+		return $result;
+	}
+
+	public function getLastInsertedId() {
+		return $this->container->getServer()->getDatabaseConnection()->lastInsertId();
+
 	}
 }

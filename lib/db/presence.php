@@ -40,6 +40,10 @@ class Presence extends Stanza implements XmlSerializable, XmlDeserializable{
 	 */
 	public $lastActive;
 
+	public function __construct() {
+		$this->addType('lastActive', 'integer');
+	}
+	
 	/**
 	 * @param Writer $writer
 	 */
@@ -115,15 +119,10 @@ class Presence extends Stanza implements XmlSerializable, XmlDeserializable{
 		} else if (is_null($children)) {
 			$newElement->presence = 'online';
 		} else {
-			$foundShow = false;
 			foreach ($children as $child) {
 				if ($child['name'] === '{jabber:client}show') {
 					$newElement->presence = $child['value'];
-					$foundShow = true;
 				}
-			}
-			if (!$foundShow) {
-				$newElement->presence = 'online';
 			}
 		}
 

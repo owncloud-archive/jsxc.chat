@@ -2,6 +2,7 @@
 
 namespace OCA\OJSXC\Utility;
 
+use OCA\OJSXC\AppInfo\Application;
 use Sabre\Xml\Service;
 use Test\TestCase as CoreTestCase;
 
@@ -15,6 +16,12 @@ class TestCase extends CoreTestCase {
 
 		self::assertEquals($parsedExpected, $parsedActual, 'Failed asserting that two XML strings are equal.');
 
+	}
+
+	public function overwriteApplicationService(Application $app, $name, $newService) {
+		$app->getContainer()->registerService($name, function () use ($newService) {
+			return $newService;
+		});
 	}
 
 }
