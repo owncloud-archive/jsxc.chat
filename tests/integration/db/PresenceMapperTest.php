@@ -46,19 +46,16 @@ class PresenceMapperTest extends MapperTestUtility {
 				[$input1, $input2, $input3],
 				[
 					[
-						'id' => '11',
 						'userid' => 'admin',
 						'presence' => 'online',
 						'last_active' => 23434,
 					],
 					[
-						'id' => '12',
 						'userid' => 'derp',
 						'presence' => 'unavailable',
 						'last_active' => 23434475,
 					],
 					[
-						'id' => '13',
 						'userid' => 'derpina',
 						'presence' => 'chat',
 						'last_active' => 23445645634
@@ -80,14 +77,7 @@ class PresenceMapperTest extends MapperTestUtility {
 		}
 		$result = $this->fetchAllAsArray();
 
-		$this->assertCount(count($expected), $result);
-
-		for ($i=0; $i < count($result); $i++) {
-			$this->assertEquals($expected[$i]['userid'], $result[$i]['userid']);
-			$this->assertEquals($expected[$i]['presence'], $result[$i]['presence']);
-			$this->assertEquals($expected[$i]['last_active'], $result[$i]['last_active']);
-		}
-
+		$this->assertArrayDbResultsEqual($expected, $result, ['userid', 'presence', 'last_active']);
 	}
 
 	/**
@@ -155,14 +145,8 @@ class PresenceMapperTest extends MapperTestUtility {
 		}
 		$result = $this->fetchAllAsArray();
 
-		$this->assertCount(count($expected), $result);
 
-		for ($i=0; $i < count($result); $i++) {
-			$this->assertEquals($expected[$i]['userid'], $result[$i]['userid']);
-			$this->assertEquals($expected[$i]['presence'], $result[$i]['presence']);
-			$this->assertEquals($expected[$i]['last_active'], $result[$i]['last_active']);
-		}
-
+		$this->assertArrayDbResultsEqual($expected, $result, ['userid', 'presence', 'last_active']);
 	}
 
 	public function getPresenceProvider() {
@@ -225,14 +209,7 @@ class PresenceMapperTest extends MapperTestUtility {
 
 		$result = $this->mapper->getPresences();
 
-		$this->assertCount(count($expected), $result);
-		for ($i=0; $i < count($result); $i++) {
-			$this->assertEquals($expected[$i]->getUserid(), $result[$i]->getUserid());
-			$this->assertEquals($expected[$i]->getPresence(), $result[$i]->getPresence());
-			$this->assertEquals($expected[$i]->getLastActive(), $result[$i]->getLastActive());
-			$this->assertEquals($expected[$i]->getTo(), $result[$i]->getTo());
-			$this->assertEquals($expected[$i]->getFrom(), $result[$i]->getFrom());
-		}
+		$this->assertObjectDbResultsEqual($expected, $result, ['userid', 'presence', 'lastActive', 'to', 'from']);
 	}
 
 	public function getConnectedUsersProvider() {
