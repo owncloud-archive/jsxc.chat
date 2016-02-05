@@ -22,7 +22,7 @@ class PresenceMapper extends Mapper {
 	 * @param string $host
 	 * @param null|string $userId
 	 */
-	public function __construct(IDBConnection $db, $host, $userId) {
+	public function __construct(IDb $db, $host, $userId) {
 		parent::__construct($db, 'ojsxc_presence');
 		$this->host = $host;
 		$this->userId = $userId;
@@ -34,13 +34,13 @@ class PresenceMapper extends Mapper {
 	 */
 	public function setPresence(PresenceEntity $stanza) {
 		$sql = "UPDATE `*PREFIX*ojsxc_presence` SET `presence`=?, `last_active`=? WHERE `userid` = ?";
-		$q = $this->db->prepare($sql);
+		$q = $this->db->prepareQuery($sql);
 		$q->execute([$stanza->getPresence(), $stanza->getLastActive(), $stanza->getUserid()]);
 
 
 		if ($q->rowCount() === 0) {
 			$sql = "INSERT INTO `*PREFIX*ojsxc_presence` (`userid`, `presence`, `last_active`) VALUES(?,?,?)";
-			$q = $this->db->prepare($sql);
+			$q = $this->db->prepareQuery($sql);
 			$q->execute([$stanza->getUserid(), $stanza->getPresence(), $stanza->getLastActive()]);
 		}
 	}

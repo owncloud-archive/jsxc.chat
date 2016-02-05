@@ -67,7 +67,7 @@ class Application extends App {
 
 		$container->registerService('PresenceMapper', function($c) {
 			return new PresenceMapper(
-				$c->query('OCP\IDBConnection'),
+				$c->query('ServerContainer')->getDb(),
 				$c->query('Host'),
 				$c->query('UserId')
 			);
