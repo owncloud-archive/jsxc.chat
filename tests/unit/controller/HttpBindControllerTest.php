@@ -2,6 +2,7 @@
 namespace OCA\OJSXC\Controller;
 
 use OCA\OJSXC\Db\Message;
+use OCA\OJSXC\Db\Presence;
 use OCA\OJSXC\Db\Stanza;
 use OCA\OJSXC\Db\StanzaMapper;
 use OCA\OJSXC\Http\XMPPResponse;
@@ -305,17 +306,65 @@ XML;
 		$this->assertEquals($expResponse->render(), $response->render());
 	}
 
-	/**
-	 * @TODO implement tests
-	 */
-	public function testPresenceHandler() {
-		$this->markTestSkipped();
-		$this->markTestIncomplete();
-		$body = '<body rid=\'897878985\' xmlns=\'http://jabber.org/protocol/httpbind\' sid=\'7862\'><presence xmlns=\'jabber:client\'><c xmlns=\'http://jabber.org/protocol/caps\' hash=\'sha-1\' node=\'http://jsxc.org/\' ver=\'u2kAg/CbVmVZhsu+lZrkuLLdO+0=\'/><show>chat</show></presence></body>';
+	public function testPresenceReturnNothingHandler() {
+		$body = "<body xmlns='http://jabber.org/protocol/httpbind'><presence xmlns='jabber:client'><show>chat</show></presence></body>";
+		$ex = new DoesNotExistException('');
+		$expResponse = new XMPPResponse();
+
 		$this->setUpController($body);
         $this->mockLock();
 
-		$this->controller->index();
+		$this->presenceHandler->expects($this->once())
+			->method('handle')
+			->will($this->returnValue(null));
+
+		$this->stanzaMapper->expects($this->exactly(10))
+			->method('findByTo')
+			->with('john')
+			->will($this->throwException($ex));
+
+		$response = $this->controller->index();
+		$this->assertEquals($expResponse, $response);
+		$this->assertEquals($expResponse->render(), $response->render());
+
+	}
+
+	public function testPresenceHandler() {
+		$body = "<body xmlns='http://jabber.org/protocol/httpbind'><presence xmlns='jabber:client'><show>chat</show></presence></body>";
+		$ex = new DoesNotExistException('');
+		$expResponse = new XMPPResponse();
+
+		$pres1 = new Presence();
+		$pres1->setPresence('online');
+		$pres1->setUserid('admin');
+		$pres1->setTo('admin@localhost');
+		$pres1->setFrom('derp@localhot');
+
+		$pres2 = new Presence();
+		$pres2->setPresence('unavailable');
+		$pres2->setUserid('herp');
+		$pres2->setTo('admin@localhost');
+		$pres2->setFrom('herp@localhot');
+
+		$expResponse->write($pres1);
+		$expResponse->write($pres2);
+
+		$this->setUpController($body);
+		$this->mockLock();
+
+		$this->presenceHandler->expects($this->once())
+			->method('handle')
+			->will($this->returnValue([$pres1, $pres2]));
+
+		$this->stanzaMapper->expects($this->never())
+			->method('findByTo')
+			->with('john')
+			->will($this->throwException($ex));
+
+		$response = $this->controller->index();
+		$this->assertEquals($expResponse, $response);
+		$this->assertEquals($expResponse->render(), $response->render());
+
 	}
 
 	public function testBodyHandler() {
