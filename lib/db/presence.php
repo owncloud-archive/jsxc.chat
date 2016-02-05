@@ -109,23 +109,28 @@ class Presence extends Stanza implements XmlSerializable, XmlDeserializable{
 	 * @param Reader $reader
 	 * @return Presence
 	 */
-	static function xmlDeserialize(Reader $reader) {
+	public static function xmlDeserialize(Reader $reader) {
 		$newElement = new self();
 		$attributes = $reader->parseAttributes();
 		$children = $reader->parseInnerTree();
-
 		if (key_exists('type', $attributes) && $attributes['type'] === 'unavailable') {
 			$newElement->presence = 'unavailable';
 		} else if (is_null($children)) {
+			// this match elements which don't have children -> online
 			$newElement->presence = 'online';
 		} else {
+			// this match elements who does have children but no "show" element -> online
+			$foundShow = false;
 			foreach ($children as $child) {
 				if ($child['name'] === '{jabber:client}show') {
 					$newElement->presence = $child['value'];
+					$foundShow = true;
 				}
 			}
+			if (!$foundShow) {
+				$newElement->presence = 'online';
+			}
 		}
-
 		$newElement->lastActive = time();
 		return $newElement;
 	}

@@ -38,6 +38,7 @@ class PresenceTest extends TestCase{
 			$this->generateFactoryData("<presence xmlns='jabber:client' type='unavailable'/>", null, null, 'unavailable', 'admin'),
 			$this->generateFactoryData("<presence xmlns='jabber:client' type='unavailable'></presence>", null, null, 'unavailable', 'admin'),
 			$this->generateFactoryData("<presence xmlns='jabber:client'/>", null, null, 'online', 'admin'),
+			$this->generateFactoryData("<presence xmlns='jabber:client'><test>ack</test></presence>", null, null, 'online', 'admin'),
 			$this->generateFactoryData("<presence xmlns='jabber:client'></presence>", null, null, 'online', 'admin'),
 			$this->generateFactoryData("<presence xmlns='jabber:client'><show>chat</show></presence>", null, null, 'chat', 'admin'),
 			$this->generateFactoryData("<presence xmlns='jabber:client'><show>dnd</show></presence>", null, null, 'dnd', 'admin'),
