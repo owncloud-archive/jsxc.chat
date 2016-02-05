@@ -22,9 +22,6 @@ OCP\Util::addStyle ( 'ojsxc', 'jsxc.oc' );
 
 $version = OCP\Util::getVersion();
 
-if($version[0] <= 6)
-	OCP\Util::addStyle ( 'ojsxc', 'jsxc.oc.lte6' );
-
 if(class_exists('\\OCP\\AppFramework\\Http\\EmptyContentSecurityPolicy')) {
 	$manager = \OC::$server->getContentSecurityPolicyManager();
 	$policy = new \OCP\AppFramework\Http\EmptyContentSecurityPolicy();

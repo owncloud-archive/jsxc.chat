@@ -1,21 +1,22 @@
 <?php
-OCP\User::checkAdminUser ();
 
-OCP\Util::addScript ( "ojsxc", "admin" );
+OCP\User::checkAdminUser();
 
-$tmpl = new OCP\Template ( 'ojsxc', 'settings' );
+OCP\Util::addScript('ojsxc', 'admin');
 
-$tmpl->assign ( 'serverType', OCP\Config::getAppValue ( 'ojsxc', 'serverType' ));
-$tmpl->assign ( 'boshUrl', OCP\Config::getAppValue ( 'ojsxc', 'boshUrl' ));
-$tmpl->assign ( 'xmppDomain', OCP\Config::getAppValue ( 'ojsxc', 'xmppDomain' ) );
-$tmpl->assign ( 'xmppResource', OCP\Config::getAppValue ( 'ojsxc', 'xmppResource' ) );
-$tmpl->assign ( 'xmppOverwrite', OCP\Config::getAppValue ( 'ojsxc', 'xmppOverwrite' ) );
-$tmpl->assign ( 'xmppStartMinimized', OCP\Config::getAppValue ( 'ojsxc', 'xmppStartMinimized' ) );
-$tmpl->assign ( 'iceUrl', OCP\Config::getAppValue ( 'ojsxc', 'iceUrl' ) );
-$tmpl->assign ( 'iceUsername', OCP\Config::getAppValue ( 'ojsxc', 'iceUsername' ) );
-$tmpl->assign ( 'iceCredential', OCP\Config::getAppValue ( 'ojsxc', 'iceCredential' ) );
-$tmpl->assign ( 'iceSecret', OCP\Config::getAppValue ( 'ojsxc', 'iceSecret' ) );
-$tmpl->assign ( 'iceTtl', OCP\Config::getAppValue ( 'ojsxc', 'iceTtl' ) );
+$config = \OC::$server->getConfig();
+$tmpl = new OCP\Template('ojsxc', 'settings');
 
-return $tmpl->fetchPage ();
-?>
+$tmpl->assign('serverType', $config->getAppValue('ojsxc', 'serverType'));
+$tmpl->assign('boshUrl', $config->getAppValue('ojsxc', 'boshUrl'));
+$tmpl->assign('xmppDomain', $config->getAppValue('ojsxc', 'xmppDomain'));
+$tmpl->assign('xmppResource', $config->getAppValue('ojsxc', 'xmppResource'));
+$tmpl->assign('xmppOverwrite', $config->getAppValue('ojsxc', 'xmppOverwrite'));
+$tmpl->assign('xmppStartMinimized', $config->getAppValue('ojsxc', 'xmppStartMinimized'));
+$tmpl->assign('iceUrl', $config->getAppValue('ojsxc', 'iceUrl'));
+$tmpl->assign('iceUsername', $config->getAppValue('ojsxc', 'iceUsername'));
+$tmpl->assign('iceCredential', $config->getAppValue('ojsxc', 'iceCredential'));
+$tmpl->assign('iceSecret', $config->getAppValue('ojsxc', 'iceSecret'));
+$tmpl->assign('iceTtl', $config->getAppValue('ojsxc', 'iceTtl'));
+
+return $tmpl->fetchPage();
