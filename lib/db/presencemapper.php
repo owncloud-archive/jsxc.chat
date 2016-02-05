@@ -4,6 +4,7 @@ namespace OCA\OJSXC\Db;
 
 use OCA\OJSXC\Db\Presence as PresenceEntity;
 use OCP\AppFramework\Db\Mapper;
+use OCP\IDBConnection;
 use Sabre\Xml\Service;
 use OCP\IDb;
 
@@ -17,11 +18,11 @@ class PresenceMapper extends Mapper {
 	/**
 	 * PresenceMapper constructor.
 	 *
-	 * @param IDb $db
+	 * @param IDBConnection $db
 	 * @param string $host
 	 * @param null|string $userId
 	 */
-	public function __construct(IDb $db, $host, $userId) {
+	public function __construct(IDBConnection $db, $host, $userId) {
 		parent::__construct($db, 'ojsxc_presence');
 		$this->host = $host;
 		$this->userId = $userId;

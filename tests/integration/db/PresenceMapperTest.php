@@ -104,7 +104,6 @@ class PresenceMapperTest extends MapperTestUtility {
 		$input2->setUserid('derp');
 		$input2->setLastActive(23434475);
 
-
 		$input3 = new PresenceEntity();
 		$input3->setPresence('chat');
 		$input3->setUserid('derpina');
@@ -125,19 +124,16 @@ class PresenceMapperTest extends MapperTestUtility {
 				[$input1, $input2, $input3, $input4, $input5],
 				[
 					[
-						'id' => '11',
 						'userid' => 'admin',
 						'presence' => 'chat',
 						'last_active' => 3234343424,
 					],
 					[
-						'id' => '12',
 						'userid' => 'derp',
 						'presence' => 'online',
 						'last_active' => 23434353,
 					],
 					[
-						'id' => '13',
 						'userid' => 'derpina',
 						'presence' => 'chat',
 						'last_active' => 23445645634,
