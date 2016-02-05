@@ -49,19 +49,19 @@ class PresenceMapperTest extends MapperTestUtility {
 						'id' => '11',
 						'userid' => 'admin',
 						'presence' => 'online',
-						'last_active' => '23434',
+						'last_active' => 23434,
 					],
 					[
 						'id' => '12',
 						'userid' => 'derp',
 						'presence' => 'unavailable',
-						'last_active' => '23434475',
+						'last_active' => 23434475,
 					],
 					[
 						'id' => '13',
 						'userid' => 'derpina',
 						'presence' => 'chat',
-						'last_active' => '23445645634',
+						'last_active' => 23445645634
 					]
 				]
 			]
@@ -128,19 +128,19 @@ class PresenceMapperTest extends MapperTestUtility {
 						'id' => '11',
 						'userid' => 'admin',
 						'presence' => 'chat',
-						'last_active' => '3234343424',
+						'last_active' => 3234343424,
 					],
 					[
 						'id' => '12',
 						'userid' => 'derp',
 						'presence' => 'online',
-						'last_active' => '23434353',
+						'last_active' => 23434353,
 					],
 					[
 						'id' => '13',
 						'userid' => 'derpina',
 						'presence' => 'chat',
-						'last_active' => '23445645634',
+						'last_active' => 23445645634,
 					]
 				]
 			]

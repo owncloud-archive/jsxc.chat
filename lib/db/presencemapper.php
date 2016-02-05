@@ -36,6 +36,7 @@ class PresenceMapper extends Mapper {
 		$q = $this->db->prepare($sql);
 		$q->execute([$stanza->getPresence(), $stanza->getLastActive(), $stanza->getUserid()]);
 
+
 		if ($q->rowCount() === 0) {
 			$sql = "INSERT INTO `*PREFIX*ojsxc_presence` (`userid`, `presence`, `last_active`) VALUES(?,?,?)";
 			$q = $this->db->prepare($sql);

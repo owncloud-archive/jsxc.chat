@@ -60,7 +60,7 @@
 				<name>last_active</name>
 				<type>integer</type>
 				<notnull>true</notnull>
-				<length>4</length>
+				<length>8</length>
 			</field>
 			<index>
 				<name>userid_index</name>
