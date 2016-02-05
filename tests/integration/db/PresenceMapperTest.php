@@ -262,6 +262,8 @@ class PresenceMapperTest extends MapperTestUtility {
 		$result = $this->mapper->getConnectedUsers();
 
 		$this->assertCount(count($expected), $result);
+		sort($expected);
+		sort($result);
 		$this->assertEquals($expected, $result);
 	}
 
