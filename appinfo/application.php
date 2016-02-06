@@ -42,6 +42,7 @@ class Application extends App {
 				$this->getLock(),
 				$c->query('OCP\ILogger'),
 				$c->query('PresenceHandler'),
+				$c->query('PresenceMapper'),
 				file_get_contents("php://input"),
 				self::$config['polling']['sleep_time'],
 				self::$config['polling']['max_cycles']

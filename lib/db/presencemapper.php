@@ -84,5 +84,17 @@ class PresenceMapper extends Mapper {
 		return $results;
 	}
 
+	/**
+	 * @brief updates the last_active label in the DB.
+	 * @param the user to update the last_active field
+	 */
+	public function setActive($user) {
+		// just do an update since we can assume the user is already online
+		// otherwise this wouldn't make sense
+		$sql = "UPDATE `*PREFIX*ojsxc_presence` SET `last_active`=? WHERE `userid` = ?";
+		$q = $this->db->prepareQuery($sql);
+		$q->execute([time(), $user]);
+	}
+
 
 }

@@ -45,8 +45,12 @@ class HttpBindControllerTest extends PHPUnit_Framework_TestCase {
 	 */
 	private $presenceHandler;
 
-	private $userId = 'john';
+	/**
+	 * @var PHPUnit_Framework_MockObject_MockObject
+	 */
+	private $presenceMapper;
 
+	private $userId = 'john';
 
 	public function setUp() {
 	}
@@ -69,11 +73,13 @@ class HttpBindControllerTest extends PHPUnit_Framework_TestCase {
 	private function setUpController($requestBody) {
 		$request = $this->getMockBuilder('OCP\IRequest')->disableOriginalConstructor()->getMock();
 		$this->stanzaMapper = $this->getMockBuilder('OCA\OJSXC\Db\StanzaMapper')->disableOriginalConstructor()->getMock();
+		$this->presenceMapper = $this->getMockBuilder('OCA\OJSXC\Db\PresenceMapper')->disableOriginalConstructor()->getMock();
 
 		$this->iqHandler = $this->getMockBuilder('OCA\OJSXC\StanzaHandlers\IQ')->disableOriginalConstructor()->getMock();
 		$this->messageHandler = $this->getMockBuilder('OCA\OJSXC\StanzaHandlers\Message')->disableOriginalConstructor()->getMock();
 		$this->presenceHandler = $this->getMockBuilder('OCA\OJSXC\StanzaHandlers\Presence')->disableOriginalConstructor()->getMock();
 		$this->lock = $this->getMockBuilder('OCA\OJSXC\ILock')->disableOriginalConstructor()->getMock();
+
 
 		$logger = \OC::$server->getLogger();
 
@@ -88,6 +94,7 @@ class HttpBindControllerTest extends PHPUnit_Framework_TestCase {
 			$this->lock,
 			$logger,
 			$this->presenceHandler,
+			$this->presenceMapper,
 			$requestBody,
 			0,
 			10
@@ -110,6 +117,10 @@ class HttpBindControllerTest extends PHPUnit_Framework_TestCase {
 			->method('findByTo')
 			->with('john')
 			->will($this->throwException($ex));
+
+		$this->presenceMapper->expects($this->once())
+			->method('setActive')
+			->with('john');
 
 		$response = $this->controller->index();
 		$this->assertEquals($expResponse, $response);
@@ -163,6 +174,9 @@ class HttpBindControllerTest extends PHPUnit_Framework_TestCase {
 			->with('john')
 			->will($this->throwException($ex));
 
+		$this->presenceMapper->expects($this->once())
+			->method('setActive')
+			->with('john');
 
 		$response = $this->controller->index();
 		$this->assertEquals($expResponse, $response);
@@ -193,6 +207,9 @@ class HttpBindControllerTest extends PHPUnit_Framework_TestCase {
 			->with('john')
 			->will($this->returnValue([$r1]));
 
+		$this->presenceMapper->expects($this->once())
+			->method('setActive')
+			->with('john');
 
 		$response = $this->controller->index();
 		$this->assertEquals($expResponse, $response);
@@ -214,6 +231,10 @@ class HttpBindControllerTest extends PHPUnit_Framework_TestCase {
 			->method('findByTo')
 			->with('john')
 			->will($this->throwException($ex));
+
+		$this->presenceMapper->expects($this->once())
+			->method('setActive')
+			->with('john');
 
 		$response = $this->controller->index();
 		$this->assertEquals($expResponse, $response);
@@ -274,6 +295,10 @@ XML;
 			->with('john')
 			->will($this->throwException($ex));
 
+		$this->presenceMapper->expects($this->once())
+			->method('setActive')
+			->with('john');
+
 		$response = $this->controller->index();
 		$this->assertEquals($expResponse, $response);
 		$this->assertEquals($expResponse->render(), $response->render());
@@ -301,6 +326,10 @@ XML;
 			->with('john')
 			->will($this->returnValue([$r1]));
 
+		$this->presenceMapper->expects($this->once())
+			->method('setActive')
+			->with('john');
+
 		$response = $this->controller->index();
 		$this->assertEquals($expResponse, $response);
 		$this->assertEquals($expResponse->render(), $response->render());
@@ -322,6 +351,10 @@ XML;
 			->method('findByTo')
 			->with('john')
 			->will($this->throwException($ex));
+
+		$this->presenceMapper->expects($this->once())
+			->method('setActive')
+			->with('john');
 
 		$response = $this->controller->index();
 		$this->assertEquals($expResponse, $response);
@@ -361,6 +394,10 @@ XML;
 			->with('john')
 			->will($this->throwException($ex));
 
+		$this->presenceMapper->expects($this->once())
+			->method('setActive')
+			->with('john');
+
 		$response = $this->controller->index();
 		$this->assertEquals($expResponse, $response);
 		$this->assertEquals($expResponse->render(), $response->render());
@@ -378,6 +415,10 @@ XML;
 			->method('findByTo')
 			->with('john')
 			->will($this->throwException($ex));
+
+		$this->presenceMapper->expects($this->once())
+			->method('setActive')
+			->with('john');
 
 		$response = $this->controller->index();
 		$this->assertEquals($expResponse, $response);

@@ -3,6 +3,7 @@
 namespace OCA\OJSXC\Controller;
 
 use OCA\OJSXC\Db\Presence;
+use OCA\OJSXC\Db\PresenceMapper;
 use OCA\OJSXC\Db\StanzaMapper;
 use OCA\OJSXC\Db\MessageMapper;
 use OCA\OJSXC\Http\XMPPResponse;
@@ -114,6 +115,11 @@ class HttpBindController extends Controller {
 	private $presenceHandler;
 
 	/**
+	 * @var PresenceMapper $presenceMapper
+	 */
+	private $presenceMapper;
+
+	/**
 	 * HttpBindController constructor.
 	 *
 	 * @param string $appName
@@ -127,12 +133,13 @@ class HttpBindController extends Controller {
 	 * @param ILock $lock
 	 * @param ILogger $logger
 	 * @param PresenceHandler $presenceHandler
+	 * @param PresenceMapper $presenceMapper
 	 * @param string $body
 	 * @param int $sleepTime
 	 * @param int $maxCicles
 	 */
 	public function __construct($appName,
-	                            IRequest $request,
+								IRequest $request,
 								$userId,
 								StanzaMapper $stanzaMapper,
 								IQ $iqHandler,
@@ -141,10 +148,11 @@ class HttpBindController extends Controller {
 								ILock $lock,
 								ILogger $logger,
 								PresenceHandler $presenceHandler,
+								PresenceMapper $presenceMapper,
 								$body,
 								$sleepTime,
 								$maxCicles
-								) {
+	) {
 		parent::__construct($appName, $request);
 		$this->userId = $userId;
 		$this->pollingId = time();
@@ -160,6 +168,7 @@ class HttpBindController extends Controller {
 		$this->debug = defined('JSXC_ENV') && JSXC_ENV === 'dev';
 		$this->logger = $logger;
 		$this->presenceHandler = $presenceHandler;
+		$this->presenceMapper = $presenceMapper;
 	}
 
 	/**
@@ -234,6 +243,8 @@ class HttpBindController extends Controller {
 				}
 			} while ($recordFound === false && $cicles < $this->maxCicles && $longpoll && $this->lock->stillLocked());
 		}
+
+		$this->presenceMapper->setActive($this->userId);
 		return $this->response;
 	}
 
