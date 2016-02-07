@@ -6,6 +6,7 @@ use OCA\OJSXC\Controller\HttpBindController;
 use OCA\OJSXC\Db\MessageMapper;
 use OCA\OJSXC\Db\PresenceMapper;
 use OCA\OJSXC\Db\StanzaMapper;
+use OCA\OJSXC\NewContentContainer;
 use OCA\OJSXC\StanzaHandlers\IQ;
 use OCA\OJSXC\StanzaHandlers\Message;
 use OCA\OJSXC\StanzaHandlers\Presence;
@@ -45,7 +46,8 @@ class Application extends App {
 				$c->query('PresenceMapper'),
 				file_get_contents("php://input"),
 				self::$config['polling']['sleep_time'],
-				self::$config['polling']['max_cycles']
+				self::$config['polling']['max_cycles'],
+				$c->query('NewContentContainer')
 			);
 		});
 
@@ -71,7 +73,8 @@ class Application extends App {
 				$c->query('ServerContainer')->getDb(),
 				$c->query('Host'),
 				$c->query('UserId'),
-				$c->query('MessageMapper')
+				$c->query('MessageMapper'),
+				$c->query('NewContentContainer')
 			);
 		});
 
@@ -114,6 +117,10 @@ class Application extends App {
 			} else {
 				return $this->getServerHost();
 			}
+		});
+
+		$container->registerService('NewContentContainer', function($c){
+			return new NewContentContainer();
 		});
 
 	}

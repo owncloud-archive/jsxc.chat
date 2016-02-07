@@ -3,6 +3,7 @@
 namespace OCA\OJSXC\Db;
 
 use OCA\OJSXC\Db\Presence as PresenceEntity;
+use OCA\OJSXC\NewContentContainer;
 use OCP\AppFramework\Db\Mapper;
 use OCP\IDBConnection;
 use Sabre\Xml\Service;
@@ -39,6 +40,11 @@ class PresenceMapper extends Mapper {
 	private $messageMapper;
 
 	/**
+	 * @var NewContentContainer $newContentContainer
+	 */
+	private $newContentContainer;
+
+	/**
 	 * PresenceMapper constructor.
 	 *
 	 * @param IDb|IDBConnection $db
@@ -46,12 +52,14 @@ class PresenceMapper extends Mapper {
 	 * @param null|string $userId
 	 * @param MessageMapper $messageMapper
 	 */
-	public function __construct(IDb $db, $host, $userId, MessageMapper $messageMapper) {
+	public function __construct(IDb $db, $host, $userId, MessageMapper $messageMapper, NewContentContainer $newContentContainer) {
 		parent::__construct($db, 'ojsxc_presence');
 		$this->host = $host;
 		$this->userId = $userId;
 		$this->messageMapper = $messageMapper;
+		$this->newContentContainer = $newContentContainer;
 		$this->updatePresence();
+
 	}
 
 	/**
@@ -162,14 +170,18 @@ class PresenceMapper extends Mapper {
 			$onlineUsers = array_diff($connectedUsers, $inactiveUsers); // filter out the inactive users, since we use a cache mechanism
 			$onlineUsers[] = $this->userId; // send to ourself TODO implement this without DB
 
+
+			$presenceToSend = new PresenceEntity();
 			foreach ($inactiveUsers as $inactiveUser) {
-				$presenceToSend = new PresenceEntity();
 				$presenceToSend->setPresence('unavailable');
 				$presenceToSend->setFrom($inactiveUser);
 				foreach ($onlineUsers as $user) {
 					$presenceToSend->setTo($user);
 					$this->messageMapper->insert($presenceToSend);
 				}
+				$presenceToSend->setTo($this->userId . '@' . $this->host);
+				$presenceToSend->setFrom($inactiveUser . '@' . $this->host);
+				$this->newContentContainer->addStanza($presenceToSend);
 			}
 
 		}

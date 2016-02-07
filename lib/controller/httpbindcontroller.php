@@ -6,8 +6,10 @@ use OCA\OJSXC\Db\Presence;
 use OCA\OJSXC\Db\PresenceMapper;
 use OCA\OJSXC\Db\StanzaMapper;
 use OCA\OJSXC\Db\MessageMapper;
+use OCA\OJSXC\Exceptions\NewContentException;
 use OCA\OJSXC\Http\XMPPResponse;
 use OCA\OJSXC\ILock;
+use OCA\OJSXC\NewContentContainer;
 use OCA\OJSXC\StanzaHandlers\IQ;
 use OCA\OJSXC\StanzaHandlers\Message;
 use OCA\OJSXC\StanzaHandlers\Presence as PresenceHandler;
@@ -120,6 +122,11 @@ class HttpBindController extends Controller {
 	private $presenceMapper;
 
 	/**
+	 * @var NewContentContainer $newContentContainer
+	 */
+	private $newContentContainer;
+
+	/**
 	 * HttpBindController constructor.
 	 *
 	 * @param string $appName
@@ -136,6 +143,7 @@ class HttpBindController extends Controller {
 	 * @param string $body
 	 * @param int $sleepTime
 	 * @param int $maxCicles
+	 * @param NewContentContainer $newContentContainer
 	 */
 	public function __construct($appName,
 								IRequest $request,
@@ -150,7 +158,8 @@ class HttpBindController extends Controller {
 								PresenceMapper $presenceMapper,
 								$body,
 								$sleepTime,
-								$maxCicles
+								$maxCicles,
+								NewContentContainer $newContentContainer
 	) {
 		parent::__construct($appName, $request);
 		$this->userId = $userId;
@@ -168,6 +177,7 @@ class HttpBindController extends Controller {
 		$this->logger = $logger;
 		$this->presenceHandler = $presenceHandler;
 		$this->presenceMapper = $presenceMapper;
+		$this->newContentContainer = $newContentContainer;
 	}
 
 	/**
@@ -225,9 +235,15 @@ class HttpBindController extends Controller {
 		}
 
 		// Start long polling
+		$this->presenceMapper->setActive($this->userId);
+		if ($this->newContentContainer->getCount() > 0 ){
+			foreach ($this->newContentContainer->getStanzas() as $stanz) {
+				$this->response->write($stanz);
+			}
+			$longpoll = false; // make sure we poll only one times for the fastes reponse
+		}
 		$recordFound = false;
 		$cicles = 0;
-		$this->presenceMapper->setActive($this->userId);
 		if ($longpollStart) {
 			do {
 				try {
