@@ -70,7 +70,8 @@ class Application extends App {
 			return new PresenceMapper(
 				$c->query('ServerContainer')->getDb(),
 				$c->query('Host'),
-				$c->query('UserId')
+				$c->query('UserId'),
+				$c->query('MessageMapper')
 			);
 		});
 

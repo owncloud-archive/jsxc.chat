@@ -16,16 +16,42 @@ use OCP\IDb;
 class PresenceMapper extends Mapper {
 
 	/**
+	 * @var bool this value indicates if we already have updated the presence
+	 * of other users so we don't do this more than 1 one times per request.
+	 * TODO We could introduce a variable in the DB which indicates this already
+	 * TODO happened x minutes ago so we shouldn't do this every request.
+	 */
+	private static $updatedPresense = false;
+
+	/**
+	 * @var array of userid's which are connected.
+	 */
+	private static $connectedUsers = [];
+
+	/**
+	 * @var bool indicates wherever we already fetched the connected users
+	 */
+	private static $fetchedConnectedUsers = false;
+
+	/**
+	 * @var MessageMapper $messageMapper
+	 */
+	private $messageMapper;
+
+	/**
 	 * PresenceMapper constructor.
 	 *
-	 * @param IDBConnection $db
+	 * @param IDb|IDBConnection $db
 	 * @param string $host
 	 * @param null|string $userId
+	 * @param MessageMapper $messageMapper
 	 */
-	public function __construct(IDb $db, $host, $userId) {
+	public function __construct(IDb $db, $host, $userId, MessageMapper $messageMapper) {
 		parent::__construct($db, 'ojsxc_presence');
 		$this->host = $host;
 		$this->userId = $userId;
+		$this->messageMapper = $messageMapper;
+		$this->updatePresence();
 	}
 
 	/**
@@ -74,14 +100,21 @@ class PresenceMapper extends Mapper {
 	 * @return array
 	 */
 	public function getConnectedUsers() {
-		$stmt = $this->execute("SELECT `userid` FROM `*PREFIX*ojsxc_presence` WHERE `presence` != 'unavailable' AND `userid` != ?", [$this->userId]);
-		$results = [];
-		while($row = $stmt->fetch()){
-			$results[] = $row['userid'];
-		}
-		$stmt->closeCursor();
+		if (!self::$fetchedConnectedUsers) {
+			self::$fetchedConnectedUsers = true;
 
-		return $results;
+			$stmt = $this->execute("SELECT `userid` FROM `*PREFIX*ojsxc_presence` WHERE `presence` != 'unavailable' AND `userid` != ?", [$this->userId]);
+			$results = [];
+			while ($row = $stmt->fetch()) {
+				$results[] = $row['userid'];
+			}
+			$stmt->closeCursor();
+
+			self::$connectedUsers = $results;
+			return $results;
+		} else {
+			return self::$connectedUsers;
+		}
 	}
 
 	/**
@@ -96,5 +129,50 @@ class PresenceMapper extends Mapper {
 		$q->execute([time(), $user]);
 	}
 
+
+	/**
+	 * @brief this function will update the presence of users who doesn't
+	 * contacted the server for >= 30 minutes.
+	 *
+	 */
+	private function updatePresence() {
+		if (!self::$updatedPresense) {
+			self::$updatedPresense = true;
+
+			$time = time() - 12; // 5 seconds
+
+			// first find all users who where offline for more than 30 minutes
+
+			$stmt = $this->execute("SELECT `userid` FROM `*PREFIX*ojsxc_presence` WHERE `presence` = 'online' AND `userid` != ? AND `last_active` < ?",
+				[$this->userId, $time]);
+
+			$this->execute("UPDATE `*PREFIX*ojsxc_presence` SET `presence` = 'unavailable' WHERE `presence` = 'online' AND `userid` != ? AND `last_active` < ?",
+				[$this->userId, $time]);
+
+			$inactiveUsers = [];
+			while ($row = $stmt->fetch()) {
+				$inactiveUsers[] = $row['userid'];
+			}
+			$stmt->closeCursor();
+
+			// broadcast the new presence
+			$connectedUsers = $this->getConnectedUsers();
+
+
+			$onlineUsers = array_diff($connectedUsers, $inactiveUsers); // filter out the inactive users, since we use a cache mechanism
+			$onlineUsers[] = $this->userId; // send to ourself TODO implement this without DB
+
+			foreach ($inactiveUsers as $inactiveUser) {
+				$presenceToSend = new PresenceEntity();
+				$presenceToSend->setPresence('unavailable');
+				$presenceToSend->setFrom($inactiveUser);
+				foreach ($onlineUsers as $user) {
+					$presenceToSend->setTo($user);
+					$this->messageMapper->insert($presenceToSend);
+				}
+			}
+
+		}
+	}
 
 }

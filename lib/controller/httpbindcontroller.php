@@ -125,7 +125,6 @@ class HttpBindController extends Controller {
 	 * @param string $appName
 	 * @param IRequest $request
 	 * @param string $userId
-	 * @param ISession $session
 	 * @param StanzaMapper $stanzaMapper
 	 * @param IQ $iqHandler
 	 * @param Message $messageHandler
@@ -228,6 +227,7 @@ class HttpBindController extends Controller {
 		// Start long polling
 		$recordFound = false;
 		$cicles = 0;
+		$this->presenceMapper->setActive($this->userId);
 		if ($longpollStart) {
 			do {
 				try {
@@ -244,7 +244,6 @@ class HttpBindController extends Controller {
 			} while ($recordFound === false && $cicles < $this->maxCicles && $longpoll && $this->lock->stillLocked());
 		}
 
-		$this->presenceMapper->setActive($this->userId);
 		return $this->response;
 	}
 
