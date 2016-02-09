@@ -45,21 +45,29 @@ class PresenceMapper extends Mapper {
 	private $newContentContainer;
 
 	/**
+	 * @var int $timeout
+	 */
+	private $timeout;
+
+	/**
 	 * PresenceMapper constructor.
 	 *
 	 * @param IDb|IDBConnection $db
 	 * @param string $host
 	 * @param null|string $userId
 	 * @param MessageMapper $messageMapper
+	 * @param NewContentContainer $newContentContainer
+	 * @param int $timeout
 	 */
-	public function __construct(IDb $db, $host, $userId, MessageMapper $messageMapper, NewContentContainer $newContentContainer) {
+	public function __construct(IDb $db, $host, $userId, MessageMapper $messageMapper, NewContentContainer $newContentContainer, $timeout) {
 		parent::__construct($db, 'ojsxc_presence');
 		$this->host = $host;
 		$this->userId = $userId;
 		$this->messageMapper = $messageMapper;
 		$this->newContentContainer = $newContentContainer;
-		$this->updatePresence();
+		$this->timeout = $timeout;
 
+		$this->updatePresence();
 	}
 
 	/**
@@ -147,14 +155,14 @@ class PresenceMapper extends Mapper {
 		if (!self::$updatedPresense) {
 			self::$updatedPresense = true;
 
-			$time = time() - 12; // 5 seconds
+			$time = time() - $this->timeout;
 
 			// first find all users who where offline for more than 30 minutes
 
-			$stmt = $this->execute("SELECT `userid` FROM `*PREFIX*ojsxc_presence` WHERE `presence` = 'online' AND `userid` != ? AND `last_active` < ?",
+			$stmt = $this->execute("SELECT `userid` FROM `*PREFIX*ojsxc_presence` WHERE `presence` != 'unavailable' AND `userid` != ? AND `last_active` < ?",
 				[$this->userId, $time]);
 
-			$this->execute("UPDATE `*PREFIX*ojsxc_presence` SET `presence` = 'unavailable' WHERE `presence` = 'online' AND `userid` != ? AND `last_active` < ?",
+			$this->execute("UPDATE `*PREFIX*ojsxc_presence` SET `presence` = 'unavailable' WHERE `presence` != 'unavailable' AND `userid` != ? AND `last_active` < ?",
 				[$this->userId, $time]);
 
 			$inactiveUsers = [];
@@ -168,7 +176,7 @@ class PresenceMapper extends Mapper {
 
 
 			$onlineUsers = array_diff($connectedUsers, $inactiveUsers); // filter out the inactive users, since we use a cache mechanism
-			$onlineUsers[] = $this->userId; // send to ourself TODO implement this without DB
+//			$onlineUsers[] = $this->userId; // send to ourself TODO implement this without DB
 
 
 			$presenceToSend = new PresenceEntity();

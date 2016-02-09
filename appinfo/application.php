@@ -26,10 +26,15 @@ class Application extends App {
 
 		/** @var $config \OCP\IConfig */
 		$configManager = $container->query('OCP\IConfig');
+
 		self::$config['polling'] = $configManager->getSystemValue('ojsxc.polling',
 			['sleep_time' => 1, 'max_cycles' => 10]);
+
+		self::$config['polling']['timeout'] = self::$config['polling']['sleep_time'] * self::$config['polling']['max_cycles'] + 5;
+
 		self::$config['use_memcache'] = $configManager->getSystemValue('ojsxc.use_memcache',
 			['locking' => false]);
+
 
 		$container->registerService('HttpBindController', function($c){
 			return new HttpBindController(
@@ -74,7 +79,8 @@ class Application extends App {
 				$c->query('Host'),
 				$c->query('UserId'),
 				$c->query('MessageMapper'),
-				$c->query('NewContentContainer')
+				$c->query('NewContentContainer'),
+				self::$config['polling']['timeout']
 			);
 		});
 

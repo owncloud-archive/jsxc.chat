@@ -52,6 +52,11 @@ class HttpBindControllerTest extends PHPUnit_Framework_TestCase {
 
 	private $userId = 'john';
 
+	/**
+	 * @var PHPUnit_Framework_MockObject_MockObject
+	 */
+	private $newContentContainer;
+
 	public function setUp() {
 	}
 
@@ -79,7 +84,7 @@ class HttpBindControllerTest extends PHPUnit_Framework_TestCase {
 		$this->messageHandler = $this->getMockBuilder('OCA\OJSXC\StanzaHandlers\Message')->disableOriginalConstructor()->getMock();
 		$this->presenceHandler = $this->getMockBuilder('OCA\OJSXC\StanzaHandlers\Presence')->disableOriginalConstructor()->getMock();
 		$this->lock = $this->getMockBuilder('OCA\OJSXC\ILock')->disableOriginalConstructor()->getMock();
-
+		$this->newContentContainer = $this->getMockBuilder('OCA\OJSXC\NewContentContainer')->disableOriginalConstructor()->getMock();
 
 		$logger = \OC::$server->getLogger();
 
@@ -97,9 +102,128 @@ class HttpBindControllerTest extends PHPUnit_Framework_TestCase {
 			$this->presenceMapper,
 			$requestBody,
 			0,
-			10
+			10,
+			$this->newContentContainer
 		);
 	}
+
+	public function testNewContentContainerNoNew() {
+		$this->setUpController('<body xmlns=\'http://jabber.org/protocol/httpbind\'/>');
+		$this->mockLock();
+		$ex = new DoesNotExistException('');
+		$expResponse = new XMPPResponse();
+
+		$this->newContentContainer->expects($this->once())
+			->method('getCount')
+			->will($this->returnValue(0));
+
+		$this->newContentContainer->expects($this->never())
+			->method('getStanzas');
+
+		$this->stanzaMapper->expects($this->exactly(10))
+				->method('findByTo')
+				->with('john')
+				->will($this->throwException($ex));
+
+		$this->presenceMapper->expects($this->once())
+				->method('setActive')
+				->with('john');
+
+		$response = $this->controller->index();
+		$this->assertEquals($expResponse, $response);
+
+	}
+
+	public function testNewContentContainerNoNewWithDbResults() {
+		$result = new Stanza('test');
+		$this->setUpController('<body rid=\'897878797\' xmlns=\'http://jabber.org/protocol/httpbind\' sid=\'7862\'/>');
+		$this->mockLock();
+
+		$expResponse = new XMPPResponse($result);
+
+		$this->iqHandler->expects($this->never())
+				->method('handle')
+				->will($this->returnValue($result));
+
+		$r1 = $this->getMockBuilder('OCA\OJSXC\Db\Stanza')->disableOriginalConstructor()->getMock();
+		$r1->expects($this->once())
+				->method('xmlSerialize')
+				->will($this->returnCallback(function(Writer $writer){
+					$writer->write('test');
+				}));
+
+		$this->stanzaMapper->expects($this->once())
+				->method('findByTo')
+				->with('john')
+				->will($this->returnValue([$r1]));
+
+		$this->presenceMapper->expects($this->once())
+				->method('setActive')
+				->with('john');
+
+		$this->newContentContainer->expects($this->once())
+				->method('getCount')
+				->will($this->returnValue(0));
+
+		$this->newContentContainer->expects($this->never())
+				->method('getStanzas');
+
+		$response = $this->controller->index();
+		$this->assertEquals($expResponse, $response);
+		$this->assertEquals($expResponse->render(), $response->render());
+	}
+
+
+	public function testNewContentContainerWithNewWithDbResults() {
+		$result = new Stanza('test');
+		$this->setUpController('<body rid=\'897878797\' xmlns=\'http://jabber.org/protocol/httpbind\' sid=\'7862\'/>');
+		$this->mockLock();
+
+		$expResponse = new XMPPResponse($result);
+
+		$this->iqHandler->expects($this->never())
+				->method('handle')
+				->will($this->returnValue($result));
+
+		$r1 = $this->getMockBuilder('OCA\OJSXC\Db\Stanza')->disableOriginalConstructor()->getMock();
+		$r1->expects($this->once())
+				->method('xmlSerialize')
+				->will($this->returnCallback(function(Writer $writer){
+					$writer->write('test');
+				}));
+
+		$this->stanzaMapper->expects($this->once())
+				->method('findByTo')
+				->with('john')
+				->will($this->returnValue([$r1]));
+
+		$this->presenceMapper->expects($this->once())
+				->method('setActive')
+				->with('john');
+
+		$this->newContentContainer->expects($this->once())
+				->method('getCount')
+				->will($this->returnValue(5));
+
+		$testStanza =  new Stanza();
+		$testStanza->setFrom('derp@own.dev');
+		$testStanza->setTo('admin@own.dev');
+
+		$this->newContentContainer->expects($this->once())
+				->method('getStanzas')
+				->will($this->returnValue([$testStanza,$testStanza, $testStanza, $testStanza, $testStanza ]));
+
+		$expResponse->write($testStanza);
+		$expResponse->write($testStanza);
+		$expResponse->write($testStanza);
+		$expResponse->write($testStanza);
+		$expResponse->write($testStanza);
+
+		$response = $this->controller->index();
+		$this->assertEquals($expResponse, $response);
+		$this->assertEquals($expResponse->render(), $response->render());
+	}
+
 
 	/**
 	 * When invalid XML, just start long polling.

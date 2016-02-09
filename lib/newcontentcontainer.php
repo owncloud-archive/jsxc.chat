@@ -15,7 +15,7 @@ class NewContentContainer {
 	 */
 	private static $stanzas;
 
-	public function addStanza($stanza) {
+	public function addStanza(Stanza $stanza) {
 		self::$stanzas[] = $stanza;
 	}
 

@@ -19,6 +19,7 @@ class PresenceMapperTest extends MapperTestUtility {
 		$this->entityName = 'OCA\OJSXC\Db\Presence';
 		$this->mapperName = 'PresenceMapper';
 		parent::setUp();
+		$this->test
 	}
 
 	/**
@@ -261,10 +262,15 @@ class PresenceMapperTest extends MapperTestUtility {
 
 		$result = $this->mapper->getConnectedUsers();
 
+		var_dump($this->fetchAllAsArray());
+		die();
+
 		$this->assertCount(count($expected), $result);
 		sort($expected);
 		sort($result);
 		$this->assertEquals($expected, $result);
+
+
 	}
 
 
