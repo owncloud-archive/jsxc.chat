@@ -1,4 +1,5 @@
 #lib/stanzahandlers
 
-This are the incoming stanzahandlers. Some of them will create outgoing stanzas which are simple stored in the DB, and send to the client by the polling process.
+This are the objects which handle incoming stanza's. The classess are called
+by the `HTTPBindController` controller.
 

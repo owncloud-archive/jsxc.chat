@@ -37,7 +37,7 @@ class Stanza extends Entity implements XmlSerializable{
     public $from;
 
     /**
-     * @var string $to
+     * @var string $stanza
      */
     public $stanza;
 

@@ -148,7 +148,7 @@ class PresenceMapper extends Mapper {
 
 	/**
 	 * @brief this function will update the presence of users who doesn't
-	 * contacted the server for TODO.
+	 * contacted the server for $this->timeout seconds.
 	 */
 	public function updatePresence() {
 		if (!self::$updatedPresense) {
