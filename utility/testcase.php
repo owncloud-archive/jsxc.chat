@@ -73,4 +73,18 @@ class TestCase extends CoreTestCase {
 		});
 	}
 
+	/**
+	 * @brief this function is needed to reset some private static propertires
+	 * which ar used for e.g. caches.
+	 * @param $name
+	 * @param $newValue
+	 */
+	public function setValueOfPrivateProperty($obj, $name, $newValue) {
+		$refl = new \ReflectionObject($obj);
+		$p = $refl->getProperty($name);
+		$p->setAccessible(true);
+		$p->setValue($obj, $newValue);
+		$p->setAccessible(false);
+	}
+
 }

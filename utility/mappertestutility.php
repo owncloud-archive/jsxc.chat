@@ -4,7 +4,6 @@ namespace OCA\OJSXC\Utility;
 
 use OCA\OJSXC\AppInfo\Application;
 
-
 /**
  * @group DB
  */
@@ -19,6 +18,10 @@ class MapperTestUtility extends TestCase {
 
 	protected $mapperName;
 
+	protected $host;
+
+	protected $userId;
+
 	protected function setUp() {
 		parent::setUp();
 		$app = new Application();
@@ -27,7 +30,14 @@ class MapperTestUtility extends TestCase {
 		$this->container = $app->getContainer();
 		$this->mapper = $this->container[$this->mapperName];
 
+		$this->host = 'localhost';
+		$this->userId = 'admin';
 
+		$con = $this->container->getServer()->getDatabaseConnection();
+		$con->executeQuery('DELETE FROM ' . $this->mapper->getTableName());
+	}
+
+	protected function tearDown() {
 		$con = $this->container->getServer()->getDatabaseConnection();
 		$con->executeQuery('DELETE FROM ' . $this->mapper->getTableName());
 	}
@@ -46,9 +56,13 @@ class MapperTestUtility extends TestCase {
 		return $entities;
 	}
 
-	protected function fetchAllAsArray(){
+	protected function fetchAllAsArray($tableName = null){
+		if (is_null($tableName)) {
+			$tableName = $this->mapper->getTableName();
+		} else {
+		}
 		$con = $this->container->getServer()->getDatabaseConnection();
-		$stmt = $con->executeQuery('SELECT * FROM ' . $this->mapper->getTableName());
+		$stmt = $con->executeQuery('SELECT * FROM ' . $tableName);
 
 		$result = [];
 		while($row = $stmt->fetch()){
@@ -63,4 +77,5 @@ class MapperTestUtility extends TestCase {
 		return $this->container->getServer()->getDatabaseConnection()->lastInsertId();
 
 	}
+
 }

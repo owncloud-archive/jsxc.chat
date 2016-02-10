@@ -3,11 +3,20 @@
 namespace OCA\OJSXC\Db;
 
 use OCA\OJSXC\Db\Presence as PresenceEntity;
+use OCA\OJSXC\NewContentContainer;
 use OCA\OJSXC\Utility\MapperTestUtility;
 
+$time = 0;
+
+function time() {
+	global $time;
+	return $time;
+}
+
+
 /**
-* @group DB
-*/
+ * @group DB
+ */
 class PresenceMapperTest extends MapperTestUtility {
 
 	/**
@@ -15,11 +24,20 @@ class PresenceMapperTest extends MapperTestUtility {
 	 */
 	protected $mapper;
 
+	/**
+	 * @var NewContentContainer $newContentContainer
+	 */
+	protected $newContentContainer;
+
 	protected function setUp() {
 		$this->entityName = 'OCA\OJSXC\Db\Presence';
 		$this->mapperName = 'PresenceMapper';
 		parent::setUp();
-		$this->test
+		$this->setValueOfPrivateProperty($this->mapper, 'updatedPresense', false);
+		$this->setValueOfPrivateProperty($this->mapper, 'fetchedConnectedUsers', false);
+		$this->setValueOfPrivateProperty($this->mapper, 'connectedUsers', []);
+		$this->newContentContainer = $this->container->query('NewContentContainer');
+		$this->setValueOfPrivateProperty($this->newContentContainer, 'stanzas', []);
 	}
 
 	/**
@@ -262,16 +280,193 @@ class PresenceMapperTest extends MapperTestUtility {
 
 		$result = $this->mapper->getConnectedUsers();
 
-		var_dump($this->fetchAllAsArray());
-		die();
-
 		$this->assertCount(count($expected), $result);
 		sort($expected);
 		sort($result);
 		$this->assertEquals($expected, $result);
+	}
 
+	public function updatePresenceProvider() {
+		$input1 = new PresenceEntity();
+		$input1->setPresence('online');
+		$input1->setUserid('admin');
+		$input1->setLastActive(1000);
+
+		$input2 = new PresenceEntity();
+		$input2->setPresence('online');
+		$input2->setUserid('foo');
+		$input2->setLastActive(1000);
+
+		$input3 = new PresenceEntity(); // will go offline
+		$input3->setPresence('xa');
+		$input3->setUserid('derp');
+		$input3->setLastActive(600);
+
+		$input4 = new PresenceEntity(); // will go offline
+		$input4->setPresence('chat');
+		$input4->setUserid('derpina');
+		$input4->setLastActive(400);
+
+		$expStanza1 = new PresenceEntity();
+		$expStanza1->setPresence('unavailable');
+		$expStanza1->setFrom('derp' . '@localhost');
+		$expStanza1->setTo('admin' . '@localhost');
+
+		$expStanza2 = new PresenceEntity();
+		$expStanza2->setPresence('unavailable');
+		$expStanza2->setFrom('derpina' . '@localhost');
+		$expStanza2->setTo('admin' . '@localhost');
+
+		return [
+			[
+				[$input1, $input2, $input3, $input4],
+				[
+					[
+						'userid' => 'admin',
+						'presence' => 'online',
+						'last_active' => '1000'
+					],
+					[
+						'userid' => 'foo',
+						'presence' => 'online',
+						'last_active' => '1000'
+					],
+					[
+						'userid' => 'derp',
+						'presence' => 'xa',
+						'last_active' => '600'
+					],
+					[
+						'userid' => 'derpina',
+						'presence' => 'chat',
+						'last_active' => '400'
+					]
+				],
+				['foo', 'derp', 'derpina'],
+				[$expStanza1, $expStanza2],
+				2,
+				[
+					[
+						"from" => 'derp',
+						"to" => "foo",
+						"stanza" => '<presence type="unavailable" from="derp" to="foo" xmlns="jabber:client"/>'
+					],
+					[
+						"from" => 'derpina',
+						"to" => "foo",
+						"stanza" => '<presence type="unavailable" from="derpina" to="foo" xmlns="jabber:client"/>'
+					]
+				]
+			]
+		];
+	}
+
+	/**
+	 * @dataProvider updatePresenceProvider
+	 * @param PresenceEntity[] $inputs
+	 * @param array $expInput
+	 * @param array $expConnectedUsers
+	 * @param PresenceEntity[] $expNewContent
+	 * @param int $expNewContentCount
+	 * @param array $expStanzasToSend
+	 */
+	public function testUpdatePresence($inputs, $expInput, $expConnectedUsers,  $expNewContent, $expNewContentCount, $expStanzasToSend) {
+
+		global $time;
+		$time = 1000;
+		foreach ($inputs as $input) {
+			$this->mapper->setPresence($input);
+		}
+		$this->assertArrayDbResultsEqual($expInput, $this->fetchAllAsArray(), ['userid', 'presence', 'last_active']);
+
+		$connectedUsers = $this->mapper->getConnectedUsers();
+		sort($expConnectedUsers);
+		sort($connectedUsers);
+		$this->assertEquals($expConnectedUsers, $connectedUsers); // before cleaning
+
+		$this->mapper->updatePresence();
+
+		$this->assertEquals($expNewContentCount, $this->newContentContainer->getCount());
+		$newContent = $this->newContentContainer->getStanzas();
+		sort($expNewContent);
+		sort($newContent);
+		$this->assertObjectDbResultsEqual($expNewContent, $newContent, ['userid', 'presence', 'lastActive']);
+		$this->assertEquals(0, $this->newContentContainer->getCount()); // stanzas will be removed once fetched
+
+		$stanzasToSend = $this->fetchAllAsArray('*PREFIX*ojsxc_stanzas');
+
+		$this->assertArrayDbResultsEqual($expStanzasToSend, $stanzasToSend, ['to', 'from', 'stanza']);
 
 	}
 
+	public function setActiveProvider() {
+		$input1 = new PresenceEntity();
+		$input1->setPresence('online');
+		$input1->setUserid('admin');
+		$input1->setLastActive(1000);
+
+		$input2 = new PresenceEntity();
+		$input2->setPresence('unavailable');
+		$input2->setUserid('foo');
+		$input2->setLastActive(1000);
+
+		$input3 = new PresenceEntity(); // will go offline
+		$input3->setPresence('xa');
+		$input3->setUserid('derp');
+		$input3->setLastActive(600);
+
+		$input4 = new PresenceEntity(); // will go offline
+		$input4->setPresence('chat');
+		$input4->setUserid('derpina');
+		$input4->setLastActive(400);
+
+		return [
+			[
+				[$input1, $input2, $input3, $input4],
+				[
+					[
+						'userid' => 'admin',
+						'presence' => 'online',
+						'last_active' => '1010',
+					],
+					[
+						'userid' => 'foo',
+						'presence' => 'unavailable',
+						'last_active' => '1000',
+					],
+					[
+						'userid' => 'derp',
+						'presence' => 'xa',
+						'last_active' => '1020',
+					],
+					[
+						'userid' => 'derpina',
+						'presence' => 'chat',
+						'last_active' => '400',
+					],
+				]
+			]
+		];
+	}
+
+	/**
+	 * @dataProvider  setActiveProvider
+	 */
+	public function testSetActive($inputs, $expected) {
+		global $time;
+
+		foreach ($inputs as $input) {
+			$this->mapper->setPresence($input);
+		}
+		$time = 1010;
+		$this->mapper->setActive('admin');
+		$time = 1020;
+		$this->mapper->setActive('derp');
+
+		$result = $this->fetchAllAsArray();
+
+		$this->assertArrayDbResultsEqual($expected, $result, ['userid', 'last_active', 'presence']);
+
+	}
 
 }

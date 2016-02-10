@@ -148,21 +148,16 @@ class PresenceMapper extends Mapper {
 
 	/**
 	 * @brief this function will update the presence of users who doesn't
-	 * contacted the server for >= 30 minutes.
-	 *
+	 * contacted the server for TODO.
 	 */
-	private function updatePresence() {
+	public function updatePresence() {
 		if (!self::$updatedPresense) {
 			self::$updatedPresense = true;
 
 			$time = time() - $this->timeout;
 
-			// first find all users who where offline for more than 30 minutes
-
+			// first find all users who where offline for more than 30 seconds TOOD
 			$stmt = $this->execute("SELECT `userid` FROM `*PREFIX*ojsxc_presence` WHERE `presence` != 'unavailable' AND `userid` != ? AND `last_active` < ?",
-				[$this->userId, $time]);
-
-			$this->execute("UPDATE `*PREFIX*ojsxc_presence` SET `presence` = 'unavailable' WHERE `presence` != 'unavailable' AND `userid` != ? AND `last_active` < ?",
 				[$this->userId, $time]);
 
 			$inactiveUsers = [];
@@ -171,17 +166,17 @@ class PresenceMapper extends Mapper {
 			}
 			$stmt->closeCursor();
 
+			$this->execute("UPDATE `*PREFIX*ojsxc_presence` SET `presence` = 'unavailable' WHERE `presence` != 'unavailable' AND `userid` != ? AND `last_active` < ?", [$this->userId, $time]);
+
 			// broadcast the new presence
 			$connectedUsers = $this->getConnectedUsers();
 
 
 			$onlineUsers = array_diff($connectedUsers, $inactiveUsers); // filter out the inactive users, since we use a cache mechanism
-//			$onlineUsers[] = $this->userId; // send to ourself TODO implement this without DB
-
 
 			$presenceToSend = new PresenceEntity();
+			$presenceToSend->setPresence('unavailable');
 			foreach ($inactiveUsers as $inactiveUser) {
-				$presenceToSend->setPresence('unavailable');
 				$presenceToSend->setFrom($inactiveUser);
 				foreach ($onlineUsers as $user) {
 					$presenceToSend->setTo($user);
