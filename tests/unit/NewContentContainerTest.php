@@ -44,7 +44,8 @@ class NewContentContainerTest extends PHPUnit_Framework_TestCase {
 		}
 		$this->assertEquals($count, $this->newContentContainer->getCount());
 
-		$this->assertEquals(sort($stanzas), sort($this->newContentContainer->getStanzas()));
+		$result = $this->newContentContainer->getStanzas();
+		$this->assertEquals(sort($stanzas), sort($result));
 
 	}
 
