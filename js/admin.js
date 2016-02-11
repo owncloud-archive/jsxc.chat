@@ -77,8 +77,11 @@ $(document).ready(function() {
 
          if(xhr.status === 0) {
             // cross-side
-            fail('Cross domain requests are not possible with the current same-origin-policy (SOP). ' + 
-               'You have to use Apache ProxyRequest or Nginx proxy_pass.');
+            fail('Cross domain request was not possible. Either your BOSH server does not send any ' +
+               'Access-Control-Allow-Origin header or the content-security-policy (CSP) blocks your request. ' +
+               'Starting from Owncloud 9.0 your CSP will be updated in any app which uses the appframework (e.g. files) ' +
+               'after you save these settings and reload.' +
+               'The savest way is still to use Apache ProxyRequest or Nginx proxy_pass.');
          } else if (xhr.status === 404) {
             // not found
             fail('Your server responded with "404 Not Found". Please check if your BOSH server is running and reachable via ' + fullurl + '.');
