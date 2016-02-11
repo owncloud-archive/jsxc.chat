@@ -11,14 +11,8 @@ use Sabre\Xml\XmlSerializable;
 /**
  * Class Stanza
  * @package OCA\OJSXC\Db
- * @brief this class is used as the entity which is fetched from the stanza table OR extended by a specific stanza
- * for inserting into the stanza table
- * @method string getTo()
- * @method string getFrom()
- * @method string getStanza()
- * @method void setTo($to)
- * @method void setFrom($from)
- * @method void setStanza($stanza)
+ * @brief this class is used as he entity which is fetched from the stanza table OR extended by a specific stanza
+ * for inserting into the stanza tablet
  */
 class Stanza extends Entity implements XmlSerializable{
 

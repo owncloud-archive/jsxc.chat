@@ -4,6 +4,7 @@ namespace OCA\OJSXC\Http;
 use OCP\AppFramework\Http\Response;
 use Sabre\Xml\Writer;
 use OCA\OJSXC\Db\Stanza;
+use Sabre\Xml\XmlDeserializable;
 
 /**
  * Class XMPPResponse
@@ -22,7 +23,7 @@ class XMPPResponse extends Response {
 	 *
 	 * @param Stanza|null $stanza
 	 */
-	public function __construct(Stanza $stanza=null) {
+	public function __construct(XmlDeserializable $stanza=null) {
 		$this->addHeader('Content-Type', 'text/xml');
 		$this->writer =  new Writer();
 		$this->writer->openMemory();

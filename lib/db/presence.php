@@ -2,6 +2,7 @@
 
 namespace OCA\OJSXC\Db;
 
+use OCP\AppFramework\Db\Entity;
 use Sabre\Xml\XmlSerializable;
 use Sabre\Xml\XmlDeserializable;
 use Sabre\Xml\Writer;
@@ -23,7 +24,7 @@ use Sabre\Xml\Element\keyValue;
  * @method string getPresence()
  * @method int getLastActive()
  */
-class Presence extends Stanza implements XmlSerializable, XmlDeserializable{
+class Presence extends Pollable implements XmlSerializable, XmlDeserializable, IPollable{
 
 	/**
 	 * @var string $userid

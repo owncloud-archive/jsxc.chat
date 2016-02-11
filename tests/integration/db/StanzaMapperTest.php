@@ -5,6 +5,11 @@ namespace OCA\OJSXC\Db;
 use OCA\OJSXC\Utility\MapperTestUtility;
 use OCP\AppFramework\Db\DoesNotExistException;
 
+function uniqid() {
+	return 4; // chosen by fair dice roll.
+	// guaranteed to be unique.
+}
+
 /**
  * @group DB
  */
@@ -21,71 +26,83 @@ class StanzaMapperTest extends MapperTestUtility {
 		parent::setUp();
 	}
 
-	public function insertProvider() {
+	public function insertMessageProvider() {
 		return [
 			[
 				'john@localhost',
 				'thomas@localhost',
-				'abcd'
+				'abcd',
+				'test',
+				'Test Message',
+				'<message to="thomas@localhost" from="john@localhost" type="test" xmlns="jabber:client" id="4-msg">Test Message</message>'
 			]
 		];
 	}
-	
+
 	/**
-	 * @dataProvider insertProvider
+	 * @dataProvider insertMessageProvider
 	 */
-	public function testInsert($from, $to, $data) {
-		$stanza = new Stanza();
+	public function testMessageInsert($from, $to, $data, $type, $msg, $expectedStanza) {
+		$stanza = new Message();
 		$stanza->setFrom($from);
 		$stanza->setTo($to);
 		$stanza->setStanza($data);
+		$stanza->setType($type);
+		$stanza->setValue($msg);
 
 		$this->assertEquals($stanza->getFrom(), $from);
 		$this->assertEquals($stanza->getTo(), $to);
 		$this->assertEquals($stanza->getStanza(), $data);
+		$this->assertEquals($stanza->getType(), $type);
 
-		$this->mapper->insert($stanza);
+		$this->mapper->insertStanza($stanza);
 
 		$result = $this->fetchAll();
 
 		$this->assertCount(1, $result);
 		$this->assertEquals($stanza->getFrom(), $result[0]->getFrom());
 		$this->assertEquals($stanza->getTo(),  $result[0]->getTo());
-		$this->assertEquals($stanza->getStanza(),  $result[0]->getStanza());
+		$this->assertEquals($expectedStanza,  $result[0]->getStanza());
 	}
 
 	/**
 	 * @expectedException \OCP\AppFramework\Db\DoesNotExistException
 	 */
-	public function testFindByToNotFound() {
+	public function testFindByToNotFoundMEssage() {
 		$this->mapper->findByTo('test');
 	}
 
 	/**
 	 * @expectedException \OCP\AppFramework\Db\DoesNotExistException
 	 */
-	public function testFindByToNotFound2() {
-		$stanza = new Stanza();
+	public function testFindByToNotFoundMessage2() {
+		$stanza = new Message();
 		$stanza->setFrom('john@localhost');
 		$stanza->setTo('john@localhost');
 		$stanza->setStanza('abcd');
-		$this->mapper->insert($stanza);
+		$stanza->setType('test');
+		$stanza->setValue('message abc');
+		$this->mapper->insertStanza($stanza);
 
 		$this->mapper->findByTo('test');
 	}
 
-	public function testFindByToFound() {
-		$stanza1 = new Stanza();
+	public function testFindByToFoundMessage() {
+		$stanza1 = new Message();
 		$stanza1->setFrom('jan@localhost');
 		$stanza1->setTo('john@localhost');
 		$stanza1->setStanza('abcd1');
-		$this->mapper->insert($stanza1);
+		$stanza1->setType('test');
+		$stanza1->setValue('Messageabc');
+		$this->mapper->insertStanza($stanza1);
 
-		$stanza2 = new Stanza();
+		$stanza2 = new Message();
 		$stanza2->setFrom('thomas@localhost');
 		$stanza2->setTo('jan@localhost');
 		$stanza2->setStanza('abcd2');
-		$this->mapper->insert($stanza2);
+		$stanza2->setType('test2');
+		$stanza2->setValue('Message');
+		$this->mapper->insertStanza($stanza2);
 
 
 		// check if two elements are inserted
@@ -95,15 +112,17 @@ class StanzaMapperTest extends MapperTestUtility {
 		// check findByTo
 		$result = $this->mapper->findByTo('john@localhost');
 		$this->assertCount(1, $result);
-		$this->assertEquals($stanza1->getStanza(),  $result[0]->getStanza());
+		$this->assertEquals('<message to="john@localhost" from="jan@localhost" type="test" xmlns="jabber:client" id="4-msg">Messageabc</message>',  $result[0]->getStanza());
 
 		// check if element is deleted
 		$result = $this->fetchAll();
 		$this->assertCount(1, $result);
 		$this->assertEquals($stanza2->getFrom(), $result[0]->getFrom());
 		$this->assertEquals($stanza2->getTo(),  $result[0]->getTo());
-		$this->assertEquals($stanza2->getStanza(),  $result[0]->getStanza());
+		$this->assertEquals('<message to="jan@localhost" from="thomas@localhost" type="test2" xmlns="jabber:client" id="4-msg">Message</message>',  $result[0]->getStanza());
 
 	}
+
+	// TODO add presence inserts test
 
 }
