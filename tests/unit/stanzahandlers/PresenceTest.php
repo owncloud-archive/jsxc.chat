@@ -96,4 +96,59 @@ class PresenceTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals($presences, $result);
 	}
 
+
+	public function unavailableHandleProvider() {
+		$presence = new PresenceEntity();
+		$presence->setPresence('unavailable');
+		$presence->setUserid('john');
+		$presence->setLastActive(time());
+
+		// broadcast presence
+		$insert1 = new PresenceEntity();
+		$insert1->setPresence('online');
+		$insert1->setFrom('john');
+		$insert1->setTo('derp');
+
+		$insert2 = new PresenceEntity();
+		$insert2->setPresence('online');
+		$insert2->setFrom('john');
+		$insert2->setTo('herp');
+
+		return [
+			[
+				$presence,
+				['derp', 'herp'],
+				[],
+				[$insert1, $insert2]
+			]
+		];
+	}
+
+	/**
+	 * @dataProvider UnavailableHandleProvider
+	 */
+	public function testUnavailableHandle($presenceEntity, $connectedUsers, $presences, $insert) {
+
+		$this->presenceMapper->expects($this->once())
+			->method('setPresence')
+			->with($presenceEntity);
+
+
+		$this->presenceMapper->expects($this->once())
+			->method('getConnectedUsers')
+			->will($this->returnValue($connectedUsers));
+
+		$this->messageMapper->expects($this->exactly(2))
+			->method('insert')
+			->withConsecutive(
+				$this->equalTo($insert[0]),
+				$this->equalTo($insert[1])
+			);
+
+		$this->presenceMapper->expects($this->never())
+			->method('getPresences');
+
+		$result = $this->presence->handle($presenceEntity);
+		$this->assertEquals($presences, $result);
+	}
 }

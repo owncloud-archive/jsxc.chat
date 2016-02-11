@@ -64,8 +64,12 @@ class Presence extends StanzaHandler {
 			$this->messageMapper->insert($presenceToSend);
 		}
 
-		// return other users presence
-		return $this->presenceMapper->getPresences();
+		if ($presence->getPresence() !== 'unavailable') {
+			// return other users presence
+			return $this->presenceMapper->getPresences();
+		} else {
+			return [];
+		}
 	}
 
 }
