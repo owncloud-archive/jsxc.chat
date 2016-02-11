@@ -4,9 +4,12 @@ namespace OCA\OJSXC\AppInfo;
 
 use OCA\OJSXC\Controller\HttpBindController;
 use OCA\OJSXC\Db\MessageMapper;
+use OCA\OJSXC\Db\PresenceMapper;
 use OCA\OJSXC\Db\StanzaMapper;
+use OCA\OJSXC\NewContentContainer;
 use OCA\OJSXC\StanzaHandlers\IQ;
 use OCA\OJSXC\StanzaHandlers\Message;
+use OCA\OJSXC\StanzaHandlers\Presence;
 use OCP\AppFramework\App;
 use OCA\OJSXC\ILock;
 use OCA\OJSXC\DbLock;
@@ -23,10 +26,15 @@ class Application extends App {
 
 		/** @var $config \OCP\IConfig */
 		$configManager = $container->query('OCP\IConfig');
+
 		self::$config['polling'] = $configManager->getSystemValue('ojsxc.polling',
 			['sleep_time' => 1, 'max_cycles' => 10]);
+
+		self::$config['polling']['timeout'] = self::$config['polling']['sleep_time'] * self::$config['polling']['max_cycles'] + 5;
+
 		self::$config['use_memcache'] = $configManager->getSystemValue('ojsxc.use_memcache',
 			['locking' => false]);
+
 
 		$container->registerService('HttpBindController', function($c){
 			return new HttpBindController(
@@ -38,9 +46,13 @@ class Application extends App {
 				$c->query('MessageHandler'),
 				$c->query('Host'),
 				$this->getLock(),
+				$c->query('OCP\ILogger'),
+				$c->query('PresenceHandler'),
+				$c->query('PresenceMapper'),
 				file_get_contents("php://input"),
 				self::$config['polling']['sleep_time'],
-				self::$config['polling']['max_cycles']
+				self::$config['polling']['max_cycles'],
+				$c->query('NewContentContainer')
 			);
 		});
 
@@ -61,6 +73,18 @@ class Application extends App {
 			);
 		});
 
+		$container->registerService('PresenceMapper', function($c) {
+			return new PresenceMapper(
+				$c->query('ServerContainer')->getDb(),
+				$c->query('Host'),
+				$c->query('UserId'),
+				$c->query('MessageMapper'),
+				$c->query('NewContentContainer'),
+				self::$config['polling']['timeout']
+			);
+		});
+
+
 		/**
 		 * XMPP Stanza Handlers
 		 */
@@ -69,6 +93,15 @@ class Application extends App {
 				$c->query('UserId'),
 				$c->query('Host'),
 				$c->query('OCP\IUserManager')
+			);
+		});
+
+		$container->registerService('PresenceHandler', function($c) {
+			return new Presence(
+				$c->query('UserId'),
+				$c->query('Host'),
+				$c->query('PresenceMapper'),
+				$c->query('MessageMapper')
 			);
 		});
 
@@ -90,6 +123,10 @@ class Application extends App {
 			} else {
 				return $this->getServerHost();
 			}
+		});
+
+		$container->registerService('NewContentContainer', function($c){
+			return new NewContentContainer();
 		});
 
 	}
