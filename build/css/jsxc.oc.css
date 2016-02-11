@@ -1,5 +1,5 @@
 /*!
- * ojsxc v3.0.0-beta1b - 2016-01-29
+ * ojsxc v3.0.0-beta2 - 2016-02-11
  * 
  * Copyright (c) 2016 Klaus Herberth <klaus@jsxc.org> <br>
  * Released under the MIT license
@@ -7,7 +7,7 @@
  * Please see http://www.jsxc.org/
  * 
  * @author Klaus Herberth <klaus@jsxc.org>
- * @version 3.0.0-beta1b
+ * @version 3.0.0-beta2
  * @license MIT
  */
 
@@ -3019,10 +3019,6 @@ fieldset[disabled] #jsxc_webrtc .checkbox label {
     background-size: contain;
     background-repeat: no-repeat;
     background-image: url('../js/jsxc/img/bookmark_red.svg'); }
-  .jsxc_rosteritem.jsxc_bookmarked .jsxc_bookmarkOptions {
-    text-indent: 9999px;
-    background-image: url('../js/jsxc/img/gear_white.svg');
-    background-size: 15px 15px; }
 
 .jsxc_caption {
   padding-right: 30px;
@@ -3034,13 +3030,13 @@ fieldset[disabled] #jsxc_webrtc .checkbox label {
     cursor: pointer; }
   .jsxc_caption .jsxc_name {
     height: 100%;
-    line-height: 35px; }
+    line-height: 40px; }
     .jsxc_min .jsxc_caption .jsxc_name {
       height: 50%;
-      line-height: 17.5px; }
+      line-height: 20px; }
     .jsxc_rosteritem .jsxc_caption .jsxc_name {
       height: 50%;
-      line-height: 17.5px; }
+      line-height: 20px; }
   .jsxc_caption .jsxc_lastmsg {
     font-size: 12px;
     display: none;
@@ -3376,7 +3372,32 @@ fieldset[disabled] #jsxc_webrtc .checkbox label {
         margin: 30px 10px;
         padding: 5px;
         border-radius: 3px;
-        text-align: center; }
+        text-align: center;
+        position: relative; }
+        .jsxc_window .jsxc_fade .jsxc_overlay > div .jsxc_close {
+          position: absolute;
+          top: 0;
+          right: 0;
+          height: 44px;
+          width: 44px; }
+          .jsxc_window .jsxc_fade .jsxc_overlay > div .jsxc_close:after {
+            content: '×';
+            position: absolute;
+            top: 4px;
+            right: 4px;
+            font-size: 20px;
+            font-family: Arial, sans-serif;
+            cursor: pointer;
+            color: #000;
+            opacity: 0.4; }
+          .jsxc_window .jsxc_fade .jsxc_overlay > div .jsxc_close:hover:after {
+            opacity: 1; }
+          @media (min-width: 768px) {
+            .jsxc_window .jsxc_fade .jsxc_overlay > div .jsxc_close {
+              width: 30px;
+              height: 30px; } }
+        .jsxc_window .jsxc_fade .jsxc_overlay > div .jsxc_body {
+          margin-top: 20px; }
         .jsxc_window .jsxc_fade .jsxc_overlay > div p {
           margin-bottom: 10px; }
         .jsxc_window .jsxc_fade .jsxc_overlay > div li {
@@ -3464,7 +3485,6 @@ fieldset[disabled] #jsxc_webrtc .checkbox label {
 .jsxc_chatmessage {
   margin: 3px;
   padding: 4px;
-  padding-right: 10px;
   word-wrap: break-word;
   background-color: #fff;
   position: relative;
@@ -3516,6 +3536,19 @@ fieldset[disabled] #jsxc_webrtc .checkbox label {
   text-overflow: ellipsis;
   clear: both; }
 
+.jsxc_encrypted.jsxc_received.jsxc_out .jsxc_timestamp {
+  margin-right: 1px; }
+
+.jsxc_encrypted .jsxc_timestamp:after {
+  content: " ";
+  display: inline-block;
+  width: 10px;
+  height: 8px;
+  margin-left: 2px;
+  background-image: url('../js/jsxc/img/padlock_close_grey.svg');
+  background-size: contain;
+  background-repeat: no-repeat; }
+
 .jsxc_in {
   float: left;
   position: relative;
@@ -3542,6 +3575,7 @@ fieldset[disabled] #jsxc_webrtc .checkbox label {
   position: relative;
   max-width: 76%;
   margin-right: 10px;
+  padding-right: 10px;
   border-radius: 3px;
   background-color: #e6ffd1; }
   .jsxc_out:after {
@@ -3597,6 +3631,11 @@ div.jsxc_transfer {
   cursor: pointer; }
   div.jsxc_transfer:hover {
     opacity: 1.0; }
+  div.jsxc_transfer.jsxc_disabled {
+    background-image: url('../js/jsxc/img/padlock_open_disabled_black.svg');
+    cursor: default; }
+    div.jsxc_transfer.jsxc_disabled:hover {
+      opacity: 0.3; }
   div.jsxc_transfer.jsxc_fin {
     opacity: 1.0;
     background-image: url('../js/jsxc/img/padlock_close_grey.svg'); }
@@ -3606,43 +3645,35 @@ div.jsxc_transfer {
     div.jsxc_transfer.jsxc_enc.jsxc_trust {
       background-image: url('../js/jsxc/img/padlock_close_green.svg'); }
 
-.jsxc_windowItem.jsxc_groupchat .jsxc_bar .jsxc_avatar, li[data-type="groupchat"] .jsxc_avatar {
+.jsxc_windowItem.jsxc_groupchat.jsxc_normal .jsxc_bar .jsxc_avatar, li[data-type="groupchat"] .jsxc_avatar {
   text-indent: 999px;
   background-image: url('../js/jsxc/img/group_white.svg');
   background-size: 70% 70% !important;
   background-repeat: no-repeat; }
 
-.jsxc_windowItem.jsxc_groupchat .jsxc_fade {
+.jsxc_windowItem.jsxc_groupchat.jsxc_normal .jsxc_fade {
   padding-top: 44px; }
-  .jsxc_min .jsxc_windowItem.jsxc_groupchat .jsxc_fade {
-    padding-top: 0px; }
 
-.jsxc_windowItem.jsxc_groupchat .jsxc_video {
+.jsxc_windowItem.jsxc_groupchat.jsxc_normal .jsxc_fingerprints, .jsxc_windowItem.jsxc_groupchat.jsxc_normal .jsxc_verification, .jsxc_windowItem.jsxc_groupchat.jsxc_normal .jsxc_transfer, .jsxc_windowItem.jsxc_groupchat.jsxc_normal .jsxc_video, .jsxc_windowItem.jsxc_groupchat.jsxc_normal .jsxc_sendFile {
   display: none; }
 
-.jsxc_windowItem.jsxc_groupchat .jsxc_transfer {
-  display: none; }
-
-.jsxc_windowItem.jsxc_groupchat .jsxc_fingerprints, .jsxc_windowItem.jsxc_groupchat .jsxc_verification, .jsxc_windowItem.jsxc_groupchat .jsxc_transfer {
-  display: none; }
-
-.jsxc_windowItem.jsxc_groupchat .jsxc_members {
-  background-image: url('../js/jsxc/img/group_grey.svg');
+.jsxc_windowItem.jsxc_groupchat.jsxc_normal .jsxc_members {
+  background-image: url('../js/jsxc/img/group_white.svg');
   background-size: 15px 15px;
   background-repeat: no-repeat;
   background-position: center; }
-  .jsxc_windowItem.jsxc_groupchat .jsxc_members:hover {
-    background-image: url('../js/jsxc/img/group_white.svg'); }
+  .jsxc_windowItem.jsxc_groupchat.jsxc_normal .jsxc_members:hover {
+    opacity: 1.0; }
 
-.jsxc_windowItem.jsxc_groupchat .jsxc_chatmessage.jsxc_in {
+.jsxc_windowItem.jsxc_groupchat.jsxc_normal .jsxc_chatmessage.jsxc_in {
   margin-left: 50px; }
-  .jsxc_windowItem.jsxc_groupchat .jsxc_chatmessage.jsxc_in .jsxc_avatar {
+  .jsxc_windowItem.jsxc_groupchat.jsxc_normal .jsxc_chatmessage.jsxc_in .jsxc_avatar {
     display: block;
     position: absolute;
     bottom: 0px;
     left: -50px;
     background-color: #777; }
-    .jsxc_windowItem.jsxc_groupchat .jsxc_chatmessage.jsxc_in .jsxc_avatar:before {
+    .jsxc_windowItem.jsxc_groupchat.jsxc_normal .jsxc_chatmessage.jsxc_in .jsxc_avatar:before {
       display: none; }
 
 .jsxc_windowItem .jsxc_memberlist {
@@ -3682,8 +3713,8 @@ div.jsxc_transfer {
     .jsxc_windowItem .jsxc_memberlist.jsxc_expand ul > li {
       display: block;
       width: 100%;
-      height: 27px;
-      line-height: 27px; }
+      height: 40px;
+      line-height: 40px; }
       .jsxc_windowItem .jsxc_memberlist.jsxc_expand ul > li .jsxc_name {
         display: block;
         cursor: default; }
@@ -3788,7 +3819,7 @@ li[data-type="groupchat"] .jsxc_video {
     background-size: 100%;
     margin: 0 3px 0 0;
     background-image: url('../js/jsxc/img/loading.gif'); }
-  #jsxc_dialog .jsxc_libraries {
+  #jsxc_dialog .jsxc_libraries, #jsxc_dialog .jsxc_credits {
     max-width: 300px; }
 
 .jsxc_avatar {
@@ -4040,6 +4071,9 @@ img.jsxc_vCard {
 
 .jsxc_groupcontacticon {
   background-image: url('../js/jsxc/img/groupcontact_black.svg'); }
+
+.jsxc_bookmarkicon {
+  background-image: url('../js/jsxc/img/bookmark_black.svg'); }
 
 .jsxc_more {
   float: right;
@@ -4393,6 +4427,8 @@ div.jsxc_video {
   display: inline-block;
   width: 100%; }
   #ojsxc input[type='checkbox'] {
+    width: auto; }
+  #ojsxc input[type='radio'] {
     width: auto; }
   @media (min-width: 768px) {
     #ojsxc input {

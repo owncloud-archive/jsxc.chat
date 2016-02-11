@@ -2,12 +2,16 @@
 OCP\User::checkLoggedIn ();
 OCP\JSON::callCheck ();
 
-$user = OCP\User::getUser ();
-$options = OCP\Config::getUserValue($user, 'ojsxc', 'options');
+$config = \OC::$server->getConfig();
+$uid = \OC::$server->getUserSession()->getUser()->getUID();
+
+$options = $config->getUserValue($uid, 'ojsxc', 'options');
 $options = json_decode($options, true);
 
 foreach($_POST as $key => $val) {
 	$options[$key] = $val;
 }
 
-echo OCP\Config::setUserValue($user, 'ojsxc', 'options', json_encode($options));
+$config->setUserValue($uid, 'ojsxc', 'options', json_encode($options));
+
+echo 'true';

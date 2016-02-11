@@ -4,14 +4,13 @@ namespace OCA\OJSXC\Db;
 
 use Sabre\Xml\Reader;
 use Sabre\Xml\Writer;
-use Sabre\Xml\XmlDeserializable;
 use Sabre\Xml\XmlSerializable;
 
 /**
  * Class Message
  *
  * @package OCA\OJSXC\Db
- * @method void setType(string $type)
+ * @method void setType($type)
  * @method void setValue(array $value)
  * @method string getType()
  * @method array getValue()

@@ -1,5 +1,5 @@
 /*!
- * ojsxc v3.0.0-beta1b - 2016-01-29
+ * ojsxc v3.0.0-beta2 - 2016-02-11
  * 
  * Copyright (c) 2016 Klaus Herberth <klaus@jsxc.org> <br>
  * Released under the MIT license
@@ -7,7 +7,7 @@
  * Please see http://www.jsxc.org/
  * 
  * @author Klaus Herberth <klaus@jsxc.org>
- * @version 3.0.0-beta1b
+ * @version 3.0.0-beta2
  * @license MIT
  */
 
@@ -25,11 +25,9 @@
 function onRosterToggle(event, state, duration) {
    "use strict";
    var wrapper = $('#content-wrapper');
-   var control = $('#controls');
 
    var roster_width = (state === 'shown') ? $('#jsxc_roster').outerWidth() : 0;
    var toggle_width = $('#jsxc_toggleRoster').width();
-   var navigation_width = $('#navigation').width();
    
    if ($(window).width() < 768) {
       // Do not resize elements on extra small devices (bootstrap definition)
@@ -39,13 +37,6 @@ function onRosterToggle(event, state, duration) {
    wrapper.animate({
       paddingRight: (roster_width + toggle_width) + 'px'
    }, duration);
-
-   // only oc < 8
-   if (!oc_config || !oc_config.version || !oc_config.version.match(/^([8-9]|[0-9]{2,})\./)) {
-      control.animate({
-         paddingRight: (roster_width + navigation_width + toggle_width) + 'px'
-      }, duration);
-   }
 
    // update webodf
    if (typeof dijit !== 'undefined') {
@@ -97,11 +88,6 @@ function onRosterReady() {
    getValues();
 
    $('#content-wrapper').css('paddingRight', roster_width + roster_right + toggle_width);
-
-   // only oc < 8
-   if (!oc_config || !oc_config.version || !oc_config.version.match(/^([8-9]|[0-9]{2,})\./)) {
-      $('#controls').css('paddingRight', roster_width + navigation_width + roster_right + toggle_width);
-   }
 
    // update webodf
    var contentbg = $('#content-wrapper').css('background-color');
@@ -184,7 +170,7 @@ $(function() {
       rosterAppend: 'body',
       root: oc_appswebroots.ojsxc + '/js/jsxc',
       RTCPeerConfig: {
-         url: OC.filePath('ojsxc', 'ajax', 'getturncredentials.php')
+         url: OC.filePath('ojsxc', 'ajax', 'getTurnCredentials.php')
       },
       displayRosterMinimized: function() {
          return OC.currentUser != null;
@@ -214,20 +200,11 @@ $(function() {
             if (typeof cache[key] === 'undefined' || cache[key] === null) {
                var url;
 
-               if (OC.generateUrl) {
-                  // oc >= 7
-                  url = OC.generateUrl('/avatar/' + encodeURIComponent(user) + '/' + size + '?requesttoken={requesttoken}', {
-                     user: user,
-                     size: size,
-                     requesttoken: oc_requesttoken
-                  });
-               } else {
-                  // oc < 7
-                  url = OC.Router.generate('core_avatar_get', {
-                     user: user,
-                     size: size
-                  }) + '?requesttoken=' + oc_requesttoken;
-               }
+               url = OC.generateUrl('/avatar/' + encodeURIComponent(user) + '/' + size + '?requesttoken={requesttoken}', {
+                  user: user,
+                  size: size,
+                  requesttoken: oc_requesttoken
+               });
 
                $.get(url, function(result) {
 
@@ -245,7 +222,7 @@ $(function() {
       loadSettings: function(username, password, cb) {
          $.ajax({
             type: 'POST',
-            url: OC.filePath('ojsxc', 'ajax', 'getsettings.php'),
+            url: OC.filePath('ojsxc', 'ajax', 'getSettings.php'),
             data: {
                username: username,
                password: password
@@ -276,28 +253,24 @@ $(function() {
                }
             },
             error: function() {
-               jsxc.error('XHR error on getsettings.php');
+               jsxc.error('XHR error on getSettings.php');
 
                cb(false);
             }
          });
       },
-      saveSettinsPermanent: function(data) {
-         var ret = 1;
-
+      saveSettinsPermanent: function(data, cb) {
          $.ajax({
-            async: false,
             type: 'POST',
             url: OC.filePath('ojsxc', 'ajax', 'setUserSettings.php'),
             data: data,
             success: function(data) {
-               if (data.trim() === 'true') {
-                  ret = 0;
-               }
+               cb(data.trim() === 'true');
+            },
+            error: function() {
+               cb(false);
             }
          });
-
-         return ret;
       },
       getUsers: function(search, cb) {
          $.ajax({

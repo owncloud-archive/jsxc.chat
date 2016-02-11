@@ -1,5 +1,5 @@
 /*!
- * ojsxc v3.0.0-beta1b - 2016-01-29
+ * ojsxc v3.0.0-beta2 - 2016-02-11
  * 
  * Copyright (c) 2016 Klaus Herberth <klaus@jsxc.org> <br>
  * Released under the MIT license
@@ -7,7 +7,7 @@
  * Please see http://www.jsxc.org/
  * 
  * @author Klaus Herberth <klaus@jsxc.org>
- * @version 3.0.0-beta1b
+ * @version 3.0.0-beta2
  * @license MIT
  */
 
@@ -90,8 +90,11 @@ $(document).ready(function() {
 
          if(xhr.status === 0) {
             // cross-side
-            fail('Cross domain requests are not possible with the current same-origin-policy (SOP). ' + 
-               'You have to use Apache ProxyRequest or Nginx proxy_pass.');
+            fail('Cross domain request was not possible. Either your BOSH server does not send any ' +
+               'Access-Control-Allow-Origin header or the content-security-policy (CSP) blocks your request. ' +
+               'Starting from Owncloud 9.0 your CSP will be updated in any app which uses the appframework (e.g. files) ' +
+               'after you save these settings and reload.' +
+               'The savest way is still to use Apache ProxyRequest or Nginx proxy_pass.');
          } else if (xhr.status === 404) {
             // not found
             fail('Your server responded with "404 Not Found". Please check if your BOSH server is running and reachable via ' + fullurl + '.');
@@ -151,7 +154,7 @@ $(document).ready(function() {
       var status = $('#ojsxc .msg div');
       status.html('<img src="' + jsxc.options.root + '/img/loading.gif" alt="wait" width="16px" height="16px" /> Saving...');
 
-      $.post(OC.filePath('ojsxc', 'ajax', 'setsettings.php'), post, function(data) {
+      $.post(OC.filePath('ojsxc', 'ajax', 'setAdminSettings.php'), post, function(data) {
          if (data) {
             status.addClass('jsxc_success').text('Settings saved. Please log out and in again.');
          } else {
