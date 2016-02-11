@@ -125,8 +125,7 @@ module.exports = function(grunt) {
       sass: {
          dist: {
              files: {
-                'css/jsxc.oc.css': 'scss/jsxc.oc.scss',
-                'css/jsxc.oc.lte6.css': 'scss/jsxc.oc.lte6.scss'
+                'css/jsxc.oc.css': 'scss/jsxc.oc.scss'
              }
          }
        },

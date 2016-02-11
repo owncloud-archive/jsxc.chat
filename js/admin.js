@@ -138,7 +138,7 @@ $(document).ready(function() {
       var status = $('#ojsxc .msg div');
       status.html('<img src="' + jsxc.options.root + '/img/loading.gif" alt="wait" width="16px" height="16px" /> Saving...');
 
-      $.post(OC.filePath('ojsxc', 'ajax', 'setsettings.php'), post, function(data) {
+      $.post(OC.filePath('ojsxc', 'ajax', 'setAdminSettings.php'), post, function(data) {
          if (data) {
             status.addClass('jsxc_success').text('Settings saved. Please log out and in again.');
          } else {
