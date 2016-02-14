@@ -3,10 +3,11 @@
 namespace OCA\OJSXC;
 
 use OCA\OJSXC\Db\Message;
-use OCA\OJSXC\Db\Stanza;
-use PHPUnit_Framework_TestCase;
+use OCA\OJSXC\Db\Pollable;
+use OCA\OJSXC\Db\Presence;
+use OCA\OJSXC\Utility\TestCase;
 
-class NewContentContainerTest extends PHPUnit_Framework_TestCase {
+class NewContentContainerTest extends TestCase {
 
 	/**
 	 * @var NewContentContainer $newContentContainer
@@ -15,11 +16,17 @@ class NewContentContainerTest extends PHPUnit_Framework_TestCase {
 
 	public function setUp() {
 		$this->newContentContainer = new NewContentContainer();
+		$this->setValueOfPrivateProperty($this->newContentContainer, 'stanzas', []);
+	}
+
+	public function tearDown() {
+		$this->setValueOfPrivateProperty($this->newContentContainer, 'stanzas', []);
 	}
 
 	public function testProvider() {
-		$stanza1 = new Stanza();
+		$stanza1 = new Presence();
 		$stanza1->setFrom('test@own.dev');
+		$stanza1->setPresence('away');
 		$stanza1->setTo('adsffdsst@own.dev');
 
 		$stanza2 = new Message();

@@ -40,6 +40,14 @@ class PresenceMapperTest extends MapperTestUtility {
 		$this->setValueOfPrivateProperty($this->newContentContainer, 'stanzas', []);
 	}
 
+	public function tearDown() {
+		parent::tearDown();
+		$this->setValueOfPrivateProperty($this->mapper, 'updatedPresense', false);
+		$this->setValueOfPrivateProperty($this->mapper, 'fetchedConnectedUsers', false);
+		$this->setValueOfPrivateProperty($this->mapper, 'connectedUsers', []);
+		$this->setValueOfPrivateProperty($this->newContentContainer, 'stanzas', []);
+	}
+
 	/**
 	 * @return array
 	 */
