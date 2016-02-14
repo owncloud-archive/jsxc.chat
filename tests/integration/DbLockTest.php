@@ -41,6 +41,12 @@ class DbLockTest extends TestCase {
 		$this->con->executeQuery("DELETE FROM `*PREFIX*preferences` WHERE `appid`='ojsxc' AND `configkey`='longpolling'");
 	}
 
+	public function tearDown() {
+		parent::tearDown();
+		$this->con = $this->container->getServer()->getDatabaseConnection();
+		$this->con->executeQuery("DELETE FROM `*PREFIX*preferences` WHERE `appid`='ojsxc' AND `configkey`='longpolling'");
+	}
+
 	/**
 	 * Tests the setLock and stillLocked function by setting up and lock
 	 * and then setting a new lock.
