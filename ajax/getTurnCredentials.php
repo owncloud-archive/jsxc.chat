@@ -13,11 +13,13 @@ $ttl = $config->getAppValue('ojsxc', 'iceTtl',  3600 * 24); // one day (accordin
 $url = $config->getAppValue('ojsxc', 'iceUrl');
 $url = $url ?  "turn:$url" : $url;
 
-$username = $secret ? (time() + $ttl).':'.$user : $user;
-$username = $config->getAppValue('ojsxc', 'iceUsername', $username);
+$usernameTRA = $secret ? (time() + $ttl).':'.$user : $user;
+$username = $config->getAppValue('ojsxc', 'iceUsername', '');
+$username = (!empty($username)) ? $username : $usernameTRA;
 
-$credential = ($secret) ? base64_encode(hash_hmac('sha1', $username, $secret, true)) : '';
-$credential = $config->getAppValue('ojsxc', 'iceCredential', $credential);
+$credentialTRA = ($secret) ? base64_encode(hash_hmac('sha1', $username, $secret, true)) : '';
+$credential = $config->getAppValue('ojsxc', 'iceCredential', '');
+$credential = (!empty($credential)) ? $credential : $credentialTRA;
 
 $data = array(
    'ttl' => $ttl,
