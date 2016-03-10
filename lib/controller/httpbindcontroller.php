@@ -4,9 +4,8 @@ namespace OCA\OJSXC\Controller;
 
 use OCA\OJSXC\Db\Presence;
 use OCA\OJSXC\Db\PresenceMapper;
+use OCA\OJSXC\Db\Stanza;
 use OCA\OJSXC\Db\StanzaMapper;
-use OCA\OJSXC\Db\MessageMapper;
-use OCA\OJSXC\Exceptions\NewContentException;
 use OCA\OJSXC\Http\XMPPResponse;
 use OCA\OJSXC\ILock;
 use OCA\OJSXC\NewContentContainer;
@@ -52,17 +51,7 @@ class HttpBindController extends Controller {
 	private $host;
 
 	/**
-	 * @var Session OCP\ISession
-	 */
-	private $session;
-
-	/**
-	 * @var MessageMapper OCA\OJSXC\Db\MessageMapper
-	 */
-	private $messageMapper;
-
-	/**
-	 * @var StanzaMapper OCA\OJSXC\Db\StanzaMapper
+	 * @var StanzaMapper $stanzaMapper
 	 */
 	private $stanzaMapper;
 

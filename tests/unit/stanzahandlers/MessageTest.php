@@ -16,7 +16,7 @@ class MessageTest extends PHPUnit_Framework_TestCase {
 	/**
 	 * @var PHPUnit_Framework_MockObject_MockObject
 	 */
-	private $messageMapper;
+	private $stanzaMapper;
 
 	/**
 	 * @var string userId
@@ -31,8 +31,8 @@ class MessageTest extends PHPUnit_Framework_TestCase {
 	public function setUp() {
 		$this->host = 'localhost';
 		$this->userId = 'john';
-		$this->messageMapper = $this->getMockBuilder('OCA\OJSXC\Db\MessageMapper')->disableOriginalConstructor()->getMock();
-		$this->message = new Message($this->userId, $this->host, $this->messageMapper);
+		$this->stanzaMapper = $this->getMockBuilder('OCA\OJSXC\Db\StanzaMapper')->disableOriginalConstructor()->getMock();
+		$this->message = new Message($this->userId, $this->host, $this->stanzaMapper);
 	}
 
 	public function messageProvider(){
@@ -79,8 +79,8 @@ class MessageTest extends PHPUnit_Framework_TestCase {
 	 * @dataProvider messageProvider
 	 */
 	public function testMessage(array $stanza, $expected) {
-		$this->messageMapper->expects($this->once())
-			->method('insert')
+		$this->stanzaMapper->expects($this->once())
+			->method('insertStanza')
 			->with($expected);
 
 		$this->message->handle($stanza);

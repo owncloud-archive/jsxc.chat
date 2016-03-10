@@ -2,6 +2,7 @@
 
 namespace OCA\OJSXC\Db;
 
+use OCP\AppFramework\Db\Entity;
 use Sabre\Xml\Reader;
 use Sabre\Xml\Writer;
 use Sabre\Xml\XmlDeserializable;
@@ -20,7 +21,7 @@ use Sabre\Xml\XmlSerializable;
  * @method string getQid()
  * @method array getItems()
  */
-class IQRoster extends Stanza implements XmlSerializable{
+class IQRoster extends Entity implements XmlSerializable{
 
 	/**
 	 * @var string $type
@@ -36,6 +37,10 @@ class IQRoster extends Stanza implements XmlSerializable{
 	 * @var array $items
 	 */
 	public $items;
+
+	public $to;
+
+	public $from;
 
 	public function xmlSerialize(Writer $writer) {
 		$writer->write([

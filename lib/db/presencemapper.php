@@ -35,9 +35,9 @@ class PresenceMapper extends Mapper {
 	private static $fetchedConnectedUsers = false;
 
 	/**
-	 * @var MessageMapper $messageMapper
+	 * @var StanzaMapper $stanzaMapper
 	 */
-	private $messageMapper;
+	private $stanzaMapper;
 
 	/**
 	 * @var NewContentContainer $newContentContainer
@@ -59,11 +59,11 @@ class PresenceMapper extends Mapper {
 	 * @param NewContentContainer $newContentContainer
 	 * @param int $timeout
 	 */
-	public function __construct(IDb $db, $host, $userId, MessageMapper $messageMapper, NewContentContainer $newContentContainer, $timeout) {
+	public function __construct(IDb $db, $host, $userId, StanzaMapper $stanzaMapper, NewContentContainer $newContentContainer, $timeout) {
 		parent::__construct($db, 'ojsxc_presence');
 		$this->host = $host;
 		$this->userId = $userId;
-		$this->messageMapper = $messageMapper;
+		$this->stanzaMapper = $stanzaMapper;
 		$this->newContentContainer = $newContentContainer;
 		$this->timeout = $timeout;
 
@@ -180,7 +180,7 @@ class PresenceMapper extends Mapper {
 				$presenceToSend->setFrom($inactiveUser);
 				foreach ($onlineUsers as $user) {
 					$presenceToSend->setTo($user);
-					$this->messageMapper->insert($presenceToSend);
+					$this->stanzaMapper->insertStanza($presenceToSend);
 				}
 				$presenceToSend->setTo($this->userId . '@' . $this->host);
 				$presenceToSend->setFrom($inactiveUser . '@' . $this->host);

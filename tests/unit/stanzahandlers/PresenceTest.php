@@ -22,7 +22,7 @@ class PresenceTest extends PHPUnit_Framework_TestCase {
 	/**
 	 * @var PHPUnit_Framework_MockObject_MockObject $presenceMapper
 	 */
-	private $messageMapper;
+	private $stanzaMapper;
 
 	/**
 	 * @var Presence
@@ -33,10 +33,10 @@ class PresenceTest extends PHPUnit_Framework_TestCase {
 		$this->host = 'localhost';
 		$this->userId = 'john';
 		$this->presenceMapper = $this->getMockBuilder('OCA\OJSXC\Db\PresenceMapper')->disableOriginalConstructor()->getMock();
-		$this->messageMapper = $this->getMockBuilder('OCA\OJSXC\Db\MessageMapper')->disableOriginalConstructor()->getMock();
+		$this->stanzaMapper = $this->getMockBuilder('OCA\OJSXC\Db\StanzaMapper')->disableOriginalConstructor()->getMock();
 
 		$this->presence = new Presence($this->userId, $this->host
-		, $this->presenceMapper, $this->messageMapper);
+		, $this->presenceMapper, $this->stanzaMapper);
 	}
 
 	public function handleProvider() {
@@ -79,8 +79,8 @@ class PresenceTest extends PHPUnit_Framework_TestCase {
 			->method('getConnectedUsers')
 			->will($this->returnValue($connectedUsers));
 
-		$this->messageMapper->expects($this->exactly(2))
-			->method('insert')
+		$this->stanzaMapper->expects($this->exactly(2))
+			->method('insertStanza')
 			->withConsecutive(
 				$this->equalTo($insert[0]),
 				$this->equalTo($insert[1])
@@ -138,8 +138,8 @@ class PresenceTest extends PHPUnit_Framework_TestCase {
 			->method('getConnectedUsers')
 			->will($this->returnValue($connectedUsers));
 
-		$this->messageMapper->expects($this->exactly(2))
-			->method('insert')
+		$this->stanzaMapper->expects($this->exactly(2))
+			->method('insertStanza')
 			->withConsecutive(
 				$this->equalTo($insert[0]),
 				$this->equalTo($insert[1])

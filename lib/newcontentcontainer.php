@@ -2,6 +2,7 @@
 
 namespace OCA\OJSXC;
 
+use OCA\OJSXC\Db\IPollable;
 use OCA\OJSXC\Db\Stanza;
 
 /**
@@ -18,7 +19,7 @@ class NewContentContainer {
 	 */
 	private static $stanzas;
 
-	public function addStanza(Stanza $stanza) {
+	public function addStanza(IPollable $stanza) {
 		self::$stanzas[] = $stanza;
 	}
 

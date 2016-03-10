@@ -5,7 +5,6 @@ namespace OCA\OJSXC\Db;
 use Sabre\Xml\Reader;
 use Sabre\Xml\Writer;
 use Sabre\Xml\XmlSerializable;
-
 /**
  * Class Message
  *
@@ -15,7 +14,7 @@ use Sabre\Xml\XmlSerializable;
  * @method string getType()
  * @method array getValue()
  */
-class Message extends Stanza implements XmlSerializable{
+class Message extends Pollable implements XmlSerializable, IPollable{
 
 	/**
 	 * @var string $type

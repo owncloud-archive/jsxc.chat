@@ -2,7 +2,7 @@
 
 namespace OCA\OJSXC\StanzaHandlers;
 
-use OCA\OJSXC\Db\MessageMapper;
+use OCA\OJSXC\Db\StanzaMapper;
 use Sabre\Xml\Reader;
 use Sabre\Xml\Writer;
 use OCA\OJSXC\Db\Message as MessageEntity;
@@ -15,9 +15,9 @@ use OCA\OJSXC\Db\Message as MessageEntity;
 class Message extends StanzaHandler {
 
 	/**
-	 * @var MessageMapper $messageMapper
+	 * @var StanzaMapper $stanzaMapper
 	 */
-	private $messageMapper;
+	private $stanzaMapper;
 
 	/**
 	 * @var string $type
@@ -39,11 +39,11 @@ class Message extends StanzaHandler {
 	 *
 	 * @param string $userId
 	 * @param string $host
-	 * @param MessageMapper $messageMapper
+	 * @param StanzaMapper $stanzaMapper
 	 */
-	public function __construct($userId, $host, MessageMapper $messageMapper) {
+	public function __construct($userId, $host, StanzaMapper $stanzaMapper) {
 		parent::__construct($userId, $host);
-		$this->messageMapper = $messageMapper;
+		$this->stanzaMapper = $stanzaMapper;
 	}
 
 	/**
@@ -73,7 +73,7 @@ class Message extends StanzaHandler {
 		$message->setFrom($this->from);
 		$message->setValue($this->values);
 		$message->setType($this->type);
-		$this->messageMapper->insert($message);
+		$this->stanzaMapper->insertStanza($message);
 		$this->values = [];
 	}
 

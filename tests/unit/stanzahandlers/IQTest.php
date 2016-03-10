@@ -156,7 +156,6 @@ class IQTest extends PHPUnit_Framework_TestCase {
 			$this->assertEquals($expected->getQid(), $result->getQid());
 			$this->assertEquals($expected->getTo(), $result->getTo());
 			$this->assertEquals($expected->getType(), $result->getType());
-			$this->assertEquals($expected->getStanza(), $result->getStanza());
 		} else {
 			$this->assertEquals($expected, $result);
 		}

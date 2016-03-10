@@ -3,7 +3,6 @@
 namespace OCA\OJSXC\AppInfo;
 
 use OCA\OJSXC\Controller\HttpBindController;
-use OCA\OJSXC\Db\MessageMapper;
 use OCA\OJSXC\Db\PresenceMapper;
 use OCA\OJSXC\Db\StanzaMapper;
 use OCA\OJSXC\NewContentContainer;
@@ -59,13 +58,6 @@ class Application extends App {
 		/**
 		 * Database Layer
 		 */
-		$container->registerService('MessageMapper', function($c) {
-			return new MessageMapper(
-				$c->query('ServerContainer')->getDb(),
-				$c->query('Host')
-			);
-		});
-
 		$container->registerService('StanzaMapper', function($c) {
 			return new StanzaMapper(
 				$c->query('ServerContainer')->getDb(),
@@ -78,7 +70,7 @@ class Application extends App {
 				$c->query('ServerContainer')->getDb(),
 				$c->query('Host'),
 				$c->query('UserId'),
-				$c->query('MessageMapper'),
+				$c->query('StanzaMapper'),
 				$c->query('NewContentContainer'),
 				self::$config['polling']['timeout']
 			);
@@ -101,7 +93,7 @@ class Application extends App {
 				$c->query('UserId'),
 				$c->query('Host'),
 				$c->query('PresenceMapper'),
-				$c->query('MessageMapper')
+				$c->query('StanzaMapper')
 			);
 		});
 
@@ -109,7 +101,7 @@ class Application extends App {
 			return new Message(
 				$c->query('UserId'),
 				$c->query('Host'),
-				$c->query('MessageMapper')
+				$c->query('StanzaMapper')
 			);
 		});
 

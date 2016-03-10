@@ -2,8 +2,8 @@
 
 namespace OCA\OJSXC\StanzaHandlers;
 
-use OCA\OJSXC\Db\MessageMapper;
 use OCA\OJSXC\Db\PresenceMapper;
+use OCA\OJSXC\Db\StanzaMapper;
 use Sabre\Xml\Reader;
 use Sabre\Xml\Writer;
 use OCA\OJSXC\Db\Presence as PresenceEntity;
@@ -21,9 +21,9 @@ class Presence extends StanzaHandler {
 	private $presenceMapper;
 
 	/**
-	 * @var MessageMapper $messageMapper
+	 * @var StanzaMapper $stanzaMapper
 	 */
-	private $messageMapper;
+	private $stanzaMapper;
 
 	/**
 	 * Presence constructor.
@@ -31,12 +31,12 @@ class Presence extends StanzaHandler {
 	 * @param $userId
 	 * @param string $host
 	 * @param PresenceMapper $presenceMapper
-	 * @param MessageMapper $messageMapper
+	 * @param StanzaMapper $stanzaMapper
 	 */
-	public function __construct($userId, $host, PresenceMapper $presenceMapper, MessageMapper $messageMapper) {
+	public function __construct($userId, $host, PresenceMapper $presenceMapper, StanzaMapper $stanzaMapper) {
 		parent::__construct($userId, $host);
 		$this->presenceMapper = $presenceMapper;
-		$this->messageMapper = $messageMapper;
+		$this->stanzaMapper = $stanzaMapper;
 	}
 
 	/**
@@ -61,7 +61,7 @@ class Presence extends StanzaHandler {
 		$presenceToSend->setFrom($this->userId);
 		foreach ($connectedUsers as $user) {
 			$presenceToSend->setTo($user);
-			$this->messageMapper->insert($presenceToSend);
+			$this->stanzaMapper->insertStanza($presenceToSend);
 		}
 
 		if ($presence->getPresence() !== 'unavailable') {
