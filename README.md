@@ -1,6 +1,6 @@
 __Bugtracker and issues:__ https://github.com/jsxc/jsxc/issues<br />
 
-# Owncloud JavaScript Xmpp Client
+# ownCloud JavaScript Xmpp Client
 
 [![Build Status](https://travis-ci.org/owncloud/jsxc.chat.svg?branch=master)](https://travis-ci.org/owncloud/jsxc.chat)
 
