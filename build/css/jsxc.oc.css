@@ -1,5 +1,5 @@
 /*!
- * ojsxc v3.0.0-beta2 - 2016-02-11
+ * ojsxc v3.0.0 - 2016-03-11
  * 
  * Copyright (c) 2016 Klaus Herberth <klaus@jsxc.org> <br>
  * Released under the MIT license
@@ -7,7 +7,7 @@
  * Please see http://www.jsxc.org/
  * 
  * @author Klaus Herberth <klaus@jsxc.org>
- * @version 3.0.0-beta2
+ * @version 3.0.0
  * @license MIT
  */
 
@@ -561,13 +561,16 @@ img.mfp-img {
 @media all and (max-width: 900px) {
   .mfp-arrow {
     -webkit-transform: scale(0.75);
-    transform: scale(0.75); }
+    -ms-transform: scale(0.75);
+        transform: scale(0.75); }
   .mfp-arrow-left {
     -webkit-transform-origin: 0;
-    transform-origin: 0; }
+    -ms-transform-origin: 0;
+        transform-origin: 0; }
   .mfp-arrow-right {
     -webkit-transform-origin: 100%;
-    transform-origin: 100%; }
+    -ms-transform-origin: 100%;
+        transform-origin: 100%; }
   .mfp-container {
     padding-left: 6px;
     padding-right: 6px; } }
@@ -2657,28 +2660,28 @@ fieldset[disabled] #jsxc_webrtc .checkbox label {
   font-size: 23px; }
 
 /* END: bootstrap */
-@-webkit-keyframes bounce {
-  0% {
+@-webkit-keyframes bounce{
+  0%{
     bottom: 0;
     -webkit-animation-timing-function: ease-in;
             animation-timing-function: ease-in; }
-  12% {
+  12%{
     bottom: 5px;
     -webkit-animation-timing-function: ease-out;
             animation-timing-function: ease-out; }
-  25% {
+  25%{
     bottom: 0;
     -webkit-animation-timing-function: ease-in;
             animation-timing-function: ease-in; }
-  37% {
+  37%{
     bottom: 5px;
     -webkit-animation-timing-function: ease-out;
             animation-timing-function: ease-out; }
-  50% {
+  50%{
     bottom: 0;
     -webkit-animation-timing-function: ease-in;
             animation-timing-function: ease-in; }
-  100% {
+  100%{
     bottom: 0; } }
 @keyframes bounce {
   0% {
@@ -2961,6 +2964,7 @@ fieldset[disabled] #jsxc_webrtc .checkbox label {
             transition: right 0.5s; }
     #jsxc_roster.jsxc_state_hidden #jsxc_toggleRoster:before {
       -webkit-transform: rotate(0deg);
+          -ms-transform: rotate(0deg);
               transform: rotate(0deg); }
   #jsxc_roster.jsxc_state_shown {
     display: block;
@@ -2990,6 +2994,7 @@ fieldset[disabled] #jsxc_webrtc .checkbox label {
     border-width: 6px 4px 6px 0;
     border-color: transparent whitesmoke;
     -webkit-transform: rotate(180deg);
+        -ms-transform: rotate(180deg);
             transform: rotate(180deg); }
 
 .jsxc_rosteritem {
@@ -3427,15 +3432,15 @@ fieldset[disabled] #jsxc_webrtc .checkbox label {
     border-radius: 0;
     box-sizing: border-box;
     border: 0; }
-  .jsxc_window input::-webkit-input-placeholder {
-    color: #000;
-    opacity: 0.3; }
-  .jsxc_window input::-moz-placeholder {
-    color: #000;
-    opacity: 0.3; }
-  .jsxc_window input:-ms-input-placeholder {
-    color: #000;
-    opacity: 0.3; }
+  .jsxc_window input::-webkit-input-placeholder{
+  color: #000;
+  opacity: 0.3; }
+  .jsxc_window input::-moz-placeholder{
+  color: #000;
+  opacity: 0.3; }
+  .jsxc_window input:-ms-input-placeholder{
+  color: #000;
+  opacity: 0.3; }
   .jsxc_window input::placeholder {
     color: #000;
     opacity: 0.3; }
@@ -3747,6 +3752,7 @@ li[data-type="groupchat"] .jsxc_video {
 #jsxc_dialog {
   padding: 20px;
   min-width: 320px;
+  max-width: 100%;
   display: inline-block;
   text-align: left;
   position: relative;
@@ -3969,12 +3975,27 @@ img.jsxc_vCard {
 .jsxc_btn {
   width: auto;
   min-width: 25px;
-  padding: 5px;
-  background-color: rgba(240, 240, 240, 0.9);
-  font-weight: bold;
-  color: #555;
-  border: 1px solid rgba(190, 190, 190, 0.9);
-  cursor: pointer; }
+  display: inline-block;
+  padding: 6px 12px;
+  margin: 0px 2px;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.42857143;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
+  cursor: pointer;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+  background-image: none;
+  border: 1px solid transparent;
+  border-radius: 4px; }
+  .jsxc_btn.jsxc_btn-default {
+    border-color: #ccc;
+    color: #555;
+    background-color: rgba(240, 240, 240, 0.9); }
   .jsxc_btn.jsxc_btn-primary {
     color: #fff;
     background-color: #337ab7;
@@ -4141,9 +4162,7 @@ img.jsxc_vCard {
     .jsxc_videoContainer {
       right: 250px; }
       .jsxc_videoContainer .jsxc_controlbar {
-        opacity: 0;
-        -webkit-transition: 1s opacity;
-                transition: 1s opacity; }
+        opacity: 0; }
       .jsxc_videoContainer:hover .jsxc_controlbar {
         opacity: 1.0; } }
 
@@ -4199,17 +4218,17 @@ div:full-screen {
   div:full-screen.jsxc_localvideo {
     border: 1px solid #fff; }
 
-div:-webkit-full-screen {
+div:-webkit-full-screen{
   width: 100%;
   height: 100%;
   background-color: #000; }
 
-div:-moz-full-screen {
+div:-moz-full-screen{
   width: 100%;
   height: 100%;
   background-color: #000; }
 
-div:-ms-fullscreen {
+div:-ms-fullscreen{
   width: 100%;
   height: 100%;
   background-color: #000; }
@@ -4218,12 +4237,12 @@ div:fullscreen {
   width: 100%;
   height: 100%;
   background-color: #000; }
-  div:-webkit-full-screen.jsxc_localvideo {
-    border: 1px solid #fff; }
-  div:-moz-full-screen.jsxc_localvideo {
-    border: 1px solid #fff; }
-  div:-ms-fullscreen.jsxc_localvideo {
-    border: 1px solid #fff; }
+  div:-webkit-full-screen.jsxc_localvideo{
+  border: 1px solid #fff; }
+  div:-moz-full-screen.jsxc_localvideo{
+  border: 1px solid #fff; }
+  div:-ms-fullscreen.jsxc_localvideo{
+  border: 1px solid #fff; }
   div:fullscreen.jsxc_localvideo {
     border: 1px solid #fff; }
 
@@ -4244,12 +4263,21 @@ div.jsxc_video {
   left: 0;
   right: 0px;
   text-align: center;
-  z-index: 9090; }
+  z-index: 9090;
+  -webkit-transition: 1s opacity;
+          transition: 1s opacity;
+  opacity: 0; }
+  @media (min-width: 768px) {
+    .jsxc_controlbar {
+      bottom: 5%;
+      top: initial; } }
+  .jsxc_controlbar.jsxc_visible {
+    opacity: 1.0; }
   .jsxc_controlbar > div {
     background-color: rgba(0, 0, 0, 0.5);
     height: 44px;
     border-radius: 22px;
-    padding: 5px;
+    padding: 0px 5px;
     display: inline-block; }
   .jsxc_controlbar .jsxc_videoControl {
     height: 44px;
@@ -4296,7 +4324,11 @@ div.jsxc_video {
   right: 0;
   bottom: 0;
   width: 250px;
-  background-color: whitesmoke; }
+  background-color: whitesmoke;
+  display: none; }
+  @media (min-width: 768px) {
+    .jsxc_chatarea {
+      display: block; } }
   .jsxc_chatarea .jsxc_settings {
     display: none !important; }
   .jsxc_chatarea .jsxc_close {
@@ -4343,14 +4375,14 @@ div.jsxc_video {
   -webkit-animation-delay: 0.78s;
           animation-delay: 0.78s; }
 
-@-webkit-keyframes bubblingG {
-  0% {
+@-webkit-keyframes bubblingG{
+  0%{
     width: 16px;
     height: 16px;
     background-color: #000;
     -webkit-transform: translateY(0);
             transform: translateY(0); }
-  100% {
+  100%{
     width: 39px;
     height: 39px;
     background-color: #fff;

@@ -1,3 +1,19 @@
+v3.0.0 / 2016-03-11
+===
+- upgrade jsxc to v3.0.0
+- add experimental internal chat server
+- add chat icon to oc header
+- ignore empty bosh url on login
+- do not use login overlay in oc >= 8.2
+- refactore admin settings
+- fix initial sidebar handling
+- fix conflict with oc avatars
+- modify csp (oc 9.0)
+- set minimum required oc version to 8.0
+- remove deprecated code and beautify
+- add makefile
+- fix turn credentials with secret
+
 v2.1.5 / 2015-11-17
 ===
 - upgrade jsxc to v2.1.5
