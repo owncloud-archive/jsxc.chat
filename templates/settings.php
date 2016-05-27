@@ -22,6 +22,10 @@
 				<input type="text" name="xmppDomain" id="xmppDomain" class="required" required="required" value="<?php p($_['xmppDomain']); ?>" />
 			</div>
 			<div class="form-group">
+				<label for="xmppPreferMail">Prefer mail address to loginName@xmppDomain</label>
+				<input type="checkbox" name="xmppPreferMail" id="xmppPreferMail" value="true" <?php if($_['xmppPreferMail'] === 'true' || $_['xmppPreferMail'] === true) echo "checked"; ?> />
+			</div>
+			<div class="form-group">
 				<label for="boshUrl">* BOSH url</label>
 				<input type="text" name="boshUrl" id="boshUrl" class="required" required="required" value="<?php p($_['boshUrl']); ?>" />
 				<div class="boshUrl-msg"></div>
