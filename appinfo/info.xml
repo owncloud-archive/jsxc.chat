@@ -36,6 +36,6 @@
       <lib>xmlreader</lib>
       <lib>xmlwriter</lib>
       <lib>dom</lib>
-      <owncloud min-version="8.0" max-version="9.1"/>
+      <owncloud min-version="8.0" max-version="9.2"/>
    </dependencies>
 </info>
