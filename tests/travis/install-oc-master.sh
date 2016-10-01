@@ -11,6 +11,7 @@ git clone https://github.com/owncloud/core.git --recursive --depth 1 -b $BRANCH 
 mv jsxc.chat owncloud/apps/ojsxc
 phpenv config-add owncloud/apps/ojsxc/tests/travis/php.ini
 cd owncloud
+make
 ./occ maintenance:install --database-name oc_autotest --database-user oc_autotest --database-pass --admin-user admin --admin-pass admin --database $DB
 ./occ app:enable ojsxc
 
