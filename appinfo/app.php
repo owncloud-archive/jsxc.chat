@@ -42,7 +42,7 @@ if(class_exists('\\OCP\\AppFramework\\Http\\EmptyContentSecurityPolicy')) {
 
 	$boshUrl = \OC::$server->getConfig()->getAppValue('ojsxc', 'boshUrl');
 
-	if(preg_match('#^(https?:)?//([a-z0-9][a-z0-9\-.]*[a-z0-9])/#i', $boshUrl, $matches)) {
+	if(preg_match('#^(https?:)?//([a-z0-9][a-z0-9\-.]*[a-z0-9](:[0-9]+)?)/#i', $boshUrl, $matches)) {
 		$boshDomain = $matches[2];
 
 		$policy->addAllowedConnectDomain($boshDomain);
