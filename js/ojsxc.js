@@ -3,7 +3,7 @@
 
 /**
  * Make room for the roster inside the owncloud template.
- * 
+ *
  * @param {type} event
  * @param {type} state State in which the roster is
  * @param {type} duration Time the roster needs to move
@@ -15,7 +15,7 @@ function onRosterToggle(event, state, duration) {
 
    var roster_width = (state === 'shown') ? $('#jsxc_roster').outerWidth() : 0;
    var toggle_width = $('#jsxc_toggleRoster').width();
-   
+
    if ($(window).width() < 768) {
       // Do not resize elements on extra small devices (bootstrap definition)
       return;
@@ -46,7 +46,7 @@ function onRosterToggle(event, state, duration) {
 
 /**
  * Init owncloud template for roster.
- * 
+ *
  * @returns {undefined}
  */
 function onRosterReady() {
@@ -297,6 +297,6 @@ $(function() {
       });
 
       var alt = $('<p id="jsxc_alt"/>').append(link);
-      $('#body-login form fieldset').append(alt);
+      $('#body-login form:eq(0) fieldset').append(alt);
    }
 });
