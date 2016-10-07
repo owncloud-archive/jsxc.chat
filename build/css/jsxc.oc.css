@@ -1,5 +1,5 @@
 /*!
- * ojsxc v3.0.0 - 2016-03-11
+ * ojsxc v3.0.1-beta1 - 2016-10-07
  * 
  * Copyright (c) 2016 Klaus Herberth <klaus@jsxc.org> <br>
  * Released under the MIT license
@@ -7,7 +7,7 @@
  * Please see http://www.jsxc.org/
  * 
  * @author Klaus Herberth <klaus@jsxc.org>
- * @version 3.0.0
+ * @version 3.0.1-beta1
  * @license MIT
  */
 
@@ -268,12 +268,10 @@
   cursor: progress; }
 
 .mfp-zoom-out-cur, .mfp-zoom-out-cur .mfp-image-holder .mfp-close {
-  cursor: -webkit-zoom-out;
   cursor: zoom-out; }
 
 .mfp-zoom {
   cursor: pointer;
-  cursor: -webkit-zoom-in;
   cursor: zoom-in; }
 
 .mfp-auto-cursor .mfp-content {
@@ -561,16 +559,13 @@ img.mfp-img {
 @media all and (max-width: 900px) {
   .mfp-arrow {
     -webkit-transform: scale(0.75);
-    -ms-transform: scale(0.75);
-        transform: scale(0.75); }
+    transform: scale(0.75); }
   .mfp-arrow-left {
     -webkit-transform-origin: 0;
-    -ms-transform-origin: 0;
-        transform-origin: 0; }
+    transform-origin: 0; }
   .mfp-arrow-right {
     -webkit-transform-origin: 100%;
-    -ms-transform-origin: 100%;
-        transform-origin: 100%; }
+    transform-origin: 100%; }
   .mfp-container {
     padding-left: 6px;
     padding-right: 6px; } }
@@ -2660,28 +2655,28 @@ fieldset[disabled] #jsxc_webrtc .checkbox label {
   font-size: 23px; }
 
 /* END: bootstrap */
-@-webkit-keyframes bounce{
-  0%{
+@-webkit-keyframes bounce {
+  0% {
     bottom: 0;
     -webkit-animation-timing-function: ease-in;
             animation-timing-function: ease-in; }
-  12%{
+  12% {
     bottom: 5px;
     -webkit-animation-timing-function: ease-out;
             animation-timing-function: ease-out; }
-  25%{
+  25% {
     bottom: 0;
     -webkit-animation-timing-function: ease-in;
             animation-timing-function: ease-in; }
-  37%{
+  37% {
     bottom: 5px;
     -webkit-animation-timing-function: ease-out;
             animation-timing-function: ease-out; }
-  50%{
+  50% {
     bottom: 0;
     -webkit-animation-timing-function: ease-in;
             animation-timing-function: ease-in; }
-  100%{
+  100% {
     bottom: 0; } }
 @keyframes bounce {
   0% {
@@ -2964,7 +2959,6 @@ fieldset[disabled] #jsxc_webrtc .checkbox label {
             transition: right 0.5s; }
     #jsxc_roster.jsxc_state_hidden #jsxc_toggleRoster:before {
       -webkit-transform: rotate(0deg);
-          -ms-transform: rotate(0deg);
               transform: rotate(0deg); }
   #jsxc_roster.jsxc_state_shown {
     display: block;
@@ -2994,7 +2988,6 @@ fieldset[disabled] #jsxc_webrtc .checkbox label {
     border-width: 6px 4px 6px 0;
     border-color: transparent whitesmoke;
     -webkit-transform: rotate(180deg);
-        -ms-transform: rotate(180deg);
             transform: rotate(180deg); }
 
 .jsxc_rosteritem {
@@ -3432,15 +3425,15 @@ fieldset[disabled] #jsxc_webrtc .checkbox label {
     border-radius: 0;
     box-sizing: border-box;
     border: 0; }
-  .jsxc_window input::-webkit-input-placeholder{
-  color: #000;
-  opacity: 0.3; }
-  .jsxc_window input::-moz-placeholder{
-  color: #000;
-  opacity: 0.3; }
-  .jsxc_window input:-ms-input-placeholder{
-  color: #000;
-  opacity: 0.3; }
+  .jsxc_window input::-webkit-input-placeholder {
+    color: #000;
+    opacity: 0.3; }
+  .jsxc_window input::-moz-placeholder {
+    color: #000;
+    opacity: 0.3; }
+  .jsxc_window input:-ms-input-placeholder {
+    color: #000;
+    opacity: 0.3; }
   .jsxc_window input::placeholder {
     color: #000;
     opacity: 0.3; }
@@ -4218,17 +4211,17 @@ div:full-screen {
   div:full-screen.jsxc_localvideo {
     border: 1px solid #fff; }
 
-div:-webkit-full-screen{
+div:-webkit-full-screen {
   width: 100%;
   height: 100%;
   background-color: #000; }
 
-div:-moz-full-screen{
+div:-moz-full-screen {
   width: 100%;
   height: 100%;
   background-color: #000; }
 
-div:-ms-fullscreen{
+div:-ms-fullscreen {
   width: 100%;
   height: 100%;
   background-color: #000; }
@@ -4237,12 +4230,12 @@ div:fullscreen {
   width: 100%;
   height: 100%;
   background-color: #000; }
-  div:-webkit-full-screen.jsxc_localvideo{
-  border: 1px solid #fff; }
-  div:-moz-full-screen.jsxc_localvideo{
-  border: 1px solid #fff; }
-  div:-ms-fullscreen.jsxc_localvideo{
-  border: 1px solid #fff; }
+  div:-webkit-full-screen.jsxc_localvideo {
+    border: 1px solid #fff; }
+  div:-moz-full-screen.jsxc_localvideo {
+    border: 1px solid #fff; }
+  div:-ms-fullscreen.jsxc_localvideo {
+    border: 1px solid #fff; }
   div:fullscreen.jsxc_localvideo {
     border: 1px solid #fff; }
 
@@ -4375,14 +4368,14 @@ div.jsxc_video {
   -webkit-animation-delay: 0.78s;
           animation-delay: 0.78s; }
 
-@-webkit-keyframes bubblingG{
-  0%{
+@-webkit-keyframes bubblingG {
+  0% {
     width: 16px;
     height: 16px;
     background-color: #000;
     -webkit-transform: translateY(0);
             transform: translateY(0); }
-  100%{
+  100% {
     width: 39px;
     height: 39px;
     background-color: #fff;

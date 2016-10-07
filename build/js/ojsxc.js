@@ -1,5 +1,5 @@
 /*!
- * ojsxc v3.0.0 - 2016-03-11
+ * ojsxc v3.0.1-beta1 - 2016-10-07
  * 
  * Copyright (c) 2016 Klaus Herberth <klaus@jsxc.org> <br>
  * Released under the MIT license
@@ -7,7 +7,7 @@
  * Please see http://www.jsxc.org/
  * 
  * @author Klaus Herberth <klaus@jsxc.org>
- * @version 3.0.0
+ * @version 3.0.1-beta1
  * @license MIT
  */
 
@@ -16,7 +16,7 @@
 
 /**
  * Make room for the roster inside the owncloud template.
- * 
+ *
  * @param {type} event
  * @param {type} state State in which the roster is
  * @param {type} duration Time the roster needs to move
@@ -28,7 +28,7 @@ function onRosterToggle(event, state, duration) {
 
    var roster_width = (state === 'shown') ? $('#jsxc_roster').outerWidth() : 0;
    var toggle_width = $('#jsxc_toggleRoster').width();
-   
+
    if ($(window).width() < 768) {
       // Do not resize elements on extra small devices (bootstrap definition)
       return;
@@ -59,7 +59,7 @@ function onRosterToggle(event, state, duration) {
 
 /**
  * Init owncloud template for roster.
- * 
+ *
  * @returns {undefined}
  */
 function onRosterReady() {
@@ -163,7 +163,7 @@ $(function() {
          form: '#body-login form',
          jid: '#user',
          pass: '#password',
-         attachIfFound: false,
+         ifFound: 'force',
          onConnecting: (oc_config.version.match(/^([8-9]|[0-9]{2,})+\./))? 'quiet' : 'dialog'
       },
       logoutElement: $('#logout'),
@@ -310,6 +310,6 @@ $(function() {
       });
 
       var alt = $('<p id="jsxc_alt"/>').append(link);
-      $('#body-login form fieldset').append(alt);
+      $('#body-login form:eq(0) fieldset').append(alt);
    }
 });
