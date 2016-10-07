@@ -150,7 +150,7 @@ $(function() {
          form: '#body-login form',
          jid: '#user',
          pass: '#password',
-         attachIfFound: false,
+         ifFound: 'force',
          onConnecting: (oc_config.version.match(/^([8-9]|[0-9]{2,})+\./))? 'quiet' : 'dialog'
       },
       logoutElement: $('#logout'),
