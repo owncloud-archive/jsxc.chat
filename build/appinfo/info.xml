@@ -3,7 +3,7 @@
    <id>ojsxc</id>
    <name>JavaScript XMPP Chat</name>
    <description>Facebook-like chat with end-to-end encrypted conversation, video calls, multi-user rooms, XMPP and internal server backend.</description>
-   <version>3.0.1-beta1</version>
+   <version>3.0.1-beta2</version>
    <licence>MIT</licence>
    <author>Klaus Herberth, Tobia De Koninck</author>
    <requiremin>8.0</requiremin>
