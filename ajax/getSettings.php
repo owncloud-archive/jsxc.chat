@@ -48,16 +48,18 @@ $data ['xmpp'] ['onlogin'] = true;
 $options = $config->getUserValue($username, 'ojsxc', 'options');
 
 if ($options !== null) {
-    $options = json_decode($options, true);
+    $options = (array) json_decode($options, true);
 
-    foreach ($options as $prop => $value) {
-        if ($prop !== 'xmpp' || $data ['xmpp'] ['overwrite']) {
-            foreach ($value as $key => $v) {
-                if ($v !== '') {
-                    $data [$prop] [$key] = ($v === 'false' || $v === 'true') ? validateBoolean($v) : $v;
-                }
-            }
-        }
+    if (is_array($options)) {
+      foreach ($options as $prop => $value) {
+          if ($prop !== 'xmpp' || $data ['xmpp'] ['overwrite']) {
+              foreach ($value as $key => $v) {
+                  if ($v !== '') {
+                      $data [$prop] [$key] = ($v === 'false' || $v === 'true') ? validateBoolean($v) : $v;
+                  }
+              }
+          }
+      }
     }
 }
 
