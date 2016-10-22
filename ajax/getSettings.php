@@ -9,7 +9,7 @@ function validateBoolean($val)
 
 OCP\JSON::callCheck();
 
-$username = $_POST ['username'];
+$username = strtolower($_POST ['username']);
 $password = $_POST ['password'];
 
 $ocUser = new OCP\User();
