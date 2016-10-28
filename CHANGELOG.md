@@ -1,3 +1,12 @@
+v3.0.1 / 2016-10-28
+===
+- upgrade jsxc to v3.0.1
+- fix invalid argument
+- use regex to match full id instead of only letters (internal chat server)
+- allow port number in BOSH url for csp
+- fix login without chat link
+- force login form
+
 v3.0.0 / 2016-03-11
 ===
 - upgrade jsxc to v3.0.0
