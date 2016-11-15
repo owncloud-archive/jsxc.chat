@@ -44,6 +44,23 @@ function onRosterToggle(event, state, duration) {
    }
 }
 
+function checkForChatRoom() {
+   if($("#document-title").attr("data-chatroom-password") && $("#document-title").attr("data-chatroom-password")!="undefined") {
+      var roomPassword = $("#document-title").data("chatroom-password");
+      var roomId = $("#document-title").data("chatroom-name");
+      roomId = "jsxcDocumentChat"+roomId;
+      var roomName = $("#document-title").text();
+      var conferenceServer = jsxc.options.get('muc').server;
+      var nickname = Strophe.getNodeFromJid(jsxc.muc.conn.jid);
+      $("#chatRoomJoinContainer").html('<button id="joinChatroom">Join document chat</button>');
+      $("#joinChatroom").click(function(){
+         jsxc.storage.setUserItem('member', roomId, {});
+         jsxc.muc.join(roomId+"@"+conferenceServer, nickname, roomPassword, roomName, '', false, false);
+         jsxc.gui.window.open(roomId+"@"+conferenceServer);
+      })
+   }
+}
+
 /**
  * Init owncloud template for roster.
  *
@@ -57,6 +74,13 @@ function onRosterReady() {
       setTimeout(onRosterReady, 200);
       return;
    }
+
+   checkForChatRoom();
+   setTimeout(checkForChatRoom,3000);
+
+   $(window).bind('hashchange', function() {
+      checkForChatRoom();
+   });
 
    var div = $('<div/>');
 
