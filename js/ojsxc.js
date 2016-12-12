@@ -3,7 +3,7 @@
 
 /**
  * Make room for the roster inside the owncloud template.
- * 
+ *
  * @param {type} event
  * @param {type} state State in which the roster is
  * @param {type} duration Time the roster needs to move
@@ -12,12 +12,10 @@
 function onRosterToggle(event, state, duration) {
    "use strict";
    var wrapper = $('#content-wrapper');
-   var control = $('#controls');
 
    var roster_width = (state === 'shown') ? $('#jsxc_roster').outerWidth() : 0;
    var toggle_width = $('#jsxc_toggleRoster').width();
-   var navigation_width = $('#navigation').width();
-   
+
    if ($(window).width() < 768) {
       // Do not resize elements on extra small devices (bootstrap definition)
       return;
@@ -26,13 +24,6 @@ function onRosterToggle(event, state, duration) {
    wrapper.animate({
       paddingRight: (roster_width + toggle_width) + 'px'
    }, duration);
-
-   // only oc < 8
-   if (!oc_config || !oc_config.version || !oc_config.version.match(/^([8-9]|[0-9]{2,})\./)) {
-      control.animate({
-         paddingRight: (roster_width + navigation_width + toggle_width) + 'px'
-      }, duration);
-   }
 
    // update webodf
    if (typeof dijit !== 'undefined') {
@@ -55,12 +46,17 @@ function onRosterToggle(event, state, duration) {
 
 /**
  * Init owncloud template for roster.
- * 
+ *
  * @returns {undefined}
  */
 function onRosterReady() {
    "use strict";
    var roster_width, navigation_width, roster_right, toggle_width;
+
+   if (typeof $('#jsxc_roster').outerWidth() !== 'number') {
+      setTimeout(onRosterReady, 200);
+      return;
+   }
 
    var div = $('<div/>');
 
@@ -79,11 +75,6 @@ function onRosterReady() {
    getValues();
 
    $('#content-wrapper').css('paddingRight', roster_width + roster_right + toggle_width);
-
-   // only oc < 8
-   if (!oc_config || !oc_config.version || !oc_config.version.match(/^([8-9]|[0-9]{2,})\./)) {
-      $('#controls').css('paddingRight', roster_width + navigation_width + roster_right + toggle_width);
-   }
 
    // update webodf
    var contentbg = $('#content-wrapper').css('background-color');
@@ -159,14 +150,14 @@ $(function() {
          form: '#body-login form',
          jid: '#user',
          pass: '#password',
-         attachIfFound: false,
+         ifFound: 'force',
          onConnecting: (oc_config.version.match(/^([8-9]|[0-9]{2,})+\./))? 'quiet' : 'dialog'
       },
       logoutElement: $('#logout'),
       rosterAppend: 'body',
       root: oc_appswebroots.ojsxc + '/js/jsxc',
       RTCPeerConfig: {
-         url: OC.filePath('ojsxc', 'ajax', 'getturncredentials.php')
+         url: OC.filePath('ojsxc', 'ajax', 'getTurnCredentials.php')
       },
       displayRosterMinimized: function() {
          return OC.currentUser != null;
@@ -196,20 +187,11 @@ $(function() {
             if (typeof cache[key] === 'undefined' || cache[key] === null) {
                var url;
 
-               if (OC.generateUrl) {
-                  // oc >= 7
-                  url = OC.generateUrl('/avatar/' + encodeURIComponent(user) + '/' + size + '?requesttoken={requesttoken}', {
-                     user: user,
-                     size: size,
-                     requesttoken: oc_requesttoken
-                  });
-               } else {
-                  // oc < 7
-                  url = OC.Router.generate('core_avatar_get', {
-                     user: user,
-                     size: size
-                  }) + '?requesttoken=' + oc_requesttoken;
-               }
+               url = OC.generateUrl('/avatar/' + encodeURIComponent(user) + '/' + size + '?requesttoken={requesttoken}', {
+                  user: user,
+                  size: size,
+                  requesttoken: oc_requesttoken
+               });
 
                $.get(url, function(result) {
 
@@ -227,41 +209,55 @@ $(function() {
       loadSettings: function(username, password, cb) {
          $.ajax({
             type: 'POST',
-            url: OC.filePath('ojsxc', 'ajax', 'getsettings.php'),
+            url: OC.filePath('ojsxc', 'ajax', 'getSettings.php'),
             data: {
                username: username,
                password: password
             },
             success: function(d) {
-               if (d.result === 'success' && d.data.xmpp.url !== '' && d.data.xmpp.url !== null) {
+               if (d.result === 'success' && d.data && d.data.serverType !== 'internal' && d.data.xmpp.url !== '' && d.data.xmpp.url !== null) {
                   cb(d.data);
+               } else if (d.data && d.data.serverType === 'internal') {
+                  // fake successful connection
+                  jsxc.bid = username + '@' + window.location.host;
+
+                  jsxc.storage.setItem('jid', jsxc.bid + '/internal');
+                  jsxc.storage.setItem('sid', 'internal');
+                  jsxc.storage.setItem('rid', '123456');
+
+                  jsxc.options.set('xmpp', {
+                     url: OC.generateUrl('apps/ojsxc/http-bind')
+                  });
+                  if (d.data.loginForm) {
+                     jsxc.options.set('loginForm', {
+                        startMinimized: d.data.loginForm.startMinimized
+                     });
+                  }
+
+                  cb(false);
                } else {
                   cb(false);
                }
             },
             error: function() {
-               jsxc.error('XHR error on getsettings.php');
+               jsxc.error('XHR error on getSettings.php');
 
                cb(false);
             }
          });
       },
-      saveSettinsPermanent: function(data) {
-         var ret = 1;
-
+      saveSettinsPermanent: function(data, cb) {
          $.ajax({
-            async: false,
             type: 'POST',
             url: OC.filePath('ojsxc', 'ajax', 'setUserSettings.php'),
             data: data,
             success: function(data) {
-               if (data.trim() === 'true') {
-                  ret = 0;
-               }
+               cb(data.trim() === 'true');
+            },
+            error: function() {
+               cb(false);
             }
          });
-
-         return ret;
       },
       getUsers: function(search, cb) {
          $.ajax({
@@ -301,6 +297,6 @@ $(function() {
       });
 
       var alt = $('<p id="jsxc_alt"/>').append(link);
-      $('#body-login form fieldset').append(alt);
+      $('#body-login form:eq(0) fieldset').append(alt);
    }
 });

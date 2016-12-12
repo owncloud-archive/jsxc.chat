@@ -1,14 +1,41 @@
 <?xml version="1.0"?>
 <info>
-	<id>ojsxc</id>
-	<name>JavaScript XMPP Chat</name>
-	<description>XMPP Chat with OTR</description>
-	<version>2.1.5</version>
-	<licence>MIT</licence>
-	<author>Klaus Herberth</author>
-	<require>5</require>
-	<website>https://www.jsxc.org</website>
-	<bugs>http://github.com/jsxc/jsxc/issues</bugs>
-	<repository type="git">http://github.com/jsxc/jsxc.owncloud.git</repository>
-	<ocsid>162257</ocsid>
+   <id>ojsxc</id>
+   <name>JavaScript XMPP Chat</name>
+   <description>Facebook-like chat with end-to-end encrypted conversation, video calls, multi-user rooms, XMPP and internal server backend.</description>
+   <version>3.0.1</version>
+   <licence>MIT</licence>
+   <author>Klaus Herberth, Tobia De Koninck</author>
+   <requiremin>8.0</requiremin>
+   <namespace>OJSXC</namespace>
+
+   <types>
+      <prelogin/>
+   </types>
+
+   <documentation>
+      <user>https://www.jsxc.org/manual.html</user>
+      <admin>https://github.com/jsxc/jsxc/wiki/Install-ojsxc-(owncloud)</admin>
+   	<developer>https://github.com/jsxc/jsxc/wiki/Contributor-Guide</developer>
+   </documentation>
+
+   <category>tools</category>
+
+   <website>https://www.jsxc.org</website>
+   <bugs>http://github.com/jsxc/jsxc/issues</bugs>
+   <repository type="git">https://github.com/owncloud/jsxc.chat.git</repository>
+
+   <ocsid>162257</ocsid>
+
+   <dependencies>
+      <php min-version="5.4" max-version="7"/>
+      <database>sqlite</database>
+      <database>mysql</database>
+      <database>pgsql</database>
+      <lib min-version="2.6.20">libxml</lib>
+      <lib>xmlreader</lib>
+      <lib>xmlwriter</lib>
+      <lib>dom</lib>
+      <owncloud min-version="8.0" max-version="9.2"/>
+   </dependencies>
 </info>

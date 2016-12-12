@@ -1,0 +1,22 @@
+<phpunit bootstrap="tests/bootstrap-unit.php"
+         convertErrorsToExceptions="true"
+         convertNoticesToExceptions="true"
+         convertWarningsToExceptions="true"
+>
+    <testsuites>
+        <testsuite name="unit">
+            <directory>./tests/unit</directory>
+        </testsuite>
+    </testsuites>
+    <filter>
+        <whitelist processUncoveredFilesFromWhitelist="true">
+            <directory suffix=".php">lib</directory>
+            <exclude>
+                <directory suffix=".php">lib/db</directory>
+                <file>lib/ilock.php</file>
+                <file>lib/memlock.php</file>
+                <file>lib/dblock.php</file>
+            </exclude>
+        </whitelist>
+    </filter>
+</phpunit>

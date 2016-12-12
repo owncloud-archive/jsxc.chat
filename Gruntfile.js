@@ -20,7 +20,7 @@ module.exports = function(grunt) {
          build: {
             files: [ {
                expand: true,
-               src: [ 'js/*.js', 'css/*', 'appinfo/*', 'ajax/*', 'img/**', 'templates/*', 'sound/*', 'settings.php', 'LICENSE' ],
+               src: [ 'js/*.js', 'css/*', 'appinfo/*', 'ajax/*', 'img/**', 'templates/*', 'sound/*', 'vendor/**', 'lib/**', 'settings.php', 'LICENSE' ],
                dest: 'build/'
             }, {
                expand: true,
@@ -55,7 +55,7 @@ module.exports = function(grunt) {
             src: [ 'build/appinfo/info.xml', 'appinfo/info.xml' ],
             overwrite: true,
             replacements: [ {
-               from: /<version>[\d.]+<\/version>/,
+               from: /<version>[^<]+<\/version>/,
                to: "<version><%= app.version %></version>"
             } ]
          },
@@ -63,7 +63,7 @@ module.exports = function(grunt) {
             src: [ 'build/appinfo/version', 'appinfo/version' ],
             overwrite: true,
             replacements: [ {
-               from: /[\d.]+/,
+               from: /.+/,
                to: "<%= app.version %>"
             } ]
          },
@@ -125,8 +125,7 @@ module.exports = function(grunt) {
       sass: {
          dist: {
              files: {
-                'css/jsxc.oc.css': 'scss/jsxc.oc.scss',
-                'css/jsxc.oc.lte6.css': 'scss/jsxc.oc.lte6.scss'
+                'css/jsxc.oc.css': 'scss/jsxc.oc.scss'
              }
          }
        },
