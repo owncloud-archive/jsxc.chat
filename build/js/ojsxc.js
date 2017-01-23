@@ -1,13 +1,13 @@
 /*!
- * ojsxc v3.0.1 - 2016-10-28
+ * ojsxc v3.1.0-beta - 2017-01-23
  * 
- * Copyright (c) 2016 Klaus Herberth <klaus@jsxc.org> <br>
+ * Copyright (c) 2017 Klaus Herberth <klaus@jsxc.org> <br>
  * Released under the MIT license
  * 
  * Please see http://www.jsxc.org/
  * 
  * @author Klaus Herberth <klaus@jsxc.org>
- * @version 3.0.1
+ * @version 3.1.0-beta
  * @license MIT
  */
 
@@ -55,6 +55,11 @@ function onRosterToggle(event, state, duration) {
          right: (roster_width + toggle_width) + 'px'
       });
    }
+
+   // trigger nextcloud/owncloud triggers
+   setTimeout(function(){
+      $(window).resize();
+   }, duration + 50);
 }
 
 /**
@@ -113,6 +118,9 @@ function onRosterReady() {
       if ($('#app-sidebar').length > 0) {
          $('#app-sidebar').css('right', (roster_width + roster_right + toggle_width) + 'px');
       }
+
+      // trigger nextcloud/owncloud triggers
+      $(window).resize();
    }, 500);
 
    function getValues() {

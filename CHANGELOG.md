@@ -1,3 +1,10 @@
+[Unreleased]
+===
+- upgrade jsxc to v3.1.0-beta
+- add option to use user email as jid
+- fix untrimmed settings
+- ignore empty webrtc configuration
+
 v3.0.1 / 2016-10-28
 ===
 - upgrade jsxc to v3.0.1
@@ -193,6 +200,6 @@ v0.3 / 2013-10-28
 - add basic muc support (alpha)
 - create DSA key in background
 - fix notification with multiple tabs
-- reorganize files 
+- reorganize files
 - add MIT license
 - minor fixes
