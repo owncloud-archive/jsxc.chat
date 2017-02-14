@@ -1,9 +1,19 @@
 [Unreleased]
 ===
-- upgrade jsxc to v3.1.0-beta
+
+v3.1.0 / 2017-02-14
+===
+- upgrade jsxc to v3.1.0
 - add option to use user email as jid
+- add option to add external services
+- add option to add external upload service automatically to csp
 - fix untrimmed settings
 - ignore empty webrtc configuration
+- do not start jsxc inside a frame
+- fix disabled chat on login
+- fix user setting retrieval
+- minor settings redesign
+- handle richdocuments ui
 
 v3.0.1 / 2016-10-28
 ===
