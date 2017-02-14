@@ -1,6 +1,10 @@
 [Unreleased]
 ===
 
+v3.1.1 / 2017-02-14
+===
+- upgrade jsxc to v3.1.1
+
 v3.1.0 / 2017-02-14
 ===
 - upgrade jsxc to v3.1.0
