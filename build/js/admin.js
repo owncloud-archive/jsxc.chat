@@ -1,5 +1,5 @@
 /*!
- * ojsxc v3.1.0-beta - 2017-01-23
+ * ojsxc v3.1.0 - 2017-02-14
  * 
  * Copyright (c) 2017 Klaus Herberth <klaus@jsxc.org> <br>
  * Released under the MIT license
@@ -7,7 +7,7 @@
  * Please see http://www.jsxc.org/
  * 
  * @author Klaus Herberth <klaus@jsxc.org>
- * @version 3.1.0-beta
+ * @version 3.1.0
  * @license MIT
  */
 
@@ -16,7 +16,7 @@
 $(document).ready(function() {
    /**
     * Test if bosh server is up and running.
-    * 
+    *
     * @param  {string}   url    BOSH url
     * @param  {string}   domain host domain for BOSH server
     * @param  {Function} cb     called if test is done
@@ -165,5 +165,49 @@ $(document).ready(function() {
             status.hide('slow');
          }, 3000);
       });
+   });
+
+   $('#ojsxc .add-input').click(function(ev) {
+      ev.preventDefault();
+
+      var clone = $(this).prev().clone();
+      clone.val('');
+
+      $(this).before(clone);
+   });
+
+   $('#insert-upload-service').click(function(ev) {
+      ev.preventDefault();
+
+      if (!jsxc.xmpp.conn || !jsxc.xmpp.conn.connected) {
+         console.warn('Not connected to any XMPP server.');
+         return;
+      }
+
+      var options = jsxc.options.get('httpUpload') || {};
+
+      var services = $('[name="externalServices[]"]').map(function(){
+         var inputField = $(this);
+
+         return inputField.val() || null;
+      });
+
+      if (options.server && services.toArray().indexOf(options.server) < 0) {
+         // insert service
+         var emptyInputFields = $('[name="externalServices[]"]').filter(function(){
+            return $(this).val() === '';
+         });
+
+         var targetInputField;
+
+         if(emptyInputFields.length === 0) {
+            $(this).parents('.form-group').find('.add-input').click();
+            targetInputField = $('[name="externalServices[]"]').last();
+         } else {
+            targetInputField = $(emptyInputFields[0]);
+         }
+
+         targetInputField.val(options.server);
+      }
    });
 });
